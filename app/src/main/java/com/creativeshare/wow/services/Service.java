@@ -2,6 +2,9 @@ package com.creativeshare.wow.services;
 
 import com.creativeshare.wow.models.AppDataModel;
 import com.creativeshare.wow.models.CommentDataModel;
+import com.creativeshare.wow.models.DepartmentDataModel;
+import com.creativeshare.wow.models.Department_Model;
+import com.creativeshare.wow.models.FamiliesStoreDataModel;
 import com.creativeshare.wow.models.MessageDataModel;
 import com.creativeshare.wow.models.MessageModel;
 import com.creativeshare.wow.models.NearDelegateDataModel;
@@ -10,9 +13,12 @@ import com.creativeshare.wow.models.NotificationCountModel;
 import com.creativeshare.wow.models.NotificationDataModel;
 import com.creativeshare.wow.models.OrderDataModel;
 import com.creativeshare.wow.models.OrderIdDataModel;
+import com.creativeshare.wow.models.OrderModelToUpload;
+import com.creativeshare.wow.models.OrderSpareDataModel;
 import com.creativeshare.wow.models.PlaceDetailsModel;
 import com.creativeshare.wow.models.PlaceGeocodeData;
 import com.creativeshare.wow.models.PlaceMapDetailsData;
+import com.creativeshare.wow.models.ProductsDataModel;
 import com.creativeshare.wow.models.SearchDataModel;
 import com.creativeshare.wow.models.SliderModel;
 import com.creativeshare.wow.models.SocialMediaModel;
@@ -23,6 +29,7 @@ import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
+import retrofit2.http.Body;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
@@ -336,6 +343,78 @@ public interface Service {
 
     @GET("/Api/profile")
     Call<UserModel> getUserDataById(@Query("user_id") String user_id);
+
+    @GET("/App/familyStore")
+    Call<FamiliesStoreDataModel> getFamiliesStores(@Query("mylat") double lat, @Query("mylong") double lng, @Query("page") int page);
+
+    @GET("/App/products")
+    Call<ProductsDataModel> getProductsByDeptId(@Query("id_department") String id_department, @Query("page") int page);
+
+    @GET("/App/departments")
+    Call<DepartmentDataModel> getAllFamilyDepts(@Query("user_id_fk") String user_id_fk);
+
+    @FormUrlEncoded
+    @POST("/App/department")
+    Call<Department_Model> addDept(@Field("ar_title_dep") String ar_title_dep,
+                                   @Field("en_title_dep") String en_title_dep,
+                                   @Field("user_id_fk") String user_id_fk
+    );
+
+    @Multipart
+    @POST("/App/carParts")
+    Call<OrderSpareDataModel.OrderSpare> addSparePart(@Part("client_id") RequestBody client_id,
+                                                      @Part("client_address") RequestBody client_address,
+                                                      @Part("client_lat") RequestBody client_lat,
+                                                      @Part("client_long") RequestBody client_long,
+                                                      @Part("car_model") RequestBody car_model,
+                                                      @Part("car_type") RequestBody car_type,
+                                                      @Part("facture_year") RequestBody facture_year,
+                                                      @Part("part_num") RequestBody part_num,
+                                                      @Part("part_amount") RequestBody part_amount,
+                                                      @Part("delivery_method") RequestBody delivery_method,
+                                                      @Part MultipartBody.Part image
+    );
+
+    @GET("/App/driverCarParts")
+    Call<OrderSpareDataModel> getDelegateSpareOrder(@Query("user_id") String user_id,
+                                                    @Query("order_type") String order_type,
+                                                    @Query("page") int page
+    );
+
+    @GET("/App/clientCarParts")
+    Call<OrderSpareDataModel> getClientSpareOrder(@Query("user_id") String user_id,
+                                                  @Query("order_type") String order_type,
+                                                  @Query("page") int page);
+
+
+    @Multipart
+    @POST("/App/product")
+    Call<ResponseBody> addFamilyProductWithImage(@Part("user_id_fk") RequestBody user_id_fk,
+                                                 @Part("dep_id_fk") RequestBody dep_id_fk,
+                                                 @Part("ar_title_pro") RequestBody ar_title_pro,
+                                                 @Part("en_title_pro") RequestBody en_title_pro,
+                                                 @Part("price") RequestBody price,
+                                                 @Part("ar_details_pro") RequestBody ar_details_pro,
+                                                 @Part("en_details_pro") RequestBody en_details_pro,
+                                                 @Part("notes") RequestBody notes,
+                                                 @Part MultipartBody.Part image
+    );
+
+    @Multipart
+    @POST("/App/product")
+    Call<ResponseBody> addFamilyProductWithoutImage(@Part("user_id_fk") RequestBody user_id_fk,
+                                                    @Part("dep_id_fk") RequestBody dep_id_fk,
+                                                    @Part("ar_title_pro") RequestBody ar_title_pro,
+                                                    @Part("en_title_pro") RequestBody en_title_pro,
+                                                    @Part("price") RequestBody price,
+                                                    @Part("ar_details_pro") RequestBody ar_details_pro,
+                                                    @Part("en_details_pro") RequestBody en_details_pro,
+                                                     @Part("notes") RequestBody notes
+
+                                                    );
+
+    @POST("/App/familyStoreOrder")
+    Call<ResponseBody> sendFamilyOrder(@Body OrderModelToUpload orderModelToUpload);
 }
 
 

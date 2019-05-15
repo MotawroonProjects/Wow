@@ -360,6 +360,7 @@
 
             </android.support.constraint.ConstraintLayout>
             <View
+                android:id="@+id/view_coupon"
                 android:layout_width="match_parent"
                 android:layout_height="1px"
                 android:background="@color/gray5"/>
@@ -399,6 +400,7 @@
 
             </android.support.constraint.ConstraintLayout>
             <View
+                android:id="@+id/view_delegate"
                 android:layout_width="match_parent"
                 android:layout_height="1px"
                 android:background="@color/gray5"/>
@@ -437,6 +439,7 @@
 
             </android.support.constraint.ConstraintLayout>
             <View
+                android:id="@+id/view_family"
                 android:layout_width="match_parent"
                 android:layout_height="1px"
                 android:background="@color/gray5"/>
@@ -475,6 +478,7 @@
 
             </android.support.constraint.ConstraintLayout>
             <View
+                android:id="@+id/view_add_product"
                 android:layout_width="match_parent"
                 android:layout_height="1px"
                 android:background="@color/gray5"/>

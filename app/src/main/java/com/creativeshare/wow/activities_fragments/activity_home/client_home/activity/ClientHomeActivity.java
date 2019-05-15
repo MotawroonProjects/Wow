@@ -28,30 +28,42 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.creativeshare.wow.R;
 import com.creativeshare.wow.activities_fragments.activity_chat.ChatActivity;
+import com.creativeshare.wow.activities_fragments.activity_home.client_home.fragments.fragmen_family_order.Fragment_Family_Orders;
+import com.creativeshare.wow.activities_fragments.activity_home.client_home.fragments.fragmen_spare_order.Fragment_Spare_Orders;
+import com.creativeshare.wow.activities_fragments.activity_home.client_home.fragments.fragment_home.FragmentFamilyDepartments;
 import com.creativeshare.wow.activities_fragments.activity_home.client_home.fragments.fragment_home.Fragment_Add_Coupon;
+import com.creativeshare.wow.activities_fragments.activity_home.client_home.fragments.fragment_home.Fragment_Add_Spare;
+import com.creativeshare.wow.activities_fragments.activity_home.client_home.fragments.fragment_home.Fragment_Cart;
 import com.creativeshare.wow.activities_fragments.activity_home.client_home.fragments.fragment_home.Fragment_Client_Delegate_Offer;
 import com.creativeshare.wow.activities_fragments.activity_home.client_home.fragments.fragment_home.Fragment_Client_Notifications;
 import com.creativeshare.wow.activities_fragments.activity_home.client_home.fragments.fragment_home.Fragment_Client_Order_Details;
 import com.creativeshare.wow.activities_fragments.activity_home.client_home.fragments.fragment_home.Fragment_Client_Profile;
+import com.creativeshare.wow.activities_fragments.activity_home.client_home.fragments.fragment_home.Fragment_Client_Spare_Order_Details;
 import com.creativeshare.wow.activities_fragments.activity_home.client_home.fragments.fragment_home.Fragment_Client_Store;
 import com.creativeshare.wow.activities_fragments.activity_home.client_home.fragments.fragment_home.Fragment_Delegate_Add_Offer;
 import com.creativeshare.wow.activities_fragments.activity_home.client_home.fragments.fragment_home.Fragment_Delegate_Comments;
 import com.creativeshare.wow.activities_fragments.activity_home.client_home.fragments.fragment_home.Fragment_Delegate_Current_Order_Details;
 import com.creativeshare.wow.activities_fragments.activity_home.client_home.fragments.fragment_home.Fragment_Delegate_Register;
+import com.creativeshare.wow.activities_fragments.activity_home.client_home.fragments.fragment_home.Fragment_Delegate_Spare_Add_Offer;
+import com.creativeshare.wow.activities_fragments.activity_home.client_home.fragments.fragment_home.Fragment_Delegate_Spare_Current_Order_Details;
 import com.creativeshare.wow.activities_fragments.activity_home.client_home.fragments.fragment_home.Fragment_Delegates;
 import com.creativeshare.wow.activities_fragments.activity_home.client_home.fragments.fragment_home.Fragment_Delegates_Result;
 import com.creativeshare.wow.activities_fragments.activity_home.client_home.fragments.fragment_home.Fragment_Documentation_Data;
 import com.creativeshare.wow.activities_fragments.activity_home.client_home.fragments.fragment_home.Fragment_Edit_Profile;
 import com.creativeshare.wow.activities_fragments.activity_home.client_home.fragments.fragment_home.Fragment_Explain_Courier;
+import com.creativeshare.wow.activities_fragments.activity_home.client_home.fragments.fragment_home.Fragment_Family;
+import com.creativeshare.wow.activities_fragments.activity_home.client_home.fragments.fragment_home.Fragment_Family_Add_Product;
 import com.creativeshare.wow.activities_fragments.activity_home.client_home.fragments.fragment_home.Fragment_Home;
 import com.creativeshare.wow.activities_fragments.activity_home.client_home.fragments.fragment_home.Fragment_Map;
 import com.creativeshare.wow.activities_fragments.activity_home.client_home.fragments.fragment_home.Fragment_Map_Location_Details;
+import com.creativeshare.wow.activities_fragments.activity_home.client_home.fragments.fragment_home.Fragment_Product_Details;
 import com.creativeshare.wow.activities_fragments.activity_home.client_home.fragments.fragment_home.Fragment_Reserve_Order;
 import com.creativeshare.wow.activities_fragments.activity_home.client_home.fragments.fragment_home.Fragment_Search;
 import com.creativeshare.wow.activities_fragments.activity_home.client_home.fragments.fragment_home.Fragment_Settings;
@@ -63,6 +75,7 @@ import com.creativeshare.wow.activities_fragments.activity_sign_in.fragments.Fra
 import com.creativeshare.wow.activities_fragments.terms_conditions.TermsConditionsActivity;
 import com.creativeshare.wow.language.Language_Helper;
 import com.creativeshare.wow.models.ChatUserModel;
+import com.creativeshare.wow.models.FamiliesStoreDataModel;
 import com.creativeshare.wow.models.Favourite_location;
 import com.creativeshare.wow.models.LocationError;
 import com.creativeshare.wow.models.NotStateModel;
@@ -70,11 +83,14 @@ import com.creativeshare.wow.models.NotificationCountModel;
 import com.creativeshare.wow.models.NotificationModel;
 import com.creativeshare.wow.models.NotificationTypeModel;
 import com.creativeshare.wow.models.OrderDataModel;
+import com.creativeshare.wow.models.OrderSpareDataModel;
 import com.creativeshare.wow.models.PlaceModel;
+import com.creativeshare.wow.models.ProductsDataModel;
 import com.creativeshare.wow.models.UserModel;
 import com.creativeshare.wow.preferences.Preferences;
 import com.creativeshare.wow.remote.Api;
 import com.creativeshare.wow.share.Common;
+import com.creativeshare.wow.singletone.OrderModelSingleTone;
 import com.creativeshare.wow.singletone.UserSingleTone;
 import com.creativeshare.wow.tags.Tags;
 import com.google.android.gms.common.ConnectionResult;
@@ -145,6 +161,17 @@ public class ClientHomeActivity extends AppCompatActivity implements GoogleApiCl
     private Fragment_Explain_Courier fragment_explain_courier;
     private Fragment_Documentation_Data fragment_documentation_data;
     private Fragment_Delegates_Result fragment_delegates_result;
+    private Fragment_Family_Orders fragment_family_orders;
+    private Fragment_Spare_Orders fragment_spare_orders;
+    private Fragment_Add_Spare fragment_add_spare;
+    private Fragment_Family fragment_family;
+    private Fragment_Family_Add_Product fragment_family_add_product;
+    private FragmentFamilyDepartments fragmentFamilyDepartments;
+    private Fragment_Cart fragment_cart;
+    private Fragment_Product_Details fragment_product_details;
+    private Fragment_Client_Spare_Order_Details fragment_client_spare_order_details;
+    private Fragment_Delegate_Spare_Add_Offer fragment_delegate_spare_add_offer;
+    private Fragment_Delegate_Spare_Current_Order_Details fragment_delegate_spare_current_order_details;
     private UserSingleTone userSingleTone;
     private UserModel userModel;
     private Preferences preferences;
@@ -164,6 +191,7 @@ public class ClientHomeActivity extends AppCompatActivity implements GoogleApiCl
     private Button btn_family_order,btn_spare_order,btn_store_order;
     private BottomSheetBehavior behavior;
     private ConstraintLayout root;
+    private OrderModelSingleTone orderModelSingleTone;
 
 
     @Override
@@ -349,6 +377,7 @@ public class ClientHomeActivity extends AppCompatActivity implements GoogleApiCl
 
     private void initView()
     {
+        orderModelSingleTone = OrderModelSingleTone.newInstance();
         Paper.init(this);
         current_lang = Paper.book().read("lang", Locale.getDefault().getLanguage());
 
@@ -385,6 +414,7 @@ public class ClientHomeActivity extends AppCompatActivity implements GoogleApiCl
             @Override
             public void onClick(View v) {
                 closeBottomSheet();
+                DisplayFragmentFamiliesOrders();
             }
         });
 
@@ -392,6 +422,7 @@ public class ClientHomeActivity extends AppCompatActivity implements GoogleApiCl
             @Override
             public void onClick(View v) {
                 closeBottomSheet();
+                DisplayFragmentSpareOrders();
             }
         });
 
@@ -761,6 +792,16 @@ public class ClientHomeActivity extends AppCompatActivity implements GoogleApiCl
         if (fragment_client_orders != null && fragment_client_orders.isAdded()) {
             fragmentManager.beginTransaction().hide(fragment_client_orders).commit();
         }
+
+        if (fragment_family_orders != null && fragment_family_orders.isAdded()) {
+            fragmentManager.beginTransaction().hide(fragment_family_orders).commit();
+        }
+
+        if (fragment_spare_orders != null && fragment_spare_orders.isAdded()) {
+            fragmentManager.beginTransaction().hide(fragment_spare_orders).commit();
+        }
+
+
         if (fragment_client_notifications != null && fragment_client_notifications.isAdded()) {
             fragmentManager.beginTransaction().hide(fragment_client_notifications).commit();
         }
@@ -813,6 +854,16 @@ public class ClientHomeActivity extends AppCompatActivity implements GoogleApiCl
             fragmentManager.beginTransaction().hide(fragment_client_profile).commit();
         }
 
+        if (fragment_family_orders != null && fragment_family_orders.isAdded()) {
+            fragmentManager.beginTransaction().hide(fragment_family_orders).commit();
+        }
+
+        if (fragment_spare_orders != null && fragment_spare_orders.isAdded()) {
+            fragmentManager.beginTransaction().hide(fragment_spare_orders).commit();
+        }
+
+
+
         if (fragment_client_orders == null) {
             fragment_client_orders = Fragment_Client_Orders.newInstance();
         }
@@ -823,6 +874,91 @@ public class ClientHomeActivity extends AppCompatActivity implements GoogleApiCl
         } else {
             fragmentManager.beginTransaction().add(R.id.fragment_home_container, fragment_client_orders, "fragment_client_orders").addToBackStack("fragment_client_orders").commit();
         }
+
+    }
+
+    public void DisplayFragmentFamiliesOrders()
+    {
+        if (fragment_home != null && fragment_home.isAdded()) {
+            fragment_home.updateBottomNavigationPosition(1);
+        }
+
+        if (fragment_client_store != null && fragment_client_store.isAdded()) {
+            fragmentManager.beginTransaction().hide(fragment_client_store).commit();
+        }
+        if (fragment_shipment != null && fragment_shipment.isAdded()) {
+            fragmentManager.beginTransaction().hide(fragment_shipment).commit();
+        }
+        if (fragment_client_notifications != null && fragment_client_notifications.isAdded()) {
+            fragmentManager.beginTransaction().hide(fragment_client_notifications).commit();
+        }
+        if (fragment_client_profile != null && fragment_client_profile.isAdded()) {
+            fragmentManager.beginTransaction().hide(fragment_client_profile).commit();
+        }
+
+        if (fragment_client_orders != null && fragment_client_orders.isAdded()) {
+            fragmentManager.beginTransaction().hide(fragment_client_orders).commit();
+        }
+
+        if (fragment_spare_orders != null && fragment_spare_orders.isAdded()) {
+            fragmentManager.beginTransaction().hide(fragment_spare_orders).commit();
+        }
+
+        if (fragment_family_orders == null) {
+            fragment_family_orders = Fragment_Family_Orders.newInstance();
+        }
+
+
+        if (fragment_family_orders.isAdded()) {
+            fragmentManager.beginTransaction().show(fragment_family_orders).commit();
+
+        } else {
+            fragmentManager.beginTransaction().add(R.id.fragment_home_container, fragment_family_orders, "fragment_family_orders").addToBackStack("fragment_family_orders").commit();
+        }
+
+    }
+
+    public void DisplayFragmentSpareOrders()
+    {
+        if (fragment_home != null && fragment_home.isAdded()) {
+            fragment_home.updateBottomNavigationPosition(1);
+        }
+
+        if (fragment_client_store != null && fragment_client_store.isAdded()) {
+            fragmentManager.beginTransaction().hide(fragment_client_store).commit();
+        }
+        if (fragment_shipment != null && fragment_shipment.isAdded()) {
+            fragmentManager.beginTransaction().hide(fragment_shipment).commit();
+        }
+        if (fragment_client_notifications != null && fragment_client_notifications.isAdded()) {
+            fragmentManager.beginTransaction().hide(fragment_client_notifications).commit();
+        }
+        if (fragment_client_profile != null && fragment_client_profile.isAdded()) {
+            fragmentManager.beginTransaction().hide(fragment_client_profile).commit();
+        }
+
+
+        if (fragment_client_orders != null && fragment_client_orders.isAdded()) {
+            fragmentManager.beginTransaction().hide(fragment_client_orders).commit();
+        }
+
+        if (fragment_family_orders != null && fragment_family_orders.isAdded()) {
+            fragmentManager.beginTransaction().hide(fragment_family_orders).commit();
+        }
+
+
+        if (fragment_spare_orders == null) {
+            fragment_spare_orders = Fragment_Spare_Orders.newInstance();
+        }
+
+        if (fragment_spare_orders.isAdded()) {
+            fragmentManager.beginTransaction().show(fragment_spare_orders).commit();
+
+        } else {
+            fragmentManager.beginTransaction().add(R.id.fragment_home_container, fragment_spare_orders, "fragment_spare_orders").addToBackStack("fragment_spare_orders").commit();
+        }
+
+        Log.e("1","1");
 
     }
     public void DisplayFragmentNotification()
@@ -1047,6 +1183,70 @@ public class ClientHomeActivity extends AppCompatActivity implements GoogleApiCl
         }
 
     }
+    public void DisplayFragmentAddSpare()
+    {
+        fragment_count+=1;
+
+        fragment_add_spare = Fragment_Add_Spare.newInstance(location.getLatitude(),location.getLongitude());
+
+
+        if (fragment_add_spare.isAdded()) {
+            fragmentManager.beginTransaction().show(fragment_add_spare).commit();
+
+        } else {
+            fragmentManager.beginTransaction().add(R.id.fragment_app_container, fragment_add_spare, "fragment_add_spare").addToBackStack("fragment_add_spare").commit();
+        }
+
+    }
+
+    public void DisplayFragmentFamilyAddProduct()
+    {
+        fragment_count+=1;
+
+        fragment_family_add_product = Fragment_Family_Add_Product.newInstance();
+
+
+        if (fragment_family_add_product.isAdded()) {
+            fragmentManager.beginTransaction().show(fragment_family_add_product).commit();
+
+        } else {
+            fragmentManager.beginTransaction().add(R.id.fragment_app_container, fragment_family_add_product, "fragment_family_add_product").addToBackStack("fragment_family_add_product").commit();
+        }
+
+    }
+
+    public void DisplayFragmentFamilyDepartments(FamiliesStoreDataModel.FamilyModel familyModel)
+    {
+        fragment_count+=1;
+
+        fragmentFamilyDepartments = FragmentFamilyDepartments.newInstance(familyModel);
+
+
+        if (fragmentFamilyDepartments.isAdded()) {
+            fragmentManager.beginTransaction().show(fragmentFamilyDepartments).commit();
+
+        } else {
+            fragmentManager.beginTransaction().add(R.id.fragment_app_container, fragmentFamilyDepartments, "fragmentFamilyDepartments").addToBackStack("fragmentFamilyDepartments").commit();
+        }
+
+    }
+
+    public void DisplayFragmentFamily()
+    {
+        fragment_count+=1;
+
+        fragment_family = Fragment_Family.newInstance(location.getLatitude(),location.getLongitude());
+
+
+        if (fragment_family.isAdded()) {
+            fragmentManager.beginTransaction().show(fragment_family).commit();
+
+        } else {
+            fragmentManager.beginTransaction().add(R.id.fragment_app_container, fragment_family, "fragment_family").addToBackStack("fragment_family").commit();
+        }
+
+    }
+
     public void getAddressFromMapListener(final Favourite_location favourite_location,String from)
     {
 
@@ -1295,6 +1495,100 @@ public class ClientHomeActivity extends AppCompatActivity implements GoogleApiCl
 
     }
 
+    public void DisplayFragmentCart()
+    {
+
+        fragment_count+=1;
+        fragment_cart = Fragment_Cart.newInstance(location.getLatitude(),location.getLongitude());
+
+        if (fragment_cart.isAdded()) {
+            fragmentManager.beginTransaction().show(fragment_cart).commit();
+
+        } else {
+            fragmentManager.beginTransaction().add(R.id.fragment_app_container, fragment_cart, "fragment_cart").addToBackStack("fragment_cart").commit();
+        }
+
+
+    }
+
+    public void DisplayFragmentProductDetails(ProductsDataModel.ProductModel productModel)
+    {
+
+        fragment_count+=1;
+        fragment_product_details = Fragment_Product_Details.newInstance(productModel);
+
+        if (fragment_product_details.isAdded()) {
+            fragmentManager.beginTransaction().show(fragment_product_details).commit();
+
+        } else {
+            fragmentManager.beginTransaction().add(R.id.fragment_app_container, fragment_product_details, "fragment_product_details").addToBackStack("fragment_product_details").commit();
+        }
+
+
+    }
+
+    public void DisplayFragmentSpareOrderDetails(OrderSpareDataModel.OrderSpare orderSpare)
+    {
+
+        fragment_count+=1;
+        fragment_client_spare_order_details = Fragment_Client_Spare_Order_Details.newInstance(orderSpare);
+
+        if (fragment_client_spare_order_details.isAdded()) {
+            fragmentManager.beginTransaction().show(fragment_client_spare_order_details).commit();
+
+        } else {
+            fragmentManager.beginTransaction().add(R.id.fragment_app_container, fragment_client_spare_order_details, "fragment_client_spare_order_details").addToBackStack("fragment_client_spare_order_details").commit();
+        }
+
+
+    }
+
+
+    public void DisplayFragmentDelegateSpareAddOffer(OrderSpareDataModel.OrderSpare orderSpare)
+    {
+
+        fragment_count+=1;
+        fragment_delegate_spare_add_offer = Fragment_Delegate_Spare_Add_Offer.newInstance(orderSpare);
+
+        if (fragment_delegate_spare_add_offer.isAdded()) {
+            fragmentManager.beginTransaction().show(fragment_delegate_spare_add_offer).commit();
+
+        } else {
+            fragmentManager.beginTransaction().add(R.id.fragment_app_container, fragment_delegate_spare_add_offer, "fragment_delegate_spare_add_offer").addToBackStack("fragment_delegate_spare_add_offer").commit();
+        }
+
+
+    }
+
+    public void DisplayFragmentDelegateSpareCurrentOrderDetails(OrderSpareDataModel.OrderSpare orderSpare)
+    {
+
+        fragment_count+=1;
+        fragment_delegate_spare_current_order_details = Fragment_Delegate_Spare_Current_Order_Details.newInstance(orderSpare);
+
+        if (fragment_delegate_spare_current_order_details.isAdded()) {
+            fragmentManager.beginTransaction().show(fragment_delegate_spare_current_order_details).commit();
+
+        } else {
+            fragmentManager.beginTransaction().add(R.id.fragment_app_container, fragment_delegate_spare_current_order_details, "fragment_delegate_spare_current_order_details").addToBackStack("fragment_delegate_spare_current_order_details").commit();
+        }
+
+
+    }
+
+    public void updateCartCount(final int count)
+    {
+        if (fragmentFamilyDepartments!=null&&fragmentFamilyDepartments.isAdded())
+        {
+            new Handler()
+                    .postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            fragmentFamilyDepartments.updateCartCount(count);
+                        }
+                    },1);
+        }
+    }
     // from fragment coupon
     public void updateUserDataProfile(UserModel userModel)
     {
@@ -2399,15 +2693,26 @@ public class ClientHomeActivity extends AppCompatActivity implements GoogleApiCl
     }
     public void Back()
     {
+
         if (behavior.getState()==BottomSheetBehavior.STATE_EXPANDED)
         {
             closeBottomSheet();
         }else
             {
+
+
+
                 if (fragment_count>1)
                 {
-                    super.onBackPressed();
-                    fragment_count-=1;
+                    if (fragmentFamilyDepartments!=null&&fragmentFamilyDepartments.isAdded()&&fragment_cart!=null&&!fragment_cart.isVisible()&&orderModelSingleTone.getItemCount()>0)
+                    {
+                        CreateRemoveCartAlert();
+                    }else
+                        {
+                            super.onBackPressed();
+                            fragment_count-=1;
+
+                        }
 
                 }else
                 {
@@ -2424,6 +2729,44 @@ public class ClientHomeActivity extends AppCompatActivity implements GoogleApiCl
 
 
 
+    }
+
+    private void CreateRemoveCartAlert() {
+
+        final AlertDialog dialog = new AlertDialog.Builder(this)
+                .setCancelable(true)
+                .create();
+
+        View view = LayoutInflater.from(this).inflate(R.layout.dialog_remove_cart_item,null);
+        FrameLayout fl_delete = view.findViewById(R.id.fl_delete);
+        FrameLayout fl_cancel = view.findViewById(R.id.fl_cancel);
+
+        TextView tv_not_dialog = view.findViewById(R.id.tv_not_dialog);
+        TextView tv_content = view.findViewById(R.id.tv_content);
+        tv_not_dialog.setText(String.valueOf(orderModelSingleTone.getItemCount()));
+        tv_content.setText(getString(R.string.the_cart_contains)+" "+orderModelSingleTone.getItemCount()+" "+getString(R.string.item)+" "+getString(R.string.delete_items));
+
+        fl_delete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                orderModelSingleTone.clear();
+                updateCartCount(0);
+                dialog.dismiss();
+
+            }
+        });
+        fl_cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+
+        dialog.getWindow().getAttributes().windowAnimations=R.style.dialog_congratulation_animation;
+        dialog.setCanceledOnTouchOutside(false);
+        dialog.getWindow().setBackgroundDrawableResource(R.drawable.dialog_window_bg);
+        dialog.setView(view);
+        dialog.show();
     }
 
     public void NavigateToSignInActivity()

@@ -2,7 +2,7 @@ package com.creativeshare.wow.tags;
 
 public class Tags {
 
-    public static final String base_url = "http://marsoolk.com";
+    public static final String base_url = "http://twseelwow.com";
     public static final String IMAGE_URL = base_url+"/uploads/images/";
     public static final String session_login = "login";
     public static final String session_logout = "logout";

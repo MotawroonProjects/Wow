@@ -174,8 +174,8 @@
                         <option name="values">
                           <map>
                             <entry key="assetSourceType" value="FILE" />
-                            <entry key="outputName" value="ic_family" />
-                            <entry key="sourceFile" value="C:\Users\Delta\Desktop\family.svg" />
+                            <entry key="outputName" value="ic_minus" />
+                            <entry key="sourceFile" value="C:\Users\Delta\Desktop\minus.svg" />
                           </map>
                         </option>
                       </PersistentState>

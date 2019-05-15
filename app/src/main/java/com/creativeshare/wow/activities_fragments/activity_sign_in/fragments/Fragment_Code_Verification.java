@@ -129,7 +129,8 @@ public class Fragment_Code_Verification extends Fragment{
                             activity.signIn(phone_number,country_code,phone_code);
                         }else
                             {
-                                if (response.code()==404)
+                                Log.e("error_code",response.code()+"_");
+                                if (response.code() == 404)
                                 {
                                     Common.CreateSignAlertDialog(activity,getString(R.string.inc_code_verification));
                                 }else

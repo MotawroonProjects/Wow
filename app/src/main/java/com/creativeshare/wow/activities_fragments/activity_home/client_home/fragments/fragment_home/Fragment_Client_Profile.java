@@ -51,6 +51,7 @@ public class Fragment_Client_Profile extends Fragment {
     private UserModel userModel;
     private UserSingleTone userSingleTone;
     private String facebook = "0", twitter = "0", instegram = "0", telegram = "0";
+    private View view_add_product,view_coupon,view_delegate,view_family;
 
     @Nullable
     @Override
@@ -71,6 +72,11 @@ public class Fragment_Client_Profile extends Fragment {
         userModel = userSingleTone.getUserModel();
         Paper.init(activity);
         current_language = Paper.book().read("lang", Locale.getDefault().getLanguage());
+
+        view_add_product = view.findViewById(R.id.view_add_product);
+        view_coupon = view.findViewById(R.id.view_coupon);
+        view_delegate = view.findViewById(R.id.view_delegate);
+        view_family = view.findViewById(R.id.view_family);
 
         arrow = view.findViewById(R.id.arrow);
         arrow2 = view.findViewById(R.id.arrow2);
@@ -161,6 +167,13 @@ public class Fragment_Client_Profile extends Fragment {
             }
         });
 
+
+        cons_add_product.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                activity.DisplayFragmentFamilyAddProduct();
+            }
+        });
 
         image_twitter.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -273,7 +286,12 @@ public class Fragment_Client_Profile extends Fragment {
                 cons_add_coupon.setVisibility(View.VISIBLE);
                 cons_coupons.setVisibility(View.VISIBLE);
                 cons_add_product.setVisibility(View.GONE);
+                view_add_product.setVisibility(View.GONE);
+                view_coupon.setVisibility(View.VISIBLE);
+                view_delegate.setVisibility(View.VISIBLE);
+
                 cons_register_family.setVisibility(View.VISIBLE);
+                view_family.setVisibility(View.VISIBLE);
 
             } else if (userModel.getData().getUser_type().equals(Tags.TYPE_DELEGATE)){
 
@@ -281,8 +299,13 @@ public class Fragment_Client_Profile extends Fragment {
                 cons_add_coupon.setVisibility(View.VISIBLE);
                 cons_coupons.setVisibility(View.VISIBLE);
                 cons_add_product.setVisibility(View.GONE);
+                view_add_product.setVisibility(View.GONE);
+                view_coupon.setVisibility(View.VISIBLE);
+                view_coupon.setVisibility(View.VISIBLE);
+                cons_register_delegate.setVisibility(View.VISIBLE);
+                view_delegate.setVisibility(View.VISIBLE);
                 cons_register_family.setVisibility(View.GONE);
-
+                view_family.setVisibility(View.GONE);
 
                 if (userModel.getData().getNum_orders() > 0) {
                     tv_certified.setText(getString(R.string.certified_account));
@@ -303,6 +326,10 @@ public class Fragment_Client_Profile extends Fragment {
                     cons_add_coupon.setVisibility(View.GONE);
                     cons_register_family.setVisibility(View.GONE);
                     cons_register_delegate.setVisibility(View.GONE);
+                    view_add_product.setVisibility(View.VISIBLE);
+                    view_coupon.setVisibility(View.GONE);
+                    view_delegate.setVisibility(View.GONE);
+                    view_family.setVisibility(View.GONE);
 
 
                 }

@@ -154,6 +154,20 @@ public class Fragment_Client_Store extends Fragment {
             }
         });
 
+        ll_spare.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                activity.DisplayFragmentAddSpare();
+            }
+        });
+
+        ll_productive_families.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                activity.DisplayFragmentFamily();
+            }
+        });
+
 
 
 
