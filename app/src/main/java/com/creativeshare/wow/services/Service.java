@@ -11,6 +11,7 @@ import com.creativeshare.wow.models.NearDelegateDataModel;
 import com.creativeshare.wow.models.NearbyStoreDataModel;
 import com.creativeshare.wow.models.NotificationCountModel;
 import com.creativeshare.wow.models.NotificationDataModel;
+import com.creativeshare.wow.models.OrderClientFamilyDataModel;
 import com.creativeshare.wow.models.OrderDataModel;
 import com.creativeshare.wow.models.OrderIdDataModel;
 import com.creativeshare.wow.models.OrderModelToUpload;
@@ -205,7 +206,9 @@ public interface Service {
 
 
     @GET("/Api/driverOrders")
-    Call<OrderDataModel> getDelegateOrders(@Query("user_id") String user_id, @Query("order_type") String order_type, @Query("page") int page);
+    Call<OrderDataModel> getDelegateOrders(@Query("user_id") String user_id,
+                                           @Query("order_type") String order_type,
+                                           @Query("page") int page);
 
     @FormUrlEncoded
     @POST("/Api/alerts")
@@ -409,12 +412,34 @@ public interface Service {
                                                     @Part("price") RequestBody price,
                                                     @Part("ar_details_pro") RequestBody ar_details_pro,
                                                     @Part("en_details_pro") RequestBody en_details_pro,
-                                                     @Part("notes") RequestBody notes
+                                                    @Part("notes") RequestBody notes
 
-                                                    );
+    );
 
     @POST("/App/familyStoreOrder")
     Call<ResponseBody> sendFamilyOrder(@Body OrderModelToUpload orderModelToUpload);
+
+
+    @GET("/App/userFamilyStore")
+    Call<OrderClientFamilyDataModel> getDelegateFamiliesOrders(@Query("user_id") String user_id,
+                                                               @Query("order_type") String order_type,
+                                                               @Query("user_type") String user_type,
+                                                               @Query("page") int page
+    );
+
+    @FormUrlEncoded
+    @POST("/App/familyAction")
+    Call<ResponseBody> familyAction(@Field("client_id") String client_id,
+                                    @Field("family_id") String driver_id,
+                                    @Field("order_id") String order_id,
+                                    @Field("status") String status
+                                    );
+
+    @FormUrlEncoded
+    @POST("/App/sendToDrivers")
+    Call<ResponseBody> sendFamilyOrderToDrivers(@Field("client_id") String client_id,
+                                                @Field("order_id") String order_id
+                                                );
 }
 
 

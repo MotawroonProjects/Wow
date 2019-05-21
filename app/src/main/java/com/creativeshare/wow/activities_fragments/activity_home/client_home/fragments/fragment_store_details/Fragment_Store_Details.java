@@ -2,24 +2,25 @@ package com.creativeshare.wow.activities_fragments.activity_home.client_home.fra
 
 import android.graphics.PorterDuff;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.constraint.ConstraintLayout;
-import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
+import androidx.viewpager.widget.ViewPager;
+
 import com.creativeshare.wow.R;
 import com.creativeshare.wow.activities_fragments.activity_home.client_home.activity.ClientHomeActivity;
 import com.creativeshare.wow.adapters.ViewPagerAdapter;
 import com.creativeshare.wow.models.PlaceModel;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.material.tabs.TabLayout;
 import com.google.maps.android.SphericalUtil;
 
 import java.util.ArrayList;

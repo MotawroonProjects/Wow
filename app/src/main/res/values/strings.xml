@@ -309,4 +309,19 @@
     <string name="ch_dept">Choose department</string>
     <string name="offer_cost">Offer cost</string>
     <string name="delivery_address">Delivery Address</string>
+    <string name="products">Products</string>
+    <string name="amount">Amount</string>
+    <string name="cost">Cost</string>
+    <string name="receiving_address">Receiving address</string>
+    <string name="view_location">View location</string>
+    <string name="productive_family_accept_order">Your order accepted</string>
+    <string name="order_is_pending">Order is pending</string>
+    <string name="wait_for_your_order_to_finish">Wait for your order to finish</string>
+    <string name="order_completed">Order completed</string>
+    <string name="f_accepted_order">Productive Family accepted order</string>
+    <string name="order_pend">Order is pending</string>
+    <string name="proc_order">Processing order</string>
+    <string name="order_comp">Order completed</string>
+    <string name="done2">Done</string>
+    <string name="send_order_to_delegates">Send order to delegates</string>
 </resources>

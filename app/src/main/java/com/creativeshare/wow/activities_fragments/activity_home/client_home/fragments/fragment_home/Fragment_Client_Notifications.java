@@ -3,14 +3,6 @@ package com.creativeshare.wow.activities_fragments.activity_home.client_home.fra
 import android.graphics.PorterDuff;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.CardView;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,6 +13,15 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.cardview.widget.CardView;
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.creativeshare.wow.R;
 import com.creativeshare.wow.activities_fragments.activity_home.client_home.activity.ClientHomeActivity;
@@ -150,6 +151,9 @@ public class Fragment_Client_Notifications extends Fragment {
         } else if (userModel.getData().getUser_type().equals(Tags.TYPE_DELEGATE)) {
             call = Api.getService(Tags.base_url).getNotification(userModel.getData().getUser_id(), "driver", 1);
 
+        }else if (userModel.getData().getUser_type().equals(Tags.TYPE_FAMILY)) {
+            call = Api.getService(Tags.base_url).getNotification(userModel.getData().getUser_id(), "driver", 1);
+
         }
 
 
@@ -203,6 +207,9 @@ public class Fragment_Client_Notifications extends Fragment {
             call = Api.getService(Tags.base_url).getNotification(userModel.getData().getUser_id(), "client", page_index);
         } else if (userModel.getData().getUser_type().equals(Tags.TYPE_DELEGATE)) {
             call = Api.getService(Tags.base_url).getNotification(userModel.getData().getUser_id(), "driver", page_index);
+
+        }else if (userModel.getData().getUser_type().equals(Tags.TYPE_FAMILY)) {
+            call = Api.getService(Tags.base_url).getNotification(userModel.getData().getUser_id(), "driver", 1);
 
         }
 
@@ -263,11 +270,7 @@ public class Fragment_Client_Notifications extends Fragment {
             activity.CreateAddRateAlertDialog(notificationModel);
         }
 
-        /*else if (userModel.getData().getUser_type().equals(Tags.TYPE_CLIENT) && notificationModel.getOrder_status().equals(String.valueOf(Tags.STATE_DELEGATE_REFUSE_ORDER)))
-        {
 
-            activity.CreateAcceptRefuseDialog(notificationModel.getOrder_id(),Double.parseDouble(notificationModel.getPlace_lat()),Double.parseDouble(notificationModel.getPlace_long()),notificationModel.getClient_id());
-        }*/
     }
     private void CreateAlertDialogForDrivers(final NotificationModel notificationModel)
     {

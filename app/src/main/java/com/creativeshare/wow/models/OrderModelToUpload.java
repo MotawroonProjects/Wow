@@ -10,15 +10,17 @@ public class OrderModelToUpload implements Serializable {
     private double client_lat;
     private double client_lng;
     private String client_address;
+    private String family_id;
 
     private List<ItemModel> products;
 
-    public OrderModelToUpload(String client_id, double total_order_cost, double client_lat, double client_lng, String client_address, List<ItemModel> products) {
+    public OrderModelToUpload(String client_id, double total_order_cost, double client_lat, double client_lng, String client_address,String family_id, List<ItemModel> products) {
         this.client_id = client_id;
         this.total_order_cost = total_order_cost;
         this.client_lat = client_lat;
         this.client_lng = client_lng;
         this.client_address = client_address;
+        this.family_id = family_id;
         this.products = products;
     }
 
@@ -68,5 +70,9 @@ public class OrderModelToUpload implements Serializable {
 
     public void setClient_address(String client_address) {
         this.client_address = client_address;
+    }
+
+    public String getFamily_id() {
+        return family_id;
     }
 }

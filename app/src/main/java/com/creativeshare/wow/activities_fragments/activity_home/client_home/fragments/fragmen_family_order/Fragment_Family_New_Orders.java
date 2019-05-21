@@ -2,12 +2,6 @@ package com.creativeshare.wow.activities_fragments.activity_home.client_home.fra
 
 import android.graphics.PorterDuff;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,10 +10,17 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.creativeshare.wow.R;
 import com.creativeshare.wow.activities_fragments.activity_home.client_home.activity.ClientHomeActivity;
-import com.creativeshare.wow.adapters.OrdersAdapter;
-import com.creativeshare.wow.models.OrderDataModel;
+import com.creativeshare.wow.adapters.OrdersFamiliesAdapter;
+import com.creativeshare.wow.models.OrderClientFamilyDataModel;
 import com.creativeshare.wow.models.UserModel;
 import com.creativeshare.wow.remote.Api;
 import com.creativeshare.wow.singletone.UserSingleTone;
@@ -33,20 +34,20 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class Fragment_Family_New_Orders extends Fragment{
+public class Fragment_Family_New_Orders extends Fragment {
 
     private ProgressBar progBar;
     private RecyclerView recView;
     private RecyclerView.LayoutManager manager;
     private ClientHomeActivity activity;
     private TextView tv_no_orders;
-    private List<OrderDataModel.OrderModel> orderModelList;
-    private OrdersAdapter adapter;
+    private List<OrderClientFamilyDataModel.OrderModel> orderModelList;
+    private OrdersFamiliesAdapter adapter;
     private UserModel userModel;
     private UserSingleTone userSingleTone;
     private boolean isLoading = false;
     private int current_page = 1;
-    private Call<OrderDataModel> call;
+    private Call<OrderClientFamilyDataModel> call;
 
     private boolean isFirstTime = true;
 
@@ -83,7 +84,7 @@ public class Fragment_Family_New_Orders extends Fragment{
         recView = view.findViewById(R.id.recView);
         manager = new LinearLayoutManager(activity);
         recView.setLayoutManager(manager);
-        adapter = new OrdersAdapter(orderModelList,activity,userModel.getData().getUser_type(),this);
+        adapter = new OrdersFamiliesAdapter(orderModelList,activity,userModel.getData().getUser_type(),this);
         recView.setAdapter(adapter);
 
         recView.addOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -101,31 +102,26 @@ public class Fragment_Family_New_Orders extends Fragment{
                         orderModelList.add(null);
                         adapter.notifyItemInserted(orderModelList.size()-1);
                         int next_page = current_page+1;
-                        //loadMore(next_page);
+                        loadMore(next_page);
                     }
                 }
             }
         });
-        //getOrders();
+        getOrders();
 
     }
 
     public void getOrders()
     {
 
-        if (userModel.getData().getUser_type().equals(Tags.TYPE_CLIENT))
-        {
-            call  = Api.getService(Tags.base_url).getClientOrders(userModel.getData().getUser_id(),"new", 1);
-        }else if (userModel.getData().getUser_type().equals(Tags.TYPE_DELEGATE))
-        {
-            call  = Api.getService(Tags.base_url).getDelegateOrders(userModel.getData().getUser_id(),"new", 1);
-
-        }
+        call  = Api.getService(Tags.base_url).getDelegateFamiliesOrders(userModel.getData().getUser_id(),"new",userModel.getData().getUser_type(), 1);
 
 
-        call.enqueue(new Callback<OrderDataModel>() {
+
+
+        call.enqueue(new Callback<OrderClientFamilyDataModel>() {
             @Override
-            public void onResponse(Call<OrderDataModel> call, Response<OrderDataModel> response) {
+            public void onResponse(Call<OrderClientFamilyDataModel> call, Response<OrderClientFamilyDataModel> response) {
                 progBar.setVisibility(View.GONE);
                 if (response.isSuccessful())
                 {
@@ -155,7 +151,7 @@ public class Fragment_Family_New_Orders extends Fragment{
             }
 
             @Override
-            public void onFailure(Call<OrderDataModel> call, Throwable t) {
+            public void onFailure(Call<OrderClientFamilyDataModel> call, Throwable t) {
                 try {
                     progBar.setVisibility(View.GONE);
                     Toast.makeText(activity, getString(R.string.something), Toast.LENGTH_SHORT).show();
@@ -165,24 +161,19 @@ public class Fragment_Family_New_Orders extends Fragment{
         });
     }
 
+
     private void loadMore(int page_index)
     {
 
 
 
-        if (userModel.getData().getUser_type().equals(Tags.TYPE_CLIENT))
-        {
-            call  = Api.getService(Tags.base_url).getClientOrders(userModel.getData().getUser_id(),"new", page_index);
-        }else if (userModel.getData().getUser_type().equals(Tags.TYPE_DELEGATE))
-        {
-            call  = Api.getService(Tags.base_url).getDelegateOrders(userModel.getData().getUser_id(),"new", page_index);
-
-        }
+        call  = Api.getService(Tags.base_url).getDelegateFamiliesOrders(userModel.getData().getUser_id(),"new",userModel.getData().getUser_type(), page_index);
 
 
-        call.enqueue(new Callback<OrderDataModel>() {
+
+        call.enqueue(new Callback<OrderClientFamilyDataModel>() {
             @Override
-            public void onResponse(Call<OrderDataModel> call, Response<OrderDataModel> response) {
+            public void onResponse(Call<OrderClientFamilyDataModel> call, Response<OrderClientFamilyDataModel> response) {
                 orderModelList.remove(orderModelList.size()-1);
                 adapter.notifyDataSetChanged();
                 isLoading = false;
@@ -212,7 +203,7 @@ public class Fragment_Family_New_Orders extends Fragment{
             }
 
             @Override
-            public void onFailure(Call<OrderDataModel> call, Throwable t) {
+            public void onFailure(Call<OrderClientFamilyDataModel> call, Throwable t) {
                 try {
                     isLoading = false;
                     if (orderModelList.get(orderModelList.size()-1)==null)
@@ -228,14 +219,19 @@ public class Fragment_Family_New_Orders extends Fragment{
         });
     }
 
-    public void setItemData(OrderDataModel.OrderModel orderModel) {
+    public void setItemData(OrderClientFamilyDataModel.OrderModel orderModel) {
 
         if (userModel.getData().getUser_type().equals(Tags.TYPE_CLIENT))
         {
-            activity.DisplayFragmentClientOrderDetails(orderModel);
-        }else
+            activity.DisplayFragmentClientFamilyOrderDetails(orderModel);
+        }else if (userModel.getData().getUser_type().equals(Tags.TYPE_DELEGATE))
         {
-            activity.DisplayFragmentDelegateAddOffer(orderModel);
+
+            activity.DisplayFragmentDelegateFamilyAddOffer(orderModel);
+        }else if (userModel.getData().getUser_type().equals(Tags.TYPE_FAMILY))
+        {
+
+            activity.DisplayFragmentFamilyNewOrderAction(orderModel);
         }
     }
 }

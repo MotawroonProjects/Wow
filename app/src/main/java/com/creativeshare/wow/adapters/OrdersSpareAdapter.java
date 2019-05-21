@@ -2,16 +2,17 @@ package com.creativeshare.wow.adapters;
 
 import android.content.Context;
 import android.graphics.PorterDuff;
-import android.support.annotation.NonNull;
-import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.creativeshare.wow.R;
 import com.creativeshare.wow.activities_fragments.activity_home.client_home.fragments.fragmen_spare_order.Fragment_Spare_Current_Orders;
@@ -40,27 +41,25 @@ public class OrdersSpareAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         this.user_type = user_type;
         this.fragment = fragment;
     }
+
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
-        if (viewType == ITEM_DATA)
-        {
+        if (viewType == ITEM_DATA) {
             View view = LayoutInflater.from(context).inflate(R.layout.orders_spare_row, parent, false);
             return new MyHolder(view);
-        }else
-            {
-                View view = LayoutInflater.from(context).inflate(R.layout.load_more_row, parent, false);
-                return new LoadMoreHolder(view);
-            }
+        } else {
+            View view = LayoutInflater.from(context).inflate(R.layout.load_more_row, parent, false);
+            return new LoadMoreHolder(view);
+        }
 
     }
 
     @Override
     public void onBindViewHolder(@NonNull final RecyclerView.ViewHolder holder, int position) {
 
-        if (holder instanceof MyHolder)
-        {
+        if (holder instanceof MyHolder) {
 
             final MyHolder myHolder = (MyHolder) holder;
             OrderSpareDataModel.OrderSpare orderModel = orderModelList.get(myHolder.getAdapterPosition());
@@ -71,12 +70,10 @@ public class OrdersSpareAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 public void onClick(View v) {
                     OrderSpareDataModel.OrderSpare orderModel = orderModelList.get(myHolder.getAdapterPosition());
 
-                    if (fragment instanceof Fragment_Spare_Current_Orders)
-                    {
+                    if (fragment instanceof Fragment_Spare_Current_Orders) {
                         Fragment_Spare_Current_Orders fragment_spare_current_orders = (Fragment_Spare_Current_Orders) fragment;
                         fragment_spare_current_orders.setItemData(orderModel);
-                    }else if (fragment instanceof Fragment_Spare_New_Orders)
-                    {
+                    } else if (fragment instanceof Fragment_Spare_New_Orders) {
                         Fragment_Spare_New_Orders fragment_spare_new_orders = (Fragment_Spare_New_Orders) fragment;
                         fragment_spare_new_orders.setItemData(orderModel);
                     }
@@ -84,11 +81,10 @@ public class OrdersSpareAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             });
 
 
-        }else
-            {
-                LoadMoreHolder loadMoreHolder = (LoadMoreHolder) holder;
-                loadMoreHolder.progBar.setIndeterminate(true);
-            }
+        } else {
+            LoadMoreHolder loadMoreHolder = (LoadMoreHolder) holder;
+            loadMoreHolder.progBar.setIndeterminate(true);
+        }
     }
 
     @Override
@@ -99,7 +95,7 @@ public class OrdersSpareAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     public class MyHolder extends RecyclerView.ViewHolder {
         private CircleImageView image;
         private ImageView image_state;
-        private TextView tv_order_num,tv_order_date,tv_order_state,tv_details;
+        private TextView tv_order_num, tv_order_date, tv_order_state, tv_details;
 
         public MyHolder(View itemView) {
             super(itemView);
@@ -112,68 +108,60 @@ public class OrdersSpareAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             tv_details = itemView.findViewById(R.id.tv_details);
 
 
-
         }
 
         public void BindData(OrderSpareDataModel.OrderSpare orderModel) {
-            if (orderModel.getOrder_status().equals(String.valueOf(Tags.STATE_ORDER_NEW))||orderModel.getOrder_status().equals(String.valueOf(Tags.STATE_DELEGATE_SEND_OFFER)))
-            {
+            if (orderModel.getOrder_status().equals(String.valueOf(Tags.STATE_ORDER_NEW)) || orderModel.getOrder_status().equals(String.valueOf(Tags.STATE_DELEGATE_SEND_OFFER))) {
                 Picasso.with(context).load(R.drawable.logo_only).fit().into(image);
                 image_state.setBackgroundResource(R.drawable.wait_bg_gray);
                 image_state.setImageResource(R.drawable.ic_time_left);
                 tv_order_state.setText(R.string.not_approved);
 
-            }else
-                {
-                    if (user_type.equals(Tags.TYPE_CLIENT))
-                    {
-                        Picasso.with(context).load(Tags.IMAGE_URL+orderModel.getDriver_user_image()).fit().placeholder(R.drawable.logo_only).into(image);
+            } else {
+                if (user_type.equals(Tags.TYPE_CLIENT)) {
+                    Picasso.with(context).load(Tags.IMAGE_URL + orderModel.getDriver_user_image()).fit().placeholder(R.drawable.logo_only).into(image);
 
-                    }else
-                        {
-                            Picasso.with(context).load(Tags.IMAGE_URL+orderModel.getClient_user_image()).fit().placeholder(R.drawable.logo_only).into(image);
-
-                        }
-
-                        if (orderModel.getOrder_status().equals(String.valueOf(Tags.STATE_CLIENT_ACCEPT_OFFER))||orderModel.getOrder_status().equals(String.valueOf(Tags.STATE_DELEGATE_COLLECTING_ORDER))||orderModel.getOrder_status().equals(String.valueOf(Tags.STATE_DELEGATE_DELIVERING_ORDER)))
-                        {
-                            image_state.setBackgroundResource(R.drawable.wait_bg);
-                            image_state.setImageResource(R.drawable.ic_time_left);
-                            tv_order_state.setText(R.string.pending);
-                        }else if (orderModel.getOrder_status().equals(String.valueOf(Tags.STATE_DELEGATE_DELIVERED_ORDER)))
-                            {
-                                image_state.setBackgroundResource(R.drawable.finish_bg);
-                                image_state.setImageResource(R.drawable.ic_correct);
-                                tv_order_state.setText(R.string.done);
-                                tv_details.setVisibility(View.GONE);
-                            }
+                } else {
+                    Picasso.with(context).load(Tags.IMAGE_URL + orderModel.getClient_user_image()).fit().placeholder(R.drawable.logo_only).into(image);
 
                 }
-            tv_order_num.setText("#"+orderModel.getOrder_id());
-            tv_order_date.setText(TimeAgo.getTimeAgo(Long.parseLong(orderModel.getOrder_date())*1000,context));
+
+                if (orderModel.getOrder_status().equals(String.valueOf(Tags.STATE_CLIENT_ACCEPT_OFFER)) || orderModel.getOrder_status().equals(String.valueOf(Tags.STATE_DELEGATE_COLLECTING_ORDER)) || orderModel.getOrder_status().equals(String.valueOf(Tags.STATE_DELEGATE_DELIVERING_ORDER))) {
+                    image_state.setBackgroundResource(R.drawable.wait_bg);
+                    image_state.setImageResource(R.drawable.ic_time_left);
+                    tv_order_state.setText(R.string.pending);
+                } else if (orderModel.getOrder_status().equals(String.valueOf(Tags.STATE_DELEGATE_DELIVERED_ORDER))) {
+                    image_state.setBackgroundResource(R.drawable.finish_bg);
+                    image_state.setImageResource(R.drawable.ic_correct);
+                    tv_order_state.setText(R.string.done);
+                    tv_details.setVisibility(View.GONE);
+                }
+
+            }
+            tv_order_num.setText("#" + orderModel.getOrder_id());
+            tv_order_date.setText(TimeAgo.getTimeAgo(Long.parseLong(orderModel.getOrder_date()) * 1000, context));
 
         }
     }
 
     public class LoadMoreHolder extends RecyclerView.ViewHolder {
         private ProgressBar progBar;
+
         public LoadMoreHolder(View itemView) {
             super(itemView);
             progBar = itemView.findViewById(R.id.progBar);
-            progBar.getIndeterminateDrawable().setColorFilter(ContextCompat.getColor(context,R.color.colorPrimary), PorterDuff.Mode.SRC_IN);
+            progBar.getIndeterminateDrawable().setColorFilter(ContextCompat.getColor(context, R.color.colorPrimary), PorterDuff.Mode.SRC_IN);
         }
     }
 
     @Override
     public int getItemViewType(int position) {
         OrderSpareDataModel.OrderSpare orderModel = orderModelList.get(position);
-        if (orderModel ==null)
-        {
+        if (orderModel == null) {
             return ITEM_LOAD;
-        }else
-            {
-                return ITEM_DATA;
-            }
+        } else {
+            return ITEM_DATA;
+        }
 
     }
 }

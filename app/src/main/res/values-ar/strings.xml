@@ -306,5 +306,20 @@
     <string name="ch_dept">إختر القسم</string>
     <string name="offer_cost">العرض</string>
     <string name="delivery_address">عنوان التوصيل</string>
+    <string name="products">المنتجات</string>
+    <string name="amount">الكمية</string>
+    <string name="cost">التكلفة</string>
+    <string name="receiving_address">عنوان الاستلام</string>
+    <string name="view_location">عرض الموقع</string>
+    <string name="productive_family_accept_order">تم قبول طلبك</string>
+    <string name="order_is_pending">جار تجهيز طلبك</string>
+    <string name="wait_for_your_order_to_finish">إنتظر لحين الانتهاء من طلبك</string>
+    <string name="order_completed">تم الإنتهاء من طلبك</string>
+    <string name="f_accepted_order">تم قبول طلبك من الاسر المنتجة</string>
+    <string name="order_pend">جار تجهيز طلبك</string>
+    <string name="proc_order">تجهيز الطلب</string>
+    <string name="order_comp">تم التجهيز الطلب</string>
+    <string name="done2">تم</string>
+    <string name="send_order_to_delegates">إرسال الطلب للمندوب</string>
 
 </resources>

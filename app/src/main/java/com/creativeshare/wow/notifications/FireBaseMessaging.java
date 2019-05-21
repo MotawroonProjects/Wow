@@ -14,8 +14,9 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
-import android.support.v4.app.NotificationCompat;
 import android.util.Log;
+
+import androidx.core.app.NotificationCompat;
 
 import com.creativeshare.wow.R;
 import com.creativeshare.wow.activities_fragments.activity_chat.ChatActivity;
@@ -275,7 +276,6 @@ public class FireBaseMessaging extends FirebaseMessagingService {
             builder.setSmallIcon(R.drawable.ic_notification);
             builder.setContentTitle(map.get("from_name"));
 
-            Log.e("sssssssssssssss","ddddddddddddddddddddddd");
             if (notification_type.equals(Tags.FIREBASE_NOT_ORDER_STATUS)) {
 
 
@@ -283,92 +283,179 @@ public class FireBaseMessaging extends FirebaseMessagingService {
                 Intent intent = new Intent(this, ClientHomeActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 String order_status = map.get("order_status");
-                Log.e("order_status",order_status+"_");
-                final NotStateModel notStateModel = new NotStateModel(order_status);
+                String order_type = map.get("order_type");
 
-                if (order_status.equals(String.valueOf(Tags.STATE_ORDER_NEW))) {
-                    builder.setContentText(getString(R.string.new_order_sent));
+                if (order_type.equals("4"))
+                {
 
+                    final NotStateModel notStateModel = new NotStateModel(order_status,order_type);
 
-                } else if (order_status.equals(String.valueOf(Tags.STATE_DELEGATE_SEND_OFFER))) {
-                    builder.setContentText(getString(R.string.delegate_accept_order));
-
-                } else if (order_status.equals(String.valueOf(Tags.STATE_DELEGATE_REFUSE_ORDER))) {
-                    builder.setContentText(getString(R.string.order_refused));
+                    if (order_status.equals(String.valueOf(Tags.STATE_ORDER_NEW))) {
+                        builder.setContentText(getString(R.string.new_order_sent));
 
 
-                } else if (order_status.equals(String.valueOf(Tags.STATE_CLIENT_ACCEPT_OFFER))) {
-                    builder.setContentText(getString(R.string.offer_accepted));
+                    } else if (order_status.equals("1")) {
+                        builder.setContentText(getString(R.string.f_accepted_order));
 
-                } else if (order_status.equals(String.valueOf(Tags.STATE_CLIENT_REFUSE_OFFER))) {
-                    builder.setContentText(getString(R.string.offer_refused));
+                    } else if (order_status.equals("2")) {
+                        builder.setContentText(getString(R.string.order_pend));
 
-                }else if (order_status.equals(String.valueOf(Tags.STATE_DELEGATE_COLLECTING_ORDER))) {
-                    builder.setContentText(getString(R.string.collecting_order));
 
-                }else if (order_status.equals(String.valueOf(Tags.STATE_DELEGATE_COLLECTED_ORDER))) {
-                    builder.setContentText(getString(R.string.order_collected));
+                    } else if (order_status.equals("3")) {
+                        builder.setContentText(getString(R.string.order_completed));
 
-                }else if (order_status.equals(String.valueOf(Tags.STATE_DELEGATE_DELIVERING_ORDER))) {
-                    builder.setContentText(getString(R.string.delivering_order));
+                    } else if (order_status.equals("4")) {
+                        builder.setContentText(getString(R.string.order_refused));
 
-                }else if (order_status.equals(String.valueOf(Tags.STATE_DELEGATE_DELIVERED_ORDER))) {
-                    builder.setContentText(getString(R.string.order_delivered_successfully));
+                    }
 
-                }
+                    intent.putExtra("status", order_status);
+                    intent.putExtra("order_type", order_type);
 
-                intent.putExtra("status", order_status);
+                    PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+                    builder.setContentIntent(pendingIntent);
 
-                PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-                builder.setContentIntent(pendingIntent);
+                    final Target target = new Target() {
+                        @Override
+                        public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+                            NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+                            if (manager != null) {
+                                builder.setLargeIcon(bitmap);
+                                EventBus.getDefault().post(notStateModel);
+                                manager.createNotificationChannel(channel);
+                                manager.notify(new Random().nextInt(200), builder.build());
+                            }
 
-                final Target target = new Target() {
-                    @Override
-                    public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
-                        NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-                        if (manager != null) {
-                            builder.setLargeIcon(bitmap);
-                            EventBus.getDefault().post(notStateModel);
-                            manager.createNotificationChannel(channel);
-                            manager.notify(new Random().nextInt(200), builder.build());
                         }
 
-                    }
+                        @Override
+                        public void onBitmapFailed(Drawable errorDrawable) {
 
-                    @Override
-                    public void onBitmapFailed(Drawable errorDrawable) {
+                        }
 
-                    }
+                        @Override
+                        public void onPrepareLoad(Drawable placeHolderDrawable) {
 
-                    @Override
-                    public void onPrepareLoad(Drawable placeHolderDrawable) {
-
-                    }
-                };
+                        }
+                    };
 
 
-                new Handler(Looper.getMainLooper())
-                        .postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
+                    new Handler(Looper.getMainLooper())
+                            .postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
 
-                                String from_image = map.get("from_image");
-                                if (from_image.equals("0"))
-                                {
+                                    String from_image = map.get("from_image");
+                                    if (from_image.equals("0"))
+                                    {
 
-                                    Picasso.with(FireBaseMessaging.this).load(R.drawable.logo_only).into(target);
+                                        Picasso.with(FireBaseMessaging.this).load(R.drawable.logo_only).into(target);
 
-                                }else
-                                {
-                                    Picasso.with(FireBaseMessaging.this).load(Uri.parse(Tags.IMAGE_URL + from_image)).resize(250,250).into(target);
+                                    }else
+                                    {
+                                        Picasso.with(FireBaseMessaging.this).load(Uri.parse(Tags.IMAGE_URL + from_image)).resize(250,250).into(target);
+
+                                    }
+
+
+
 
                                 }
+                            }, 1);
 
 
 
+
+                }else
+                    {
+                        final NotStateModel notStateModel = new NotStateModel(order_status,order_type);
+
+                        if (order_status.equals(String.valueOf(Tags.STATE_ORDER_NEW))) {
+                            builder.setContentText(getString(R.string.new_order_sent));
+
+
+                        } else if (order_status.equals(String.valueOf(Tags.STATE_DELEGATE_SEND_OFFER))) {
+                            builder.setContentText(getString(R.string.delegate_accept_order));
+
+                        } else if (order_status.equals(String.valueOf(Tags.STATE_DELEGATE_REFUSE_ORDER))) {
+                            builder.setContentText(getString(R.string.order_refused));
+
+
+                        } else if (order_status.equals(String.valueOf(Tags.STATE_CLIENT_ACCEPT_OFFER))) {
+                            builder.setContentText(getString(R.string.offer_accepted));
+
+                        } else if (order_status.equals(String.valueOf(Tags.STATE_CLIENT_REFUSE_OFFER))) {
+                            builder.setContentText(getString(R.string.offer_refused));
+
+                        }else if (order_status.equals(String.valueOf(Tags.STATE_DELEGATE_COLLECTING_ORDER))) {
+                            builder.setContentText(getString(R.string.collecting_order));
+
+                        }else if (order_status.equals(String.valueOf(Tags.STATE_DELEGATE_COLLECTED_ORDER))) {
+                            builder.setContentText(getString(R.string.order_collected));
+
+                        }else if (order_status.equals(String.valueOf(Tags.STATE_DELEGATE_DELIVERING_ORDER))) {
+                            builder.setContentText(getString(R.string.delivering_order));
+
+                        }else if (order_status.equals(String.valueOf(Tags.STATE_DELEGATE_DELIVERED_ORDER))) {
+                            builder.setContentText(getString(R.string.order_delivered_successfully));
+
+                        }
+
+                        intent.putExtra("status", order_status);
+                        intent.putExtra("order_type", order_type);
+
+                        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+                        builder.setContentIntent(pendingIntent);
+
+                        final Target target = new Target() {
+                            @Override
+                            public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+                                NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+                                if (manager != null) {
+                                    builder.setLargeIcon(bitmap);
+                                    EventBus.getDefault().post(notStateModel);
+                                    manager.createNotificationChannel(channel);
+                                    manager.notify(new Random().nextInt(200), builder.build());
+                                }
 
                             }
-                        }, 1);
+
+                            @Override
+                            public void onBitmapFailed(Drawable errorDrawable) {
+
+                            }
+
+                            @Override
+                            public void onPrepareLoad(Drawable placeHolderDrawable) {
+
+                            }
+                        };
+
+
+                        new Handler(Looper.getMainLooper())
+                                .postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+
+                                        String from_image = map.get("from_image");
+                                        if (from_image.equals("0"))
+                                        {
+
+                                            Picasso.with(FireBaseMessaging.this).load(R.drawable.logo_only).into(target);
+
+                                        }else
+                                        {
+                                            Picasso.with(FireBaseMessaging.this).load(Uri.parse(Tags.IMAGE_URL + from_image)).resize(250,250).into(target);
+
+                                        }
+
+
+
+
+                                    }
+                                }, 1);
+
+                    }
 
 
 

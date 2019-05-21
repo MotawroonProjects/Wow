@@ -2,10 +2,6 @@ package com.creativeshare.wow.activities_fragments.activity_home.client_home.fra
 
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.design.widget.AppBarLayout;
-import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,6 +12,10 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+
 import com.creativeshare.wow.R;
 import com.creativeshare.wow.activities_fragments.activity_home.client_home.activity.ClientHomeActivity;
 import com.creativeshare.wow.models.OrderSpareDataModel;
@@ -23,6 +23,7 @@ import com.creativeshare.wow.models.UserModel;
 import com.creativeshare.wow.share.Common;
 import com.creativeshare.wow.singletone.UserSingleTone;
 import com.creativeshare.wow.tags.Tags;
+import com.google.android.material.appbar.AppBarLayout;
 import com.squareup.picasso.Picasso;
 
 import java.util.Locale;
@@ -30,7 +31,7 @@ import java.util.Locale;
 import de.hdodenhof.circleimageview.CircleImageView;
 import io.paperdb.Paper;
 
-public class Fragment_Delegate_Spare_Add_Offer extends Fragment{
+public class Fragment_Delegate_Spare_Add_Offer extends Fragment {
 
     private final static  String TAG = "Data";
     private ImageView image_back,image_spare;
@@ -130,7 +131,7 @@ public class Fragment_Delegate_Spare_Add_Offer extends Fragment{
         btn_refused.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                activity.delegateRefuse_FinishOrder(userModel.getData().getUser_id(),orderModel.getClient_id(),orderModel.getOrder_id(),"refuse");
+                activity.delegateRefuse_FinishSpareOrder(userModel.getData().getUser_id(),orderModel.getClient_id(),orderModel.getOrder_id(),"refuse");
 
             }
         });
@@ -160,7 +161,7 @@ public class Fragment_Delegate_Spare_Add_Offer extends Fragment{
         if (orderModel!=null)
         {
             Picasso.with(activity).load(Tags.IMAGE_URL+orderModel.getClient_user_image()).placeholder(R.drawable.logo_only).fit().into(image);
-            Picasso.with(activity).load(Tags.IMAGE_URL+orderModel.getCar_image()).placeholder(R.drawable.logo_only).fit().into(image);
+            Picasso.with(activity).load(Tags.IMAGE_URL+orderModel.getCar_image()).placeholder(R.drawable.logo_only).fit().into(image_spare);
 
             tv_client_name.setText(orderModel.getClient_user_full_name());
 
@@ -193,7 +194,7 @@ public class Fragment_Delegate_Spare_Add_Offer extends Fragment{
         {
             edt_delivery_cost.setError(null);
             Common.CloseKeyBoard(activity,edt_delivery_cost);
-            activity.delegateAcceptOrder(userModel.getData().getUser_id(),orderModel.getClient_id(),orderModel.getOrder_id(),m_cost);
+            activity.delegateAcceptSpareOrder(userModel.getData().getUser_id(),orderModel.getClient_id(),orderModel.getOrder_id(),m_cost);
         }else
             {
                 edt_delivery_cost.setError(getString(R.string.field_req));

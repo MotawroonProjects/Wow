@@ -2,13 +2,6 @@ package com.creativeshare.wow.activities_fragments.activity_home.client_home.fra
 
 import android.app.ProgressDialog;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.constraint.ConstraintLayout;
-import android.support.v4.app.Fragment;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -20,6 +13,14 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.creativeshare.wow.R;
 import com.creativeshare.wow.activities_fragments.activity_home.client_home.activity.ClientHomeActivity;
@@ -48,6 +49,7 @@ import retrofit2.Response;
 public class Fragment_Cart extends Fragment {
     private static final String TAG1="LAT";
     private static final String TAG2="LNG";
+    private static final String TAG3="FAMILY_ID";
 
     private ImageView arrow;
     private LinearLayout ll_back,ll_no_products;
@@ -66,15 +68,17 @@ public class Fragment_Cart extends Fragment {
     private double lat=0.0,lng=0.0;
     private String client_address="";
     private OrderModelToUpload orderModelToUpload;
+    private String family_id="";
     private UserSingleTone userSingleTone;
     private UserModel userModel;
 
 
-    public static Fragment_Cart newInstance(double lat,double lng)
+    public static Fragment_Cart newInstance(double lat,double lng,String family_id)
     {
         Bundle bundle = new Bundle();
         bundle.putDouble(TAG1,lat);
         bundle.putDouble(TAG2,lng);
+        bundle.putString(TAG3,family_id);
 
         Fragment_Cart fragment_cart = new Fragment_Cart();
         fragment_cart.setArguments(bundle);
@@ -135,6 +139,7 @@ public class Fragment_Cart extends Fragment {
         if (bundle!=null){
             lat = bundle.getDouble(TAG1);
             lng = bundle.getDouble(TAG2);
+            family_id = bundle.getString(TAG3);
 
         }
         updateUI();
@@ -207,7 +212,7 @@ public class Fragment_Cart extends Fragment {
 
     }
 
-    public  void CreateAddDeliveryAddressDialog()
+    private   void CreateAddDeliveryAddressDialog()
     {
         final AlertDialog dialog = new AlertDialog.Builder(activity)
                 .setCancelable(true)
@@ -246,7 +251,8 @@ public class Fragment_Cart extends Fragment {
         final ProgressDialog dialog = Common.createProgressDialog(activity,getString(R.string.wait));
         dialog.show();
 
-        orderModelToUpload = new OrderModelToUpload(userModel.getData().getUser_id(),getTotalOrderCost(this.itemModelList),lat,lng,client_address,itemModelList);
+        Log.e("family_id",family_id+"_");
+        orderModelToUpload = new OrderModelToUpload(userModel.getData().getUser_id(),getTotalOrderCost(this.itemModelList),lat,lng,client_address,family_id,itemModelList);
 
         Api.getService(Tags.base_url)
                 .sendFamilyOrder(orderModelToUpload)
@@ -262,6 +268,7 @@ public class Fragment_Cart extends Fragment {
                             updateContainerProductData(0);
                             orderModelSingleTone.clear();
                             activity.updateCartCount(0);
+                            activity.RefreshFragment_FamilyOrder();
 
                         }else
                         {

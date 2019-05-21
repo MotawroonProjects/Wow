@@ -1,22 +1,23 @@
 package com.creativeshare.wow.activities_fragments.activity_home.client_home.fragments.fragmen_family_order;
 
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
-import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.viewpager.widget.ViewPager;
+
 import com.creativeshare.wow.R;
 import com.creativeshare.wow.adapters.ViewPagerAdapter;
+import com.google.android.material.tabs.TabLayout;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class Fragment_Family_Orders extends Fragment{
+public class Fragment_Family_Orders extends Fragment {
 
     private TabLayout tab;
     private ViewPager pager;
@@ -84,7 +85,7 @@ public class Fragment_Family_Orders extends Fragment{
     public void RefreshOrderFragments()
     {
         Fragment_Family_New_Orders fragment_family_new_orders = (Fragment_Family_New_Orders) fragmentList.get(0);
-        Fragment_Family_Current_Orders fragment_family_current_orders = (Fragment_Family_Current_Orders) fragmentList.get(0);
+        Fragment_Family_Current_Orders fragment_family_current_orders = (Fragment_Family_Current_Orders) fragmentList.get(1);
         Fragment_Family_Previous_Orders fragment_family_previous_orders = (Fragment_Family_Previous_Orders) fragmentList.get(2);
 
         fragment_family_new_orders.getOrders();
