@@ -42,6 +42,7 @@ import com.creativeshare.wow.activities_fragments.activity_home.client_home.frag
 import com.creativeshare.wow.activities_fragments.activity_home.client_home.fragments.fragment_home.Fragment_Add_Spare;
 import com.creativeshare.wow.activities_fragments.activity_home.client_home.fragments.fragment_home.Fragment_Cart;
 import com.creativeshare.wow.activities_fragments.activity_home.client_home.fragments.fragment_home.Fragment_Client_Delegate_Offer;
+import com.creativeshare.wow.activities_fragments.activity_home.client_home.fragments.fragment_home.Fragment_Client_Family_Delegate_Order_Details;
 import com.creativeshare.wow.activities_fragments.activity_home.client_home.fragments.fragment_home.Fragment_Client_Family_Order_Details;
 import com.creativeshare.wow.activities_fragments.activity_home.client_home.fragments.fragment_home.Fragment_Client_Notifications;
 import com.creativeshare.wow.activities_fragments.activity_home.client_home.fragments.fragment_home.Fragment_Client_Order_Details;
@@ -54,6 +55,7 @@ import com.creativeshare.wow.activities_fragments.activity_home.client_home.frag
 import com.creativeshare.wow.activities_fragments.activity_home.client_home.fragments.fragment_home.Fragment_Delegate_Current_Order_Details;
 import com.creativeshare.wow.activities_fragments.activity_home.client_home.fragments.fragment_home.Fragment_Delegate_Current_SpareOrder_Details;
 import com.creativeshare.wow.activities_fragments.activity_home.client_home.fragments.fragment_home.Fragment_Delegate_Family_Add_Offer;
+import com.creativeshare.wow.activities_fragments.activity_home.client_home.fragments.fragment_home.Fragment_Delegate_Family_Current_Order_Details;
 import com.creativeshare.wow.activities_fragments.activity_home.client_home.fragments.fragment_home.Fragment_Delegate_Register;
 import com.creativeshare.wow.activities_fragments.activity_home.client_home.fragments.fragment_home.Fragment_Delegate_Spare_Add_Offer;
 import com.creativeshare.wow.activities_fragments.activity_home.client_home.fragments.fragment_home.Fragment_Delegate_Spare_Current_Order_Details;
@@ -69,6 +71,7 @@ import com.creativeshare.wow.activities_fragments.activity_home.client_home.frag
 import com.creativeshare.wow.activities_fragments.activity_home.client_home.fragments.fragment_home.Fragment_Home;
 import com.creativeshare.wow.activities_fragments.activity_home.client_home.fragments.fragment_home.Fragment_Map;
 import com.creativeshare.wow.activities_fragments.activity_home.client_home.fragments.fragment_home.Fragment_Map_Location_Details;
+import com.creativeshare.wow.activities_fragments.activity_home.client_home.fragments.fragment_home.Fragment_Order_Products;
 import com.creativeshare.wow.activities_fragments.activity_home.client_home.fragments.fragment_home.Fragment_Product_Details;
 import com.creativeshare.wow.activities_fragments.activity_home.client_home.fragments.fragment_home.Fragment_Reserve_Order;
 import com.creativeshare.wow.activities_fragments.activity_home.client_home.fragments.fragment_home.Fragment_Search;
@@ -93,6 +96,7 @@ import com.creativeshare.wow.models.OrderDataModel;
 import com.creativeshare.wow.models.OrderSpareDataModel;
 import com.creativeshare.wow.models.PlaceModel;
 import com.creativeshare.wow.models.ProductsDataModel;
+import com.creativeshare.wow.models.RegisterMeAsModel;
 import com.creativeshare.wow.models.UserModel;
 import com.creativeshare.wow.preferences.Preferences;
 import com.creativeshare.wow.remote.Api;
@@ -186,6 +190,9 @@ public class ClientHomeActivity extends AppCompatActivity implements GoogleApiCl
     private Fragment_Delegate_Family_Add_Offer fragment_delegate_family_add_offer;
     private Fragment_Delegate_Current_SpareOrder_Details fragment_delegate_current_spareOrder_details;
     private Fragment_Delegate_Add_Offer_Family fragment_delegate_add_offer_family;
+    private Fragment_Client_Family_Delegate_Order_Details fragment_client_family_delegate_order_details;
+    private Fragment_Delegate_Family_Current_Order_Details fragment_delegate_family_current_order_details;
+    private Fragment_Order_Products fragment_order_products;
     private UserSingleTone userSingleTone;
     private UserModel userModel;
     private Preferences preferences;
@@ -206,7 +213,7 @@ public class ClientHomeActivity extends AppCompatActivity implements GoogleApiCl
     private BottomSheetBehavior behavior;
     private ConstraintLayout root;
     private OrderModelSingleTone orderModelSingleTone;
-    String next_step ="";
+    private String next_step ="";
 
 
     @Override
@@ -243,51 +250,51 @@ public class ClientHomeActivity extends AppCompatActivity implements GoogleApiCl
                 if (status.equals(String.valueOf(Tags.STATE_ORDER_NEW)))
                 {
 
-                    if (order_type.equals("1"))
-                    {
-                        DisplayFragmentMyOrders();
+                    switch (order_type) {
+                        case "1":
+                            DisplayFragmentMyOrders();
 
-                        new Handler()
-                                .postDelayed(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        fragment_client_orders.NavigateToFragmentRefresh(0);
-                                    }
-                                },1000);
-                    }else if (order_type.equals("2"))
-                    {
-                        DisplayFragmentMyOrders();
+                            new Handler()
+                                    .postDelayed(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            fragment_client_orders.NavigateToFragmentRefresh(0);
+                                        }
+                                    }, 1000);
+                            break;
+                        case "2":
+                            DisplayFragmentMyOrders();
 
-                        new Handler()
-                                .postDelayed(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        fragment_client_orders.NavigateToFragmentRefresh(0);
-                                    }
-                                },1000);
-                    }
-                    else if (order_type.equals("3"))
-                    {
-                        DisplayFragmentSpareOrders();
+                            new Handler()
+                                    .postDelayed(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            fragment_client_orders.NavigateToFragmentRefresh(0);
+                                        }
+                                    }, 1000);
+                            break;
+                        case "3":
+                            DisplayFragmentSpareOrders();
 
-                        new Handler()
-                                .postDelayed(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        fragment_spare_orders.NavigateToFragmentRefresh(0);
-                                    }
-                                },1000);
-                    }else if (order_type.equals("4"))
-                    {
-                        DisplayFragmentFamiliesOrders();
+                            new Handler()
+                                    .postDelayed(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            fragment_spare_orders.NavigateToFragmentRefresh(0);
+                                        }
+                                    }, 1000);
+                            break;
+                        case "4":
+                            DisplayFragmentFamiliesOrders();
 
-                        new Handler()
-                                .postDelayed(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        fragment_family_orders.NavigateToFragmentRefresh(0);
-                                    }
-                                },1000);
+                            new Handler()
+                                    .postDelayed(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            fragment_family_orders.NavigateToFragmentRefresh(0);
+                                        }
+                                    }, 1000);
+                            break;
                     }
 
 
@@ -701,50 +708,28 @@ public class ClientHomeActivity extends AppCompatActivity implements GoogleApiCl
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void ListenNotificationChange(final NotStateModel notStateModel)
     {
-        if (fragment_client_order_details!=null&&fragment_client_order_details.isAdded())
-        {
-            new Handler()
-                    .postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            fragment_client_order_details.updateStepView(Integer.parseInt(notStateModel.getNotification_state()));
-                        }
-                    },1);
-        }
-
-        if (fragment_client_spare_order_details!=null&&fragment_client_spare_order_details.isAdded())
-        {
-            new Handler()
-                    .postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            fragment_client_spare_order_details.updateStepView(Integer.parseInt(notStateModel.getNotification_state()));
-                        }
-                    },1);
-        }
-
-        if (fragment_client_family_order_details!=null&&fragment_client_family_order_details.isAdded())
-        {
-            new Handler()
-                    .postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            fragment_client_family_order_details.updateStepView(Integer.parseInt(notStateModel.getNotification_state()));
-                        }
-                    },1);
-        }
-
-
-
         canRead =true;
         RefreshFragment_Notification();
         getNotificationCount();
 
         String order_type = notStateModel.getOrder_type();
 
+        Log.e("order_type",order_type+"____");
+        Log.e("status",notStateModel.getNotification_state()+"_____");
         switch (order_type) {
             case "1":
+                RefreshFragment_Order();
 
+                if (fragment_client_order_details!=null&&fragment_client_order_details.isAdded())
+                {
+                    new Handler()
+                            .postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    fragment_client_order_details.updateStepView(Integer.parseInt(notStateModel.getNotification_state()));
+                                }
+                            },1);
+                }
                 DisplayFragmentMyOrders();
 
                 new Handler()
@@ -756,7 +741,18 @@ public class ClientHomeActivity extends AppCompatActivity implements GoogleApiCl
                         }, 1000);
                 break;
             case "2":
+                RefreshFragment_Order();
 
+                if (fragment_client_order_details!=null&&fragment_client_order_details.isAdded())
+                {
+                    new Handler()
+                            .postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    fragment_client_order_details.updateStepView(Integer.parseInt(notStateModel.getNotification_state()));
+                                }
+                            },1);
+                }
                 DisplayFragmentMyOrders();
 
                 new Handler()
@@ -768,7 +764,17 @@ public class ClientHomeActivity extends AppCompatActivity implements GoogleApiCl
                         }, 1000);
                 break;
             case "3":
-
+                RefreshFragment_SpareOrder();
+                if (fragment_client_spare_order_details!=null&&fragment_client_spare_order_details.isAdded())
+                {
+                    new Handler()
+                            .postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    fragment_client_spare_order_details.updateStepView(Integer.parseInt(notStateModel.getNotification_state()));
+                                }
+                            },1);
+                }
 
                 DisplayFragmentSpareOrders();
 
@@ -781,6 +787,47 @@ public class ClientHomeActivity extends AppCompatActivity implements GoogleApiCl
                         }, 1000);
                 break;
             case "4":
+
+                RefreshFragment_FamilyOrder();
+
+
+                if (notStateModel.getFamily_order_end().equals("0"))
+                {
+                    if (fragment_client_family_order_details!=null&&fragment_client_family_order_details.isAdded())
+                    {
+                        new Handler()
+                                .postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        fragment_client_family_order_details.updateStepView(Integer.parseInt(notStateModel.getNotification_state()));
+                                    }
+                                },1);
+                    }
+                }else
+                    {
+
+                        if (fragment_client_family_order_details!=null&&fragment_client_family_order_details.isAdded())
+                        {
+                            new Handler()
+                                    .postDelayed(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            fragment_client_family_order_details.updateStepView(3);
+                                        }
+                                    },1);
+                        }
+                        if (fragment_client_family_delegate_order_details!=null&&fragment_client_family_delegate_order_details.isAdded())
+                        {
+                            new Handler()
+                                    .postDelayed(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            fragment_client_family_delegate_order_details.updateStepView(Integer.parseInt(notStateModel.getNotification_state()));
+                                        }
+                                    },1);
+                        }
+                    }
+
                 DisplayFragmentFamiliesOrders();
 
                 new Handler()
@@ -798,6 +845,19 @@ public class ClientHomeActivity extends AppCompatActivity implements GoogleApiCl
     public void ListenNotificationRate(NotificationTypeModel notificationTypeModel)
     {
         if (userModel.getData().getUser_type().equals(Tags.TYPE_DELEGATE))
+        {
+            getUserDataById(userModel.getData().getUser_id());
+
+        }
+
+
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void ListenChangeUserType(RegisterMeAsModel registerMeAsModel)
+    {
+
+        if (registerMeAsModel.getStatus()==2)
         {
             getUserDataById(userModel.getData().getUser_id());
 
@@ -1729,6 +1789,23 @@ public class ClientHomeActivity extends AppCompatActivity implements GoogleApiCl
 
 
     }
+    public void DisplayFragmentClientFamilyDelegateOrderDetails(OrderClientFamilyDataModel.OrderModel orderModel)
+    {
+
+        fragment_count+=1;
+        fragment_client_family_delegate_order_details = Fragment_Client_Family_Delegate_Order_Details.newInstance(orderModel);
+
+        if (fragment_client_family_delegate_order_details.isAdded()) {
+            fragmentManager.beginTransaction().show(fragment_client_family_delegate_order_details).commit();
+
+        } else {
+            fragmentManager.beginTransaction().add(R.id.fragment_app_container, fragment_client_family_delegate_order_details, "fragment_client_family_delegate_order_details").addToBackStack("fragment_client_family_delegate_order_details").commit();
+        }
+
+
+
+    }
+
     public void DisplayFragmentClientFamilyOrderDetails(OrderClientFamilyDataModel.OrderModel orderModel)
     {
 
@@ -1811,6 +1888,23 @@ public class ClientHomeActivity extends AppCompatActivity implements GoogleApiCl
 
     }
 
+    public void DisplayFragmentDelegateFamilyCurrentOrderDetails(OrderClientFamilyDataModel.OrderModel orderModel)
+    {
+
+        fragment_count+=1;
+        fragment_delegate_family_current_order_details = Fragment_Delegate_Family_Current_Order_Details.newInstance(orderModel);
+
+        if (fragment_delegate_family_current_order_details.isAdded()) {
+            fragmentManager.beginTransaction().show(fragment_delegate_family_current_order_details).commit();
+
+        } else {
+            fragmentManager.beginTransaction().add(R.id.fragment_app_container, fragment_delegate_family_current_order_details, "fragment_delegate_family_current_order_details").addToBackStack("fragment_delegate_family_current_order_details").commit();
+        }
+
+
+
+    }
+
     public void DisplayFragmentFamilyCurrentOrderDetails(OrderClientFamilyDataModel.OrderModel orderModel)
     {
 
@@ -1822,6 +1916,23 @@ public class ClientHomeActivity extends AppCompatActivity implements GoogleApiCl
 
         } else {
             fragmentManager.beginTransaction().add(R.id.fragment_app_container, fragment_family_current_order_details, "fragment_family_current_order_details").addToBackStack("fragment_family_current_order_details").commit();
+        }
+
+
+
+    }
+
+    public void DisplayFragmentOrderProducts(List<OrderClientFamilyDataModel.ProductModel> productModelList)
+    {
+
+        fragment_count+=1;
+        fragment_order_products = Fragment_Order_Products.newInstance(productModelList);
+
+        if (fragment_order_products.isAdded()) {
+            fragmentManager.beginTransaction().show(fragment_order_products).commit();
+
+        } else {
+            fragmentManager.beginTransaction().add(R.id.fragment_app_container, fragment_order_products, "fragment_order_products").addToBackStack("fragment_order_products").commit();
         }
 
 
@@ -2198,6 +2309,68 @@ public class ClientHomeActivity extends AppCompatActivity implements GoogleApiCl
                 });
     }
 
+    public void delegateFamilyRefuse_FinishOrder(String driver_id, String client_id, String order_id, final String type)
+    {
+
+        final ProgressDialog progressDialog = Common.createProgressDialog(this,getString(R.string.wait));
+        progressDialog.setCancelable(false);
+        progressDialog.show();
+        Api.getService(Tags.base_url)
+                .delegateRefuse_Finish(driver_id,client_id,order_id,type)
+                .enqueue(new Callback<ResponseBody>() {
+                    @Override
+                    public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                        progressDialog.dismiss();
+                        if (response.isSuccessful())
+                        {
+                            fragment_count-=1;
+                            ClientHomeActivity.super.onBackPressed();
+                            if (type.equals("refuse"))
+                            {
+                                Toast.makeText(ClientHomeActivity.this,getString(R.string.refused), Toast.LENGTH_SHORT).show();
+                                RefreshFragment_FamilyOrder();
+                                RefreshFragment_Notification();
+                            }else if (type.equals("end"))
+                            {
+                               /* ClientHomeActivity.super.onBackPressed();
+                                fragment_count-=1;*/
+                                Toast.makeText(ClientHomeActivity.this,getString(R.string.done), Toast.LENGTH_SHORT).show();
+                                DisplayFragmentFamiliesOrders();
+                                RefreshFragment_FamilyOrder();
+                                new Handler()
+                                        .postDelayed(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                if (fragment_client_orders!=null&&fragment_client_orders.isAdded())
+                                                {
+                                                    fragment_client_orders.NavigateToFragmentRefresh(2);
+
+                                                }
+                                            }
+                                        },1000);
+                            }
+
+                        }else
+                        {
+                            progressDialog.dismiss();
+                            Toast.makeText(ClientHomeActivity.this, getString(R.string.failed), Toast.LENGTH_SHORT).show();
+                            try {
+                                Log.e("error_code",response.code()+""+response.errorBody().string());
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<ResponseBody> call, Throwable t) {
+                        try {
+                            progressDialog.dismiss();
+                            Log.e("Error",t.getMessage());
+                        }catch (Exception e){}
+                    }
+                });
+    }
 
     public void delegateRefuse_FinishSpareOrder(String driver_id, String client_id, String order_id, final String type)
     {
@@ -2412,6 +2585,7 @@ public class ClientHomeActivity extends AppCompatActivity implements GoogleApiCl
                                     .postDelayed(new Runnable() {
                                         @Override
                                         public void run() {
+                                            fragment_client_family_delegate_order_details.UpdateBtnStateSendToDriver();
                                             DisplayFragmentFamiliesOrders();
                                         }
                                     },20);
@@ -2766,7 +2940,7 @@ public class ClientHomeActivity extends AppCompatActivity implements GoogleApiCl
                                                 .postDelayed(new Runnable() {
                                                     @Override
                                                     public void run() {
-                                                        Common.CreateSuccessDialog(ClientHomeActivity.this,getString(R.string.succ_be_courier));
+                                                        Common.CreateSuccessDialog(ClientHomeActivity.this,getString(R.string.dear_will_review));
 
                                                     }
                                                 },1000);
@@ -2775,12 +2949,31 @@ public class ClientHomeActivity extends AppCompatActivity implements GoogleApiCl
                             },1);
                         }else
                             {
+
+
+                                if (response.code()== 409)
+                                {
+                                    Common.CreateSignAlertDialog(ClientHomeActivity.this,getString(R.string.already_family));
+
+                                }else if (response.code()== 406)
+                                {
+                                    Common.CreateSignAlertDialog(ClientHomeActivity.this,getString(R.string.req_already_sent));
+
+                                }else
+                                    {
+                                        Toast.makeText(ClientHomeActivity.this, getString(R.string.failed), Toast.LENGTH_SHORT).show();
+
+                                    }
+
+
+
+
+
                                 try {
                                     Log.e("Error_code",response.code()+""+response.errorBody().string());
                                 } catch (IOException e) {
                                     e.printStackTrace();
                                 }
-                                Toast.makeText(ClientHomeActivity.this, getString(R.string.failed), Toast.LENGTH_SHORT).show();
                             }
                     }
 
@@ -3098,8 +3291,150 @@ public class ClientHomeActivity extends AppCompatActivity implements GoogleApiCl
 
     }
 
+    public void UpdateDelegateFamilyOrderMovement(final String client_id, final String driver_id, final String order_id, int order_movement) {
 
-    public void CreateAddRateAlertDialog(final NotificationModel notificationModel)
+
+        if (order_movement == Tags.STATE_CLIENT_ACCEPT_OFFER)
+        {
+            final ProgressDialog dialog = Common.createProgressDialog(this,getString(R.string.wait));
+            dialog.setCancelable(false);
+            dialog.show();
+            state = String.valueOf(Tags.STATE_DELEGATE_COLLECTING_ORDER);
+            call = Api.getService(Tags.base_url).movementDelegate(order_id,state);
+            // تجميع الطلب
+            call.enqueue(new Callback<ResponseBody>() {
+                @Override
+                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                    dialog.dismiss();
+                    if (response.isSuccessful())
+                    {
+
+                        fragment_delegate_family_current_order_details.updateOrderState(Integer.parseInt(state));
+
+                        RefreshFragment_FamilyOrder();
+                        RefreshFragment_Notification();
+
+
+                    }else
+                    {
+                        Toast.makeText(ClientHomeActivity.this, getString(R.string.failed), Toast.LENGTH_SHORT).show();
+                        try {
+                            Log.e("error_code",response.code()+""+response.errorBody().string());
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<ResponseBody> call, Throwable t) {
+                    try {
+                        dialog.dismiss();
+                        Toast.makeText(ClientHomeActivity.this, getString(R.string.something), Toast.LENGTH_SHORT).show();
+
+                        Log.e("Error",t.getMessage());
+                    }catch (Exception e){}
+                }
+            });
+
+        }else if (order_movement == Tags.STATE_DELEGATE_COLLECTING_ORDER)
+        {
+            final ProgressDialog dialog = Common.createProgressDialog(this,getString(R.string.wait));
+            dialog.setCancelable(false);
+            dialog.show();
+            state = String.valueOf(Tags.STATE_DELEGATE_COLLECTED_ORDER);
+
+            call = Api.getService(Tags.base_url).movementDelegate(order_id,state);
+
+            // تم التجميع
+            call.enqueue(new Callback<ResponseBody>() {
+                @Override
+                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                    dialog.dismiss();
+                    if (response.isSuccessful())
+                    {
+
+                        fragment_delegate_family_current_order_details.updateOrderState(Integer.parseInt(state));
+
+                        RefreshFragment_FamilyOrder();
+                        RefreshFragment_Notification();
+
+                    }else
+                    {
+                        Toast.makeText(ClientHomeActivity.this, getString(R.string.failed), Toast.LENGTH_SHORT).show();
+                        try {
+                            Log.e("error_code",response.code()+""+response.errorBody().string());
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<ResponseBody> call, Throwable t) {
+                    try {
+                        dialog.dismiss();
+                        Toast.makeText(ClientHomeActivity.this, getString(R.string.something), Toast.LENGTH_SHORT).show();
+
+                        Log.e("Error",t.getMessage());
+                    }catch (Exception e){}
+                }
+            });
+
+        }
+        else if (order_movement == Tags.STATE_DELEGATE_COLLECTED_ORDER)
+        {
+            final ProgressDialog dialog = Common.createProgressDialog(this,getString(R.string.wait));
+            dialog.setCancelable(false);
+            dialog.show();
+            state = String.valueOf(Tags.STATE_DELEGATE_DELIVERING_ORDER);
+
+            call = Api.getService(Tags.base_url).movementDelegate(order_id,state);
+            call.enqueue(new Callback<ResponseBody>() {
+                @Override
+                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                    dialog.dismiss();
+                    if (response.isSuccessful())
+                    {
+
+                        fragment_delegate_family_current_order_details.updateOrderState(Integer.parseInt(state));
+                        RefreshFragment_FamilyOrder();
+                        RefreshFragment_Notification();
+                    }else
+                    {
+                        Toast.makeText(ClientHomeActivity.this, getString(R.string.failed), Toast.LENGTH_SHORT).show();
+                        try {
+                            Log.e("error_code",response.code()+""+response.errorBody().string());
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<ResponseBody> call, Throwable t) {
+                    try {
+                        dialog.dismiss();
+                        Toast.makeText(ClientHomeActivity.this, getString(R.string.something), Toast.LENGTH_SHORT).show();
+
+                        Log.e("Error",t.getMessage());
+                    }catch (Exception e){}
+                }
+            });
+
+        }
+        else if (order_movement == Tags.STATE_DELEGATE_DELIVERING_ORDER)
+        {
+            delegateFamilyRefuse_FinishOrder(driver_id,client_id,order_id,"end");
+
+
+        }
+
+
+    }
+
+
+    public void CreateAddRateAlertDialog(final NotificationModel notificationModel, final int type)
     {
         final AlertDialog dialog = new AlertDialog.Builder(this)
                 .setCancelable(true)
@@ -3206,7 +3541,16 @@ public class ClientHomeActivity extends AppCompatActivity implements GoogleApiCl
             @Override
             public void onClick(View v) {
                 String comment = edt_comment.getText().toString().trim();
-                AddRate(dialog,notificationModel,rate,comment);
+
+                if (type == 1)
+                {
+                    AddRate(dialog,notificationModel,rate,comment);
+
+                }else
+                    {
+                        AddFamilyRate(dialog,notificationModel,rate,comment);
+
+                    }
             }
         });
 
@@ -3233,6 +3577,51 @@ public class ClientHomeActivity extends AppCompatActivity implements GoogleApiCl
 
         Api.getService(Tags.base_url)
                 .addRate(notificationModel.getClient_id(),notificationModel.getDriver_id(),notificationModel.getOrder_id(),rate,"end",comment)
+                .enqueue(new Callback<ResponseBody>() {
+                    @Override
+                    public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                        if (response.isSuccessful())
+                        {
+
+                            alertDialog.dismiss();
+                            dialog.dismiss();
+                            RefreshFragment_Notification();
+
+                        }else
+                        {
+                            try {
+                                Log.e("error_code",response.errorBody().string());
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                            dialog.dismiss();
+                            Toast.makeText(ClientHomeActivity.this, getString(R.string.failed), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<ResponseBody> call, Throwable t) {
+                        try {
+                            dialog.dismiss();
+                            Log.e("Error",t.getMessage());
+                            Toast.makeText(ClientHomeActivity.this,getString(R.string.something), Toast.LENGTH_SHORT).show();
+                        }catch (Exception re){}
+                    }
+                });
+
+
+
+    }
+
+    private void AddFamilyRate(final AlertDialog alertDialog,NotificationModel notificationModel, double rate, String comment) {
+
+        final ProgressDialog dialog = Common.createProgressDialog(this,getString(R.string.wait));
+        dialog.setCanceledOnTouchOutside(false);
+        dialog.setCancelable(false);
+        dialog.show();
+
+        Api.getService(Tags.base_url)
+                .addFamilyRate(notificationModel.getClient_id(),notificationModel.getFamily_id(),notificationModel.getOrder_id(),rate,comment)
                 .enqueue(new Callback<ResponseBody>() {
                     @Override
                     public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
@@ -3613,11 +4002,27 @@ public class ClientHomeActivity extends AppCompatActivity implements GoogleApiCl
 
                 if (fragment_count>1)
                 {
-                    if (fragmentFamilyDepartments!=null&&fragmentFamilyDepartments.isAdded()&&fragment_cart!=null&&!fragment_cart.isVisible()&&orderModelSingleTone.getItemCount()>0)
+                    if (fragmentFamilyDepartments!=null&&fragmentFamilyDepartments.isAdded())
                     {
-                        CreateRemoveCartAlert();
+                        if (fragment_product_details!=null&&fragment_product_details.isVisible()||fragment_cart!=null&&fragment_cart.isAdded())
+                        {
+                            super.onBackPressed();
+                            fragment_count-=1;
+                        }else
+                            {
+                               if (orderModelSingleTone.getItemCount()>0)
+                               {
+                                   CreateRemoveCartAlert();
+
+                               }else
+                                   {
+                                       super.onBackPressed();
+                                       fragment_count-=1;
+                                   }
+                            }
                     }else
                         {
+
                             super.onBackPressed();
                             fragment_count-=1;
 

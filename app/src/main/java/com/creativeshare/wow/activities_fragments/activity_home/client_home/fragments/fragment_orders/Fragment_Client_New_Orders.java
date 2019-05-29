@@ -22,8 +22,8 @@ import com.creativeshare.wow.activities_fragments.activity_home.client_home.acti
 import com.creativeshare.wow.adapters.OrdersAdapter;
 import com.creativeshare.wow.models.OrderDataModel;
 import com.creativeshare.wow.models.UserModel;
+import com.creativeshare.wow.preferences.Preferences;
 import com.creativeshare.wow.remote.Api;
-import com.creativeshare.wow.singletone.UserSingleTone;
 import com.creativeshare.wow.tags.Tags;
 
 import java.io.IOException;
@@ -44,7 +44,7 @@ public class Fragment_Client_New_Orders extends Fragment {
     private List<OrderDataModel.OrderModel> orderModelList;
     private OrdersAdapter adapter;
     private UserModel userModel;
-    private UserSingleTone userSingleTone;
+    private Preferences preferences;
     private boolean isLoading = false;
     private int current_page = 1;
     private Call<OrderDataModel> call;
@@ -76,8 +76,8 @@ public class Fragment_Client_New_Orders extends Fragment {
         orderModelList = new ArrayList<>();
 
         activity = (ClientHomeActivity) getActivity();
-        userSingleTone = UserSingleTone.getInstance();
-        userModel = userSingleTone.getUserModel();
+        preferences = Preferences.getInstance();
+        userModel = preferences.getUserData(activity);
         tv_no_orders = view.findViewById(R.id.tv_no_orders);
         progBar = view.findViewById(R.id.progBar);
         progBar.getIndeterminateDrawable().setColorFilter(ContextCompat.getColor(activity,R.color.colorPrimary), PorterDuff.Mode.SRC_IN);

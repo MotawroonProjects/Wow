@@ -11,13 +11,11 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.creativeshare.wow.R;
 import com.creativeshare.wow.activities_fragments.activity_home.client_home.activity.ClientHomeActivity;
-import com.creativeshare.wow.adapters.ProductsDetailsAdapter;
 import com.creativeshare.wow.models.OrderClientFamilyDataModel;
 import com.creativeshare.wow.models.UserModel;
 import com.creativeshare.wow.singletone.UserSingleTone;
@@ -44,9 +42,8 @@ public class Fragment_Family_New_Order_Action extends Fragment {
     private AppBarLayout app_bar;
     private UserSingleTone userSingleTone;
     private UserModel userModel;
-    private RecyclerView recView;
-    private LinearLayoutManager manager;
-    private ProductsDetailsAdapter adapter;
+    private CardView cardViewProducts;
+
 
 
 
@@ -81,6 +78,9 @@ public class Fragment_Family_New_Order_Action extends Fragment {
 
             image_back.setImageResource(R.drawable.ic_left_arrow);
         }
+
+        cardViewProducts = view.findViewById(R.id.cardViewProducts);
+
         ll_back = view.findViewById(R.id.ll_back);
         image = view.findViewById(R.id.image);
         tv_client_name = view.findViewById(R.id.tv_client_name);
@@ -88,9 +88,7 @@ public class Fragment_Family_New_Order_Action extends Fragment {
         btn_accept = view.findViewById(R.id.btn_accept);
         btn_refused = view.findViewById(R.id.btn_refused);
         ll_client_container = view.findViewById(R.id.ll_client_container);
-        recView = view.findViewById(R.id.recView);
-        manager = new LinearLayoutManager(activity);
-        recView.setLayoutManager(manager);
+
         app_bar = view.findViewById(R.id.app_bar);
 
 
@@ -124,6 +122,13 @@ public class Fragment_Family_New_Order_Action extends Fragment {
             }
         });
 
+        cardViewProducts.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                activity.DisplayFragmentOrderProducts(orderModel.getProducts());
+            }
+        });
+
 
         app_bar.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
             @Override
@@ -144,8 +149,8 @@ public class Fragment_Family_New_Order_Action extends Fragment {
 
     private void UpdateUI(OrderClientFamilyDataModel.OrderModel orderModel) {
         if (orderModel != null) {
-            adapter = new ProductsDetailsAdapter(orderModel.getProducts(),activity);
-            recView.setAdapter(adapter);
+           /* adapter = new ProductsDetailsAdapter(orderModel.getProducts(),activity);
+            recView.setAdapter(adapter);*/
             Picasso.with(activity).load(Tags.IMAGE_URL + orderModel.getClient_user_image()).placeholder(R.drawable.logo_only).fit().into(image);
             tv_client_name.setText(orderModel.getClient_user_full_name());
             tv_order_address.setText(orderModel.getClient_address());

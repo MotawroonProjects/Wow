@@ -2,6 +2,7 @@ package com.creativeshare.wow.activities_fragments.activity_home.client_home.fra
 
 import android.graphics.PorterDuff;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,8 +23,8 @@ import com.creativeshare.wow.activities_fragments.activity_home.client_home.acti
 import com.creativeshare.wow.adapters.OrdersFamiliesAdapter;
 import com.creativeshare.wow.models.OrderClientFamilyDataModel;
 import com.creativeshare.wow.models.UserModel;
+import com.creativeshare.wow.preferences.Preferences;
 import com.creativeshare.wow.remote.Api;
-import com.creativeshare.wow.singletone.UserSingleTone;
 import com.creativeshare.wow.tags.Tags;
 
 import java.io.IOException;
@@ -44,7 +45,7 @@ public class Fragment_Family_New_Orders extends Fragment {
     private List<OrderClientFamilyDataModel.OrderModel> orderModelList;
     private OrdersFamiliesAdapter adapter;
     private UserModel userModel;
-    private UserSingleTone userSingleTone;
+    private Preferences preferences;
     private boolean isLoading = false;
     private int current_page = 1;
     private Call<OrderClientFamilyDataModel> call;
@@ -76,8 +77,8 @@ public class Fragment_Family_New_Orders extends Fragment {
         orderModelList = new ArrayList<>();
 
         activity = (ClientHomeActivity) getActivity();
-        userSingleTone = UserSingleTone.getInstance();
-        userModel = userSingleTone.getUserModel();
+        preferences = Preferences.getInstance();
+        userModel = preferences.getUserData(activity);
         tv_no_orders = view.findViewById(R.id.tv_no_orders);
         progBar = view.findViewById(R.id.progBar);
         progBar.getIndeterminateDrawable().setColorFilter(ContextCompat.getColor(activity,R.color.colorPrimary), PorterDuff.Mode.SRC_IN);
@@ -114,51 +115,64 @@ public class Fragment_Family_New_Orders extends Fragment {
     public void getOrders()
     {
 
-        call  = Api.getService(Tags.base_url).getDelegateFamiliesOrders(userModel.getData().getUser_id(),"new",userModel.getData().getUser_type(), 1);
+        if (userModel==null)
+        {
+            preferences = Preferences.getInstance();
+            userModel = preferences.getUserData(activity);
+        }
+
+        new Handler()
+                .postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        call  = Api.getService(Tags.base_url).getDelegateFamiliesOrders(userModel.getData().getUser_id(),"new",userModel.getData().getUser_type(), 1);
 
 
 
 
-        call.enqueue(new Callback<OrderClientFamilyDataModel>() {
-            @Override
-            public void onResponse(Call<OrderClientFamilyDataModel> call, Response<OrderClientFamilyDataModel> response) {
-                progBar.setVisibility(View.GONE);
-                if (response.isSuccessful())
-                {
-                    orderModelList.clear();
+                        call.enqueue(new Callback<OrderClientFamilyDataModel>() {
+                            @Override
+                            public void onResponse(Call<OrderClientFamilyDataModel> call, Response<OrderClientFamilyDataModel> response) {
+                                progBar.setVisibility(View.GONE);
+                                if (response.isSuccessful())
+                                {
+                                    orderModelList.clear();
 
-                    if (response.body()!=null&&response.body().getData().size()>0)
-                    {
-                        tv_no_orders.setVisibility(View.GONE);
-                        orderModelList.addAll(response.body().getData());
-                        adapter.notifyDataSetChanged();
-                        isFirstTime = false;
-                    }else
-                    {
-                        tv_no_orders.setVisibility(View.VISIBLE);
-                        adapter.notifyDataSetChanged();
+                                    if (response.body()!=null&&response.body().getData().size()>0)
+                                    {
+                                        tv_no_orders.setVisibility(View.GONE);
+                                        orderModelList.addAll(response.body().getData());
+                                        adapter.notifyDataSetChanged();
+                                        isFirstTime = false;
+                                    }else
+                                    {
+                                        tv_no_orders.setVisibility(View.VISIBLE);
+                                        adapter.notifyDataSetChanged();
+                                    }
+                                }else
+                                {
+
+                                    Toast.makeText(activity,R.string.failed, Toast.LENGTH_SHORT).show();
+                                    try {
+                                        Log.e("Error_code",response.code()+"_"+response.errorBody().string());
+                                    } catch (IOException e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+                            }
+
+                            @Override
+                            public void onFailure(Call<OrderClientFamilyDataModel> call, Throwable t) {
+                                try {
+                                    progBar.setVisibility(View.GONE);
+                                    Toast.makeText(activity, getString(R.string.something), Toast.LENGTH_SHORT).show();
+                                    Log.e("Error",t.getMessage());
+                                }catch (Exception e){}
+                            }
+                        });
                     }
-                }else
-                {
+                },1000);
 
-                    Toast.makeText(activity,R.string.failed, Toast.LENGTH_SHORT).show();
-                    try {
-                        Log.e("Error_code",response.code()+"_"+response.errorBody().string());
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-
-            @Override
-            public void onFailure(Call<OrderClientFamilyDataModel> call, Throwable t) {
-                try {
-                    progBar.setVisibility(View.GONE);
-                    Toast.makeText(activity, getString(R.string.something), Toast.LENGTH_SHORT).show();
-                    Log.e("Error",t.getMessage());
-                }catch (Exception e){}
-            }
-        });
     }
 
 
@@ -221,17 +235,23 @@ public class Fragment_Family_New_Orders extends Fragment {
 
     public void setItemData(OrderClientFamilyDataModel.OrderModel orderModel) {
 
-        if (userModel.getData().getUser_type().equals(Tags.TYPE_CLIENT))
-        {
-            activity.DisplayFragmentClientFamilyOrderDetails(orderModel);
-        }else if (userModel.getData().getUser_type().equals(Tags.TYPE_DELEGATE))
-        {
+        switch (userModel.getData().getUser_type()) {
+            case Tags.TYPE_CLIENT:
+                if (orderModel.getFamily_order_end().equals("0")) {
+                    activity.DisplayFragmentClientFamilyOrderDetails(orderModel);
 
-            activity.DisplayFragmentDelegateFamilyAddOffer(orderModel);
-        }else if (userModel.getData().getUser_type().equals(Tags.TYPE_FAMILY))
-        {
+                } else {
+                    activity.DisplayFragmentClientFamilyDelegateOrderDetails(orderModel);
+                }
+                break;
+            case Tags.TYPE_DELEGATE:
 
-            activity.DisplayFragmentFamilyNewOrderAction(orderModel);
+                activity.DisplayFragmentDelegateFamilyAddOffer(orderModel);
+                break;
+            case Tags.TYPE_FAMILY:
+
+                activity.DisplayFragmentFamilyNewOrderAction(orderModel);
+                break;
         }
     }
 }

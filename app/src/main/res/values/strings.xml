@@ -221,7 +221,7 @@
     <string name="comment">Comment</string>
     <string name="add_rate">Add Rate</string>
     <string name="offer_refused">Offer refused</string>
-    <string name="order_refused_send_again">Order refuse resend order to another courier?</string>
+    <string name="order_refused_send_again">Order refuse</string>
     <string name="age_18_and_over">Age 18 and over</string>
     <string name="a_picture_of_the_car_from_the_front">A picture of the car from the front(The car plate number should be clear)</string>
     <string name="a_picture_of_the_car_from_behind">A picture of the car from behind(The car plate number should be clear)</string>
@@ -324,4 +324,16 @@
     <string name="order_comp">Order completed</string>
     <string name="done2">Done</string>
     <string name="send_order_to_delegates">Send order to delegates</string>
+    <string name="del_off">Delivery offer :</string>
+    <string name="order_canceled">Order canceled</string>
+    <string name="req_sent_suc">Your request is sent successfully</string>
+    <string name="req_already_sent">Your request has already been sent</string>
+    <string name="already_family">Sorry! You have already sent a request as productive family</string>
+    <string name="admin">Admin</string>
+    <string name="req_approved_delegate">Your request approved as delegate</string>
+    <string name="req_approved_family">Your request approved as productive family</string>
+    <string name="dear_will_review">Dear Customer Your request has been successfully sent. We will review your request</string>
+    <string name="already_snt_courier">Sorry! You have already sent a request as a courier</string>
+    <string name="del_sent_offer">Delegate sent offer</string>
+
 </resources>

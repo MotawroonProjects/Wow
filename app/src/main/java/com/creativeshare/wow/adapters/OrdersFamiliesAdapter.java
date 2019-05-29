@@ -2,6 +2,7 @@ package com.creativeshare.wow.adapters;
 
 import android.content.Context;
 import android.graphics.PorterDuff;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.creativeshare.wow.R;
 import com.creativeshare.wow.activities_fragments.activity_home.client_home.fragments.fragmen_family_order.Fragment_Family_Current_Orders;
 import com.creativeshare.wow.activities_fragments.activity_home.client_home.fragments.fragmen_family_order.Fragment_Family_New_Orders;
+import com.creativeshare.wow.activities_fragments.activity_home.client_home.fragments.fragmen_family_order.Fragment_Family_Previous_Orders;
 import com.creativeshare.wow.models.OrderClientFamilyDataModel;
 import com.creativeshare.wow.share.TimeAgo;
 import com.creativeshare.wow.tags.Tags;
@@ -47,7 +49,7 @@ public class OrdersFamiliesAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
         if (viewType == ITEM_DATA)
         {
-            View view = LayoutInflater.from(context).inflate(R.layout.orders_row, parent, false);
+            View view = LayoutInflater.from(context).inflate(R.layout.orders_family_row, parent, false);
             return new MyHolder(view);
         }else
             {
@@ -117,31 +119,48 @@ public class OrdersFamiliesAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         }
 
         public void BindData(OrderClientFamilyDataModel.OrderModel orderModel) {
-            if (orderModel.getOrder_status().equals(String.valueOf(Tags.STATE_ORDER_NEW)))
-            {
-                Picasso.with(context).load(R.drawable.logo_only).fit().into(image);
-                image_state.setBackgroundResource(R.drawable.wait_bg_gray);
-                image_state.setImageResource(R.drawable.ic_time_left);
-                tv_order_state.setText(R.string.not_approved);
 
+
+            if (fragment instanceof Fragment_Family_Previous_Orders)
+            {
+                image_state.setBackgroundResource(R.drawable.finish_bg);
+                image_state.setImageResource(R.drawable.ic_correct);
+                tv_order_state.setText(R.string.done);
+                tv_details.setVisibility(View.GONE);
+                Log.e("cccc","ccccc");
             }else
                 {
-                    if (user_type.equals(Tags.TYPE_CLIENT))
+
+                    Log.e("555","55");
+
+                    if (orderModel.getOrder_status().equals(String.valueOf(Tags.STATE_ORDER_NEW)))
                     {
-                        Picasso.with(context).load(Tags.IMAGE_URL+orderModel.getDriver_user_image()).fit().placeholder(R.drawable.logo_only).into(image);
+                        Picasso.with(context).load(R.drawable.logo_only).fit().into(image);
+                        image_state.setBackgroundResource(R.drawable.wait_bg_gray);
+                        image_state.setImageResource(R.drawable.ic_time_left);
+                        tv_order_state.setText(R.string.not_approved);
 
                     }else
+                    {
+                        if (user_type.equals(Tags.TYPE_CLIENT))
+                        {
+                            Picasso.with(context).load(Tags.IMAGE_URL+orderModel.getDriver_user_image()).fit().placeholder(R.drawable.logo_only).into(image);
+
+                        }else
                         {
                             Picasso.with(context).load(Tags.IMAGE_URL+orderModel.getClient_user_image()).fit().placeholder(R.drawable.logo_only).into(image);
 
                         }
 
-                        if (orderModel.getOrder_status().equals("1"))
+
+                        if (orderModel.getFamily_order_end().equals("0"))
                         {
-                            image_state.setBackgroundResource(R.drawable.wait_bg);
-                            image_state.setImageResource(R.drawable.ic_time_left);
-                            tv_order_state.setText(R.string.order_accepted);
-                        }else if (orderModel.getOrder_status().equals("2"))
+                            if (orderModel.getOrder_status().equals("1"))
+                            {
+                                image_state.setBackgroundResource(R.drawable.wait_bg);
+                                image_state.setImageResource(R.drawable.ic_time_left);
+                                tv_order_state.setText(R.string.order_accepted);
+                            }else if (orderModel.getOrder_status().equals("2"))
                             {
 
                                 image_state.setBackgroundResource(R.drawable.wait_bg);
@@ -151,16 +170,37 @@ public class OrdersFamiliesAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
                             }
 
-                        else if (orderModel.getOrder_status().equals("3"))
-                        {
+                            else if (orderModel.getOrder_status().equals("3"))
+                            {
 
-                            image_state.setBackgroundResource(R.drawable.finish_bg);
-                            image_state.setImageResource(R.drawable.ic_correct);
-                            tv_order_state.setText(R.string.done);
-                            tv_details.setVisibility(View.GONE);
-                        }
+                                image_state.setBackgroundResource(R.drawable.finish_bg);
+                                image_state.setImageResource(R.drawable.ic_correct);
+                                tv_order_state.setText(R.string.done);
+                                tv_details.setVisibility(View.GONE);
+                            }
+                        }else
+                            {
+                                if (orderModel.getOrder_status().equals(String.valueOf(Tags.STATE_CLIENT_ACCEPT_OFFER))||orderModel.getOrder_status().equals(String.valueOf(Tags.STATE_DELEGATE_COLLECTING_ORDER))||orderModel.getOrder_status().equals(String.valueOf(Tags.STATE_DELEGATE_DELIVERING_ORDER)))
+                                {
+                                    image_state.setBackgroundResource(R.drawable.wait_bg);
+                                    image_state.setImageResource(R.drawable.ic_time_left);
+                                    tv_order_state.setText(R.string.pending);
+                                }else if (orderModel.getOrder_status().equals(String.valueOf(Tags.STATE_DELEGATE_DELIVERED_ORDER)))
+                                {
+                                    image_state.setBackgroundResource(R.drawable.finish_bg);
+                                    image_state.setImageResource(R.drawable.ic_correct);
+                                    tv_order_state.setText(R.string.done);
+                                    tv_details.setVisibility(View.GONE);
+                                }
+                            }
 
+
+
+                    }
                 }
+
+
+
             tv_order_num.setText("#"+orderModel.getOrder_id());
             tv_order_date.setText(TimeAgo.getTimeAgo(Long.parseLong(orderModel.getOrder_date()),context));
 

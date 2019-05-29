@@ -29,8 +29,8 @@ import com.creativeshare.wow.adapters.NotificationsAdapter;
 import com.creativeshare.wow.models.NotificationDataModel;
 import com.creativeshare.wow.models.NotificationModel;
 import com.creativeshare.wow.models.UserModel;
+import com.creativeshare.wow.preferences.Preferences;
 import com.creativeshare.wow.remote.Api;
-import com.creativeshare.wow.singletone.UserSingleTone;
 import com.creativeshare.wow.tags.Tags;
 import com.iarcuschin.simpleratingbar.SimpleRatingBar;
 import com.squareup.picasso.Picasso;
@@ -57,7 +57,7 @@ public class Fragment_Client_Notifications extends Fragment {
     private UserModel userModel;
     private List<NotificationModel> notificationModelList;
     private NotificationsAdapter adapter;
-    private UserSingleTone userSingleTone;
+    private Preferences preferences;
     private boolean isLoading = false;
     private int current_page = 1;
     private Call<NotificationDataModel> call;
@@ -93,8 +93,8 @@ public class Fragment_Client_Notifications extends Fragment {
         activity = (ClientHomeActivity) getActivity();
         Paper.init(activity);
         current_language = Paper.book().read("lang",Locale.getDefault().getLanguage());
-        userSingleTone = UserSingleTone.getInstance();
-        userModel = userSingleTone.getUserModel();
+        preferences = Preferences.getInstance();
+        userModel = preferences.getUserData(activity);
         ll_not = view.findViewById(R.id.ll_not);
 
         progBar = view.findViewById(R.id.progBar);
@@ -133,7 +133,11 @@ public class Fragment_Client_Notifications extends Fragment {
 
     public void getNotification() {
 
-
+        if (userModel==null)
+        {
+            preferences = Preferences.getInstance();
+            userModel = preferences.getUserData(activity);
+        }
 
         if (userModel.getData().getUser_type().equals(Tags.TYPE_CLIENT)) {
             call = Api.getService(Tags.base_url).getNotification(userModel.getData().getUser_id(), "client", 1);
@@ -263,11 +267,44 @@ public class Fragment_Client_Notifications extends Fragment {
     public void setItemData(NotificationModel notificationModel, int pos)
     {
         if (userModel.getData().getUser_type().equals(Tags.TYPE_CLIENT) && Integer.parseInt(notificationModel.getOrder_status())<Tags.STATE_CLIENT_ACCEPT_OFFER) {
+
             CreateAlertDialogForDrivers(notificationModel);
-            //activity.DisplayFragmentClientDelegateOffer(notificationModel);
             lastSelectedItem = pos;
         }else if (userModel.getData().getUser_type().equals(Tags.TYPE_CLIENT) && Integer.parseInt(notificationModel.getOrder_status())==Tags.STATE_DELEGATE_DELIVERED_ORDER) {
-            activity.CreateAddRateAlertDialog(notificationModel);
+            if (notificationModel.getOrder_type().equals("1")||notificationModel.getOrder_type().equals("2")||notificationModel.getOrder_type().equals("3"))
+            {
+                if (notificationModel.getClient_rate().equals("0"))
+                {
+                    activity.CreateAddRateAlertDialog(notificationModel,1);
+
+                }
+
+            }
+
+        }
+
+        else if (userModel.getData().getUser_type().equals(Tags.TYPE_CLIENT)&&notificationModel.getOrder_type().equals("4")) {
+
+
+            if (notificationModel.getDriver_id().equals("0")&&notificationModel.getOrder_status().equals("3"))
+            {
+
+                if (notificationModel.getClient_family_rate().equals("0"))
+                {
+                    activity.CreateAddRateAlertDialog(notificationModel,2);
+
+                }
+
+            }else if (!notificationModel.getDriver_id().equals("0")&&notificationModel.getOrder_status().equals("8"))
+            {
+
+                if (notificationModel.getClient_rate().equals("0"))
+                {
+                    activity.CreateAddRateAlertDialog(notificationModel,1);
+
+                }
+
+            }
         }
 
 

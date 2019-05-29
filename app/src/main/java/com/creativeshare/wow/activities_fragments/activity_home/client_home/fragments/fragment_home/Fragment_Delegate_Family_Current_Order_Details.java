@@ -20,28 +20,26 @@ import com.creativeshare.wow.models.ChatUserModel;
 import com.creativeshare.wow.models.OrderClientFamilyDataModel;
 import com.creativeshare.wow.models.UserModel;
 import com.creativeshare.wow.singletone.UserSingleTone;
-import com.google.android.material.appbar.AppBarLayout;
+import com.creativeshare.wow.tags.Tags;
 
 import java.util.Currency;
 import java.util.Locale;
 
 import io.paperdb.Paper;
 
-public class Fragment_Family_Current_Order_Details extends Fragment {
+public class Fragment_Delegate_Family_Current_Order_Details extends Fragment {
     private static final String TAG = "ORDER";
     private ClientHomeActivity activity;
     private ImageView image_back,image_arrow,image_arrow2,image_chat;
     private LinearLayout ll_back;
-    private AppBarLayout app_bar;
     private String current_lang;
     private TextView tv_client_name,tv_address,tv_order_state,tv_order_next_state,tv_total_cost;
-    private FrameLayout fl_update_order_state,fl_map;
+    private FrameLayout fl_map,fl_update_order_state;
     private OrderClientFamilyDataModel.OrderModel order;
     private UserSingleTone userSingleTone;
     private UserModel userModel;
     private int order_state;
     private CardView cardViewProducts;
-
 
 
 
@@ -54,11 +52,11 @@ public class Fragment_Family_Current_Order_Details extends Fragment {
         return view;
     }
 
-    public static Fragment_Family_Current_Order_Details newInstance(OrderClientFamilyDataModel.OrderModel order)
+    public static Fragment_Delegate_Family_Current_Order_Details newInstance(OrderClientFamilyDataModel.OrderModel order)
     {
         Bundle bundle = new Bundle();
         bundle.putSerializable(TAG,order);
-        Fragment_Family_Current_Order_Details fragment_delegate_Current_order_details = new Fragment_Family_Current_Order_Details();
+        Fragment_Delegate_Family_Current_Order_Details fragment_delegate_Current_order_details = new Fragment_Delegate_Family_Current_Order_Details();
         fragment_delegate_Current_order_details.setArguments(bundle);
         return fragment_delegate_Current_order_details;
     }
@@ -71,37 +69,34 @@ public class Fragment_Family_Current_Order_Details extends Fragment {
 
 
         image_back = view.findViewById(R.id.image_back);
-        image_arrow2 = view.findViewById(R.id.image_arrow2);
         image_arrow = view.findViewById(R.id.image_arrow);
+        image_arrow2 = view.findViewById(R.id.image_arrow2);
 
         if (current_lang.equals("ar"))
         {
             image_back.setImageResource(R.drawable.ic_right_arrow);
-            image_arrow2.setImageResource(R.drawable.ic_right_arrow);
             image_arrow.setImageResource(R.drawable.ic_right_arrow);
+            image_arrow2.setImageResource(R.drawable.ic_right_arrow);
 
         }else
         {
             image_back.setImageResource(R.drawable.ic_left_arrow);
-            image_arrow2.setImageResource(R.drawable.ic_left_arrow);
             image_arrow.setImageResource(R.drawable.ic_left_arrow);
+            image_arrow2.setImageResource(R.drawable.ic_left_arrow);
 
         }
         cardViewProducts = view.findViewById(R.id.cardViewProducts);
 
         image_chat = view.findViewById(R.id.image_chat);
-        app_bar = view.findViewById(R.id.app_bar);
+        tv_total_cost = view.findViewById(R.id.tv_total_cost);
 
         ll_back = view.findViewById(R.id.ll_back);
         tv_order_state = view.findViewById(R.id.tv_order_state);
         tv_order_next_state = view.findViewById(R.id.tv_order_next_state);
         tv_client_name = view.findViewById(R.id.tv_client_name);
         tv_address = view.findViewById(R.id.tv_address);
-        fl_update_order_state = view.findViewById(R.id.fl_update_order_state);
         fl_map = view.findViewById(R.id.fl_map);
-
-        tv_total_cost = view.findViewById(R.id.tv_total_cost);
-
+        fl_update_order_state = view.findViewById(R.id.fl_update_order_state);
 
 
 
@@ -118,13 +113,14 @@ public class Fragment_Family_Current_Order_Details extends Fragment {
                 activity.Back();
             }
         });
+
+
         fl_map.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                activity.DisplayFragmentMapLocationDetails(Double.parseDouble(order.getClient_lat()),Double.parseDouble(order.getClient_lat()),order.getClient_address());
+              activity.DisplayFragmentMapLocationDetails(Double.parseDouble(order.getClient_lat()),Double.parseDouble(order.getClient_long()),order.getClient_address());
             }
         });
-
 
         cardViewProducts.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -146,29 +142,11 @@ public class Fragment_Family_Current_Order_Details extends Fragment {
             @Override
             public void onClick(View v) {
 
-                activity.familyUpdateMovement(userModel.getData().getUser_id(),order.getClient_id(),order.getOrder_id(),String.valueOf(order_state));
+                activity.UpdateDelegateFamilyOrderMovement(order.getClient_id(),order.getDriver_id(),order.getOrder_id(),order_state);
 
             }
         });
 
-
-        app_bar.addOnOffsetChangedListener(new AppBarLayout.BaseOnOffsetChangedListener() {
-            @Override
-            public void onOffsetChanged(AppBarLayout appBarLayout, int i) {
-                int total_range = appBarLayout.getTotalScrollRange();
-
-                if ((total_range+i)<60)
-                {
-                    image_chat.setVisibility(View.GONE);
-                    tv_order_state.setVisibility(View.GONE);
-                }else
-                    {
-                        image_chat.setVisibility(View.VISIBLE);
-                        tv_order_state.setVisibility(View.VISIBLE);
-                    }
-
-            }
-        });
 
 
     }
@@ -176,22 +154,20 @@ public class Fragment_Family_Current_Order_Details extends Fragment {
     private void UpdateUI(OrderClientFamilyDataModel.OrderModel order)
     {
 
+        tv_client_name.setText(order.getClient_user_full_name());
+        tv_address.setText(order.getClient_address());
+
         if (order.getProducts().size()>0)
         {
             Currency currency = Currency.getInstance(new Locale(current_lang,order.getProducts().get(0).getUser_country()));
             tv_total_cost.setText(String.format("%s %s %s",getString(R.string.total_order_cost),order.getTotal_order_cost(),currency.getSymbol()));
+
         }else
-            {
-                tv_total_cost.setText(String.format("%s %s",getString(R.string.total_order_cost),order.getTotal_order_cost()));
+        {
+            tv_total_cost.setText(String.format("%s %s ",getString(R.string.total_order_cost),order.getTotal_order_cost()));
 
-            }
+        }
 
-        tv_client_name.setText(order.getClient_user_full_name());
-        tv_address.setText(order.getClient_address());
-
-
-
-        //check user type
         order_state = Integer.parseInt(order.getOrder_status());
         updateOrderState(order_state);
 
@@ -205,20 +181,22 @@ public class Fragment_Family_Current_Order_Details extends Fragment {
         this.order_state = state;
         switch (state)
         {
-            case 1:
+            case Tags.STATE_CLIENT_ACCEPT_OFFER:
                 tv_order_state.setText(getString(R.string.accepted));
-                tv_order_next_state.setText(getString(R.string.proc_order));
+                tv_order_next_state.setText(getString(R.string.collect_order));
                 break;
-            case 2:
-                tv_order_state.setText(getString(R.string.order_comp));
-                tv_order_next_state.setText(getString(R.string.done2));
+            case Tags.STATE_DELEGATE_COLLECTING_ORDER:
+                tv_order_state.setText(getString(R.string.collecting_order));
+                tv_order_next_state.setText(getString(R.string.collected_order));
                 break;
-            case 3:
-                tv_order_state.setText(getString(R.string.done));
-                tv_order_next_state.setText(getString(R.string.done));
-                fl_update_order_state.setVisibility(View.INVISIBLE);
+            case Tags.STATE_DELEGATE_COLLECTED_ORDER:
+                tv_order_state.setText(getString(R.string.collected_order));
+                tv_order_next_state.setText(getString(R.string.deliver_order));
                 break;
-
+            case Tags.STATE_DELEGATE_DELIVERING_ORDER:
+                tv_order_state.setText(getString(R.string.delivering_order));
+                tv_order_next_state.setText(getString(R.string.delivered_order));
+                break;
 
 
 

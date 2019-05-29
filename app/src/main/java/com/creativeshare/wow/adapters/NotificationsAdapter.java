@@ -127,11 +127,15 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
             tv_order_num.setText("#" + notificationModel.getOrder_id());
             tv_notification_date.setText(TimeAgo.getTimeAgo(Long.parseLong(notificationModel.getDate_notification()) * 1000, context));
 
+
+
             String order_type = notificationModel.getOrder_type();
 
             Log.e("order_status",notificationModel.getOrder_status()+"_");
 
             if (order_type.equals("1") || order_type.equals("2")) {
+                tv_add_rate.setText(context.getString(R.string.add_rate2));
+
                 if (notificationModel.getOrder_status().equals(String.valueOf(Tags.STATE_ORDER_NEW))) {
                     // delegate only
                     tv_order_state.setText(R.string.not_approved);
@@ -151,7 +155,7 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
 
 
                     if (user_type.equals(Tags.TYPE_CLIENT)) {
-                        tv_order_state.setText(R.string.order_accepted);
+                        tv_order_state.setText(context.getString(R.string.del_sent_offer));
 
                         Picasso.with(context).load(R.drawable.logo_only).fit().into(image);
                         tv_name.setText(notificationModel.getOrder_details());
@@ -190,12 +194,23 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
 
                         image_state.setBackgroundResource(R.drawable.finish_bg);
                         image_state.setImageResource(R.drawable.ic_correct);
-                        tv_add_rate.setVisibility(View.VISIBLE);
                         image_state.setVisibility(View.VISIBLE);
+
+                        if (notificationModel.getClient_rate().equals("0"))
+                        {
+                            tv_add_rate.setVisibility(View.VISIBLE);
+
+                        }else
+                            {
+                                tv_add_rate.setVisibility(View.GONE);
+
+                            }
                     }
                 }
 
             } else if (order_type.equals("3")) {
+                tv_add_rate.setText(context.getString(R.string.add_rate2));
+
                 if (notificationModel.getOrder_status().equals(String.valueOf(Tags.STATE_ORDER_NEW))) {
 
                     tv_order_state.setText(R.string.not_approved);
@@ -252,13 +267,24 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
 
                         image_state.setBackgroundResource(R.drawable.finish_bg);
                         image_state.setImageResource(R.drawable.ic_correct);
-                        tv_add_rate.setVisibility(View.VISIBLE);
                         image_state.setVisibility(View.VISIBLE);
+
+                        if (notificationModel.getClient_rate().equals("0"))
+                        {
+                            tv_add_rate.setVisibility(View.VISIBLE);
+
+                        }else
+                        {
+                            tv_add_rate.setVisibility(View.GONE);
+
+                        }
                     }
                 }
 
 
             } else if (order_type.equals("4")) {
+                tv_add_rate.setText(context.getString(R.string.add_rate2));
+
                 tv_name.setText(notificationModel.getFrom_user_full_name());
                 if (user_type.equals(Tags.TYPE_CLIENT)) {
                     Picasso.with(context).load(R.drawable.logo_only).fit().into(image);
@@ -277,27 +303,62 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
                 }
                 else if (notificationModel.getOrder_status().equals("1"))
                 {
-                    tv_order_state.setText(R.string.not_approved);
+                    tv_order_state.setText(R.string.del_sent_offer);
                     image_state.setVisibility(View.GONE);
                     tv_add_rate.setVisibility(View.GONE);
+
+
+
+
                 }else  if (notificationModel.getOrder_status().equals("2"))
                 {
+                    tv_order_state.setText(R.string.order_pend);
+
                     image_state.setBackgroundResource(R.drawable.wait_bg);
                     image_state.setImageResource(R.drawable.ic_time_left);
                     image_state.setVisibility(View.VISIBLE);
                     tv_add_rate.setVisibility(View.GONE);
 
                 }
-                else  if (notificationModel.getOrder_status().equals("3"))
+                else  if (notificationModel.getOrder_status().equals("3")||notificationModel.getOrder_status().equals("8"))
                 {
+                    tv_order_state.setText(R.string.done);
+
                     image_state.setBackgroundResource(R.drawable.finish_bg);
                     image_state.setImageResource(R.drawable.ic_correct);
-                    tv_add_rate.setVisibility(View.VISIBLE);
                     image_state.setVisibility(View.VISIBLE);
+
+                    if (notificationModel.getDriver_id().equals("0"))
+                    {
+                        if (notificationModel.getClient_family_rate().equals("0"))
+                        {
+                            tv_add_rate.setVisibility(View.VISIBLE);
+
+                        }else
+                        {
+                            tv_add_rate.setVisibility(View.GONE);
+
+                        }
+
+                    }else
+                        {
+                            if (notificationModel.getClient_rate().equals("0"))
+                            {
+                                tv_add_rate.setVisibility(View.VISIBLE);
+
+                            }else
+                            {
+                                tv_add_rate.setVisibility(View.GONE);
+
+                            }
+                        }
+
                 }
 
                 else  if (notificationModel.getOrder_status().equals("4"))
                 {
+                    tv_order_state.setText(context.getString(R.string.order_canceled));
+
                     image_state.setBackgroundResource(R.drawable.delete_bg);
                     image_state.setImageResource(R.drawable.ic_delete_state);
                     image_state.setVisibility(View.VISIBLE);

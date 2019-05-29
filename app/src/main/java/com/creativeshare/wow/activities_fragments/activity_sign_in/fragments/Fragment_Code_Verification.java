@@ -127,7 +127,7 @@ public class Fragment_Code_Verification extends Fragment {
                         if (response.isSuccessful())
                         {
                             countDownTimer.cancel();
-                            activity.signIn(phone_number,country_code,phone_code);
+                            activity.signIn("0"+phone_number,country_code,phone_code);
                         }else
                             {
                                 Log.e("error_code",response.code()+"_");

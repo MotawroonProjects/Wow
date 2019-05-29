@@ -22,10 +22,7 @@ import com.creativeshare.wow.share.TimeAgo;
 import com.creativeshare.wow.tags.Tags;
 import com.squareup.picasso.Picasso;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -103,7 +100,7 @@ public class OrdersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     public class MyHolder extends RecyclerView.ViewHolder {
         private CircleImageView image;
         private ImageView image_state;
-        private TextView tv_delivery_time,tv_order_num,tv_order_date,tv_order_state,tv_details;
+        private TextView tv_order_num,tv_order_date,tv_order_state,tv_details;
 
         public MyHolder(View itemView) {
             super(itemView);
@@ -111,7 +108,6 @@ public class OrdersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             image = itemView.findViewById(R.id.image);
             image_state = itemView.findViewById(R.id.image_state);
             tv_order_date = itemView.findViewById(R.id.tv_order_date);
-            tv_delivery_time = itemView.findViewById(R.id.tv_delivery_time);
             tv_order_num = itemView.findViewById(R.id.tv_order_num);
             tv_order_state = itemView.findViewById(R.id.tv_order_state);
             tv_details = itemView.findViewById(R.id.tv_details);
@@ -154,9 +150,9 @@ public class OrdersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                             }
 
                 }
-            SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy , hh:mm aa", Locale.ENGLISH);
+           /* SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy , hh:mm aa", Locale.ENGLISH);
             String deliveryTime = dateFormat.format(new Date(Long.parseLong(orderModel.getOrder_time_arrival())*1000));
-            tv_delivery_time.setText(deliveryTime);
+            tv_delivery_time.setText(deliveryTime);*/
             tv_order_num.setText("#"+orderModel.getOrder_id());
             tv_order_date.setText(TimeAgo.getTimeAgo(Long.parseLong(orderModel.getOrder_date())*1000,context));
 

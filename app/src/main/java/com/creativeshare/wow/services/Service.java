@@ -259,6 +259,16 @@ public interface Service {
                                @Field("client_comment") String client_comment
     );
 
+    @FormUrlEncoded
+    @POST("/App/ratingFamily")
+    Call<ResponseBody> addFamilyRate(@Field("client_id") String client_id,
+                                     @Field("family_id") String family_id,
+                                     @Field("order_id") String order_id,
+                                     @Field("client_rate") double client_rate,
+                                     @Field("client_comment") String client_comment
+    );
+
+
     @GET("/Api/comment")
     Call<CommentDataModel> getDelegateComment(@Query("user_id") String user_id, @Query("user_type") String user_type, @Query("page") int page);
 
@@ -433,13 +443,22 @@ public interface Service {
                                     @Field("family_id") String driver_id,
                                     @Field("order_id") String order_id,
                                     @Field("status") String status
-                                    );
+    );
 
     @FormUrlEncoded
     @POST("/App/sendToDrivers")
     Call<ResponseBody> sendFamilyOrderToDrivers(@Field("client_id") String client_id,
                                                 @Field("order_id") String order_id
-                                                );
+    );
+
+    @FormUrlEncoded
+    @POST("App/beFamily")
+    Call<ResponseBody> beFamily(@Field("user_id") String user_id,
+                                @Field("user_address") String user_address
+    );
+
+
 }
+
 
 

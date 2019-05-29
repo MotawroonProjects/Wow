@@ -161,7 +161,7 @@
     <string name="order_number">رقم الطلب</string>
     <string name="no_waiting_orders">لا توجد طلبات في الانتظار</string>
     <string name="order_state">حالة الطلب</string>
-    <string name="not_approved">لم يتم الموافقة علية</string>
+    <string name="not_approved">طلب جديد</string>
     <string name="pending">قيد الانتظار</string>
     <string name="done">تم الانجاز</string>
     <string name="just_now">الان</string>
@@ -214,11 +214,11 @@
     <string name="deliver_within">مدة التوصيل</string>
     <string name="write_package_details">إكتب هنا تفاصيل الغرض اللي ترغب في إرسالة. مثلا ماهو، وكيف حجمة، واذا محتاج سيارة مخصصة لنقلة. ملاحظة: لاتستخدم هذه الخدمة للطلب من المطاعم. </string>
     <string name="contact_us_on_telegram">تواصل معنا عبر تيليجرام.</string>
-    <string name="rate_of_courier">تقييم المرسول</string>
+    <string name="rate_of_courier">إضافة تقييم</string>
     <string name="comment">تعليقك</string>
     <string name="add_rate">إضافة تقييم</string>
     <string name="offer_refused">تم رفض العرض</string>
-    <string name="order_refused_send_again">تم رفض طلبك إرسال طلبك لمرسول آخر ؟</string>
+    <string name="order_refused_send_again">تم رفض الطلب </string>
     <string name="age_18_and_over">العمر 18 سنة وأكثر</string>
     <string name="a_picture_of_the_car_from_the_front">صورة للسيارة من الامام ( برجاء ان يكون رقم لوحة السيارة واضح)</string>
     <string name="a_picture_of_the_car_from_behind">صورة للسيارة من الخلف (برجاء ان يكون رقم لوحة السيارة واضح)</string>
@@ -259,7 +259,7 @@
     <string name="excellent">ممتاز</string>
     <string name="very_good">جيد جدا</string>
     <string name="good">جيد</string>
-    <string name="add_rate2">تقييم المرسول</string>
+    <string name="add_rate2">إضافة تقييم</string>
     <string name="bad">سيئ</string>
     <string name="very_bad">سيئ جدا</string>
     <string name="spare_parts">قطع غيار</string>
@@ -321,5 +321,17 @@
     <string name="order_comp">تم التجهيز الطلب</string>
     <string name="done2">تم</string>
     <string name="send_order_to_delegates">إرسال الطلب للمندوب</string>
+    <string name="del_off">عرض التوصيل :</string>
+    <string name="order_canceled">تم إلغاء الطلب</string>
+    <string name="req_sent_suc">تم إرسال طلبك بنجاح</string>
+    <string name="req_already_sent">تم إرسال طلبك من قبل</string>
+    <string name="already_family">عفوا! لقد قمت بإرسال طلب كأسرة منتجة من قبل.</string>
+    <string name="admin">الإدارة</string>
+    <string name="req_approved_delegate">تم الموافقة على طلبك كمرسول</string>
+    <string name="req_approved_family">تم الموافقة على طلبك كأسرة منتجة</string>
+    <string name="dear_will_review">عزيزي العميل : تم إرسال طلبك بنجاح سوف نقوم بمراجعة طلبك.</string>
+    <string name="already_snt_courier">عفوا! لقد قمت بإرسال طلب كمرسول من قبل.</string>
+    <string name="del_sent_offer">المندوب أرسل لك عرض التوصيل</string>
+
 
 </resources>

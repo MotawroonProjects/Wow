@@ -22,8 +22,8 @@ import com.creativeshare.wow.activities_fragments.activity_home.client_home.acti
 import com.creativeshare.wow.adapters.OrdersSpareAdapter;
 import com.creativeshare.wow.models.OrderSpareDataModel;
 import com.creativeshare.wow.models.UserModel;
+import com.creativeshare.wow.preferences.Preferences;
 import com.creativeshare.wow.remote.Api;
-import com.creativeshare.wow.singletone.UserSingleTone;
 import com.creativeshare.wow.tags.Tags;
 
 import java.io.IOException;
@@ -44,7 +44,7 @@ public class Fragment_Spare_Current_Orders extends Fragment {
     private List<OrderSpareDataModel.OrderSpare> orderModelList;
     private OrdersSpareAdapter adapter;
     private UserModel userModel;
-    private UserSingleTone userSingleTone;
+    private Preferences preferences;
     private boolean isLoading = false;
     private int current_page = 1;
     private Call<OrderSpareDataModel> call;
@@ -74,8 +74,8 @@ public class Fragment_Spare_Current_Orders extends Fragment {
     private void initView(View view) {
         orderModelList = new ArrayList<>();
         activity = (ClientHomeActivity) getActivity();
-        userSingleTone = UserSingleTone.getInstance();
-        userModel = userSingleTone.getUserModel();
+        preferences = Preferences.getInstance();
+        userModel = preferences.getUserData(activity);
         tv_no_orders = view.findViewById(R.id.tv_no_orders);
 
         progBar = view.findViewById(R.id.progBar);
@@ -115,6 +115,12 @@ public class Fragment_Spare_Current_Orders extends Fragment {
 
     public void getOrders()
     {
+        if (userModel==null)
+        {
+            preferences = Preferences.getInstance();
+            userModel = preferences.getUserData(activity);
+        }
+
         if (userModel.getData().getUser_type().equals(Tags.TYPE_CLIENT))
         {
             call  = Api.getService(Tags.base_url).getClientSpareOrder(userModel.getData().getUser_id(),"current", 1);

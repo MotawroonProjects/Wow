@@ -26,6 +26,11 @@ public class NotificationModel implements Serializable {
     private String place_address;
     private String order_type;
     private List<Drivers> driver_list;
+    private String family_id;
+    private String family_order_end;
+    private String client_rate;
+    private String client_family_rate;
+
 
 
 
@@ -112,6 +117,23 @@ public class NotificationModel implements Serializable {
 
     public List<Drivers> getDriver_list() {
         return driver_list;
+
+    }
+
+    public String getFamily_id() {
+        return family_id;
+    }
+
+    public String getFamily_order_end() {
+        return family_order_end;
+    }
+
+    public String getClient_rate() {
+        return client_rate;
+    }
+
+    public String getClient_family_rate() {
+        return client_family_rate;
     }
 
     public class Drivers implements Serializable {

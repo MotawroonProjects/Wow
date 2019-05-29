@@ -4,11 +4,13 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -36,6 +38,7 @@ import java.util.Currency;
 import java.util.Locale;
 
 import io.paperdb.Paper;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -183,7 +186,7 @@ public class Fragment_Client_Profile extends Fragment {
                     ViewSocial(twitter);
 
                 } else {
-
+                    CreateAlertDialog();
                 }
             }
         });
@@ -226,12 +229,100 @@ public class Fragment_Client_Profile extends Fragment {
             }
         });
 
+        cons_register_family.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                CreateAddFamilyAddressDialog();
+            }
+        });
         updateUI(userModel);
 
         getSocialMedia();
 
     }
 
+    private void register_family(String user_address)
+    {
+        final ProgressDialog dialog = Common.createProgressDialog(activity, getString(R.string.wait));
+        dialog.setCancelable(false);
+        dialog.show();
+        Api.getService(Tags.base_url)
+                .beFamily(userModel.getData().getUser_id(),user_address)
+                .enqueue(new Callback<ResponseBody>() {
+                    @Override
+                    public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                        dialog.dismiss();
+                        if (response.isSuccessful()) {
+
+                           Common.CreateSignAlertDialog(activity,getString(R.string.dear_will_review));
+
+
+                        }else if (response.code()== 409)
+                        {
+                            Common.CreateSignAlertDialog(activity,getString(R.string.req_already_sent));
+
+                        }else if (response.code()== 406)
+                        {
+                            Common.CreateSignAlertDialog(activity,getString(R.string.already_snt_courier));
+
+                        }
+                        else {
+                            dialog.dismiss();
+                            try {
+                                Log.e("error_code", response.code() + "" + response.errorBody().string());
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<ResponseBody> call, Throwable t) {
+                        try {
+                            dialog.dismiss();
+                            Log.e("Error", t.getMessage());
+                        } catch (Exception e) {
+                        }
+                    }
+                });
+    }
+
+    private void CreateAddFamilyAddressDialog()
+    {
+        final AlertDialog dialog = new AlertDialog.Builder(activity)
+                .setCancelable(true)
+                .create();
+
+        View view = LayoutInflater.from(activity).inflate(R.layout.dialog_add_delivery_address,null);
+        Button btn_add = view.findViewById(R.id.btn_add);
+        TextView tv_title = view.findViewById(R.id.tv_title);
+        tv_title.setText(getString(R.string.address));
+        final EditText edt_address = view.findViewById(R.id.edt_address);
+        btn_add.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String address = edt_address.getText().toString().trim();
+
+                if (!TextUtils.isEmpty(address))
+                {
+                    edt_address.setError(null);
+                    Common.CloseKeyBoard(activity,edt_address);
+                    dialog.dismiss();
+
+                    register_family(address);
+                }else
+                {
+                    edt_address.setError(getString(R.string.field_req));
+                }
+
+            }
+        });
+        dialog.getWindow().getAttributes().windowAnimations=R.style.dialog_congratulation_animation;
+        dialog.setCanceledOnTouchOutside(false);
+        dialog.getWindow().setBackgroundDrawableResource(R.drawable.dialog_window_bg);
+        dialog.setView(view);
+        dialog.show();
+    }
     private void getSocialMedia() {
 
         final ProgressDialog dialog = Common.createProgressDialog(activity, getString(R.string.wait));

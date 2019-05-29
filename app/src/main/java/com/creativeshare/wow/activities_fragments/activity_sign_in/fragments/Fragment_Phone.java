@@ -143,7 +143,7 @@ public class Fragment_Phone extends Fragment implements OnCountryPickerListener 
     private void CheckData() {
         String phone_regex = "^[+]?[0-9]{6,}$";
 
-        String phone = edt_phone.getText().toString().trim();
+        String phone = edt_phone.getText().toString().trim().replaceFirst("0","");
 
         if (!TextUtils.isEmpty(phone) && phone.matches(phone_regex)) {
             edt_phone.setError(null);

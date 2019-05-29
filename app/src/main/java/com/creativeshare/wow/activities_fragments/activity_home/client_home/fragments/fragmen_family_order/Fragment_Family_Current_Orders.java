@@ -22,8 +22,8 @@ import com.creativeshare.wow.activities_fragments.activity_home.client_home.acti
 import com.creativeshare.wow.adapters.OrdersFamiliesAdapter;
 import com.creativeshare.wow.models.OrderClientFamilyDataModel;
 import com.creativeshare.wow.models.UserModel;
+import com.creativeshare.wow.preferences.Preferences;
 import com.creativeshare.wow.remote.Api;
-import com.creativeshare.wow.singletone.UserSingleTone;
 import com.creativeshare.wow.tags.Tags;
 
 import java.io.IOException;
@@ -45,7 +45,7 @@ public class Fragment_Family_Current_Orders extends Fragment {
     private OrdersFamiliesAdapter adapter;
 
     private UserModel userModel;
-    private UserSingleTone userSingleTone;
+    private Preferences preferences;
     private boolean isLoading = false;
     private int current_page = 1;
     private Call<OrderClientFamilyDataModel> call;
@@ -74,8 +74,8 @@ public class Fragment_Family_Current_Orders extends Fragment {
     private void initView(View view) {
         orderModelList = new ArrayList<>();
         activity = (ClientHomeActivity) getActivity();
-        userSingleTone = UserSingleTone.getInstance();
-        userModel = userSingleTone.getUserModel();
+        preferences = Preferences.getInstance();
+        userModel = preferences.getUserData(activity);
         tv_no_orders = view.findViewById(R.id.tv_no_orders);
 
         progBar = view.findViewById(R.id.progBar);
@@ -113,6 +113,12 @@ public class Fragment_Family_Current_Orders extends Fragment {
     }
 
     public void getOrders() {
+
+        if (userModel==null)
+        {
+            preferences = Preferences.getInstance();
+            userModel = preferences.getUserData(activity);
+        }
         call = Api.getService(Tags.base_url).getDelegateFamiliesOrders(userModel.getData().getUser_id(), "current",userModel.getData().getUser_type(), 1);
 
 
@@ -213,10 +219,27 @@ public class Fragment_Family_Current_Orders extends Fragment {
     public void setItemData(OrderClientFamilyDataModel.OrderModel orderModel) {
 
         if (userModel.getData().getUser_type().equals(Tags.TYPE_CLIENT)) {
-            activity.DisplayFragmentClientFamilyOrderDetails(orderModel);
+            if (orderModel.getFamily_order_end().equals("0"))
+            {
+                activity.DisplayFragmentClientFamilyOrderDetails(orderModel);
+
+            }else
+                {
+                    activity.DisplayFragmentClientFamilyDelegateOrderDetails(orderModel);
+
+                }
 
         } else  {
-            activity.DisplayFragmentFamilyCurrentOrderDetails(orderModel);
+
+            if (orderModel.getFamily_order_end().equals("0"))
+            {
+                activity.DisplayFragmentFamilyCurrentOrderDetails(orderModel);
+
+            }else
+            {
+                activity.DisplayFragmentDelegateFamilyCurrentOrderDetails(orderModel);
+            }
+
         }
     }
 }

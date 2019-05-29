@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateInterpolator;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -34,7 +35,7 @@ import java.util.Locale;
 import de.hdodenhof.circleimageview.CircleImageView;
 import io.paperdb.Paper;
 
-public class Fragment_Client_Family_Order_Details extends Fragment {
+public class Fragment_Client_Family_Delegate_Order_Details extends Fragment {
     private static final String TAG = "ORDER";
     private ClientHomeActivity activity;
     private ImageView image_back, image_chat, image_call;
@@ -48,27 +49,29 @@ public class Fragment_Client_Family_Order_Details extends Fragment {
     private LinearLayout ll;
     private AppBarLayout app_bar;
 
+    //private TextView tv_offer;
+    private Button btn_send_driver;
+
     ////////////////////////////////
-    private ImageView image1, image2, image3;
-    private TextView tv1, tv2, tv3, tv_order_id;
-    private View view1, view2;
+    private ImageView image1, image2, image3, image4, image5;
+    private TextView tv1, tv2, tv3, tv4, tv5, tv_order_id;
+    private View view1, view2, view3, view4;
     ////////////////////////////////
     private OrderClientFamilyDataModel.OrderModel order;
     private CardView cardViewProducts;
 
-
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_client_family_order_details, container, false);
+        View view = inflater.inflate(R.layout.fragment_client_family_delegate_order_details, container, false);
         initView(view);
         return view;
     }
 
-    public static Fragment_Client_Family_Order_Details newInstance(OrderClientFamilyDataModel.OrderModel order) {
+    public static Fragment_Client_Family_Delegate_Order_Details newInstance(OrderClientFamilyDataModel.OrderModel order) {
         Bundle bundle = new Bundle();
         bundle.putSerializable(TAG, order);
-        Fragment_Client_Family_Order_Details fragment_client_order_details = new Fragment_Client_Family_Order_Details();
+        Fragment_Client_Family_Delegate_Order_Details fragment_client_order_details = new Fragment_Client_Family_Delegate_Order_Details();
         fragment_client_order_details.setArguments(bundle);
         return fragment_client_order_details;
     }
@@ -89,12 +92,15 @@ public class Fragment_Client_Family_Order_Details extends Fragment {
 
         tv_not_approved = view.findViewById(R.id.tv_not_approved);
         tv_total_cost = view.findViewById(R.id.tv_total_cost);
+        btn_send_driver = view.findViewById(R.id.btn_send_driver);
+        cardViewProducts = view.findViewById(R.id.cardViewProducts);
 
         /////////////////////////////////////////////////
         app_bar = view.findViewById(R.id.app_bar);
         rl = view.findViewById(R.id.rl);
         ll = view.findViewById(R.id.ll);
 
+        //tv_offer = view.findViewById(R.id.tv_offer);
 
         app_bar.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
             @Override
@@ -115,12 +121,18 @@ public class Fragment_Client_Family_Order_Details extends Fragment {
         image1 = view.findViewById(R.id.image1);
         image2 = view.findViewById(R.id.image2);
         image3 = view.findViewById(R.id.image3);
+        image4 = view.findViewById(R.id.image4);
+        image5 = view.findViewById(R.id.image5);
         tv1 = view.findViewById(R.id.tv1);
         tv2 = view.findViewById(R.id.tv2);
         tv3 = view.findViewById(R.id.tv3);
+        tv4 = view.findViewById(R.id.tv4);
+        tv5 = view.findViewById(R.id.tv5);
         tv_order_id = view.findViewById(R.id.tv_order_id);
         view1 = view.findViewById(R.id.view1);
         view2 = view.findViewById(R.id.view2);
+        view3 = view.findViewById(R.id.view3);
+        view4 = view.findViewById(R.id.view4);
 
         /////////////////////////////////////////////////
         image_chat = view.findViewById(R.id.image_chat);
@@ -130,7 +142,7 @@ public class Fragment_Client_Family_Order_Details extends Fragment {
         tv_delegate_name = view.findViewById(R.id.tv_delegate_name);
         tv_rate = view.findViewById(R.id.tv_rate);
         rateBar = view.findViewById(R.id.rateBar);
-        cardViewProducts = view.findViewById(R.id.cardViewProducts);
+
 
         Bundle bundle = getArguments();
         if (bundle != null) {
@@ -171,6 +183,12 @@ public class Fragment_Client_Family_Order_Details extends Fragment {
         });
 
 
+        btn_send_driver.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                activity.sendFamilyOrderToDriver(order.getOrder_id(),order.getClient_id());
+            }
+        });
 
 
     }
@@ -179,15 +197,31 @@ public class Fragment_Client_Family_Order_Details extends Fragment {
     private void UpdateUI(OrderClientFamilyDataModel.OrderModel order) {
         if (order != null) {
 
+
+            if (order.getSend_to_drivers().equals("0"))
+            {
+                btn_send_driver.setVisibility(View.VISIBLE);
+            }else
+                {
+                    btn_send_driver.setVisibility(View.GONE);
+
+                }
+
+
             if (order.getProducts().size()>0)
             {
                 Currency currency = Currency.getInstance(new Locale(current_lang,order.getProducts().get(0).getUser_country()));
                 tv_total_cost.setText(String.format("%s %s %s",getString(R.string.total_order_cost),order.getTotal_order_cost(),currency.getSymbol()));
+                //tv_offer.setText(String.format("%s %s %s",getString(R.string.del_off),order.getDriver_offer(),currency.getSymbol()));
+
             }else
             {
-                tv_total_cost.setText(String.format("%s %s",getString(R.string.total_order_cost),order.getTotal_order_cost()));
+                tv_total_cost.setText(String.format("%s %s ",getString(R.string.total_order_cost),order.getTotal_order_cost()));
+                //tv_offer.setText(String.format("%s %s ",getString(R.string.del_off),order.getDriver_offer()));
 
             }
+
+
             tv_delegate_name.setText(order.getDriver_user_full_name());
             Picasso.with(activity).load(Uri.parse(Tags.IMAGE_URL + order.getDriver_user_image())).placeholder(R.drawable.logo_only).fit().into(image);
             tv_rate.setText("(" + order.getRate() + ")");
@@ -226,6 +260,10 @@ public class Fragment_Client_Family_Order_Details extends Fragment {
 
     }
 
+    public void UpdateBtnStateSendToDriver()
+    {
+        btn_send_driver.setVisibility(View.GONE);
+    }
 
     public void updateStepView(int completePosition) {
         Log.e("completePosition",completePosition+"__");
@@ -233,14 +271,14 @@ public class Fragment_Client_Family_Order_Details extends Fragment {
             case Tags.STATE_ORDER_NEW:
                 ClearStepUI();
                 break;
-            case 1:
+            case Tags.STATE_CLIENT_ACCEPT_OFFER:
                 image1.setBackgroundResource(R.drawable.step_green_circle);
                 image1.setImageResource(R.drawable.step_green_true);
                 view1.setBackgroundColor(ContextCompat.getColor(activity, R.color.green_text));
                 tv1.setTextColor(ContextCompat.getColor(activity, R.color.colorPrimary));
 
                 break;
-            case 2:
+            case Tags.STATE_DELEGATE_COLLECTING_ORDER:
                 image1.setBackgroundResource(R.drawable.step_green_circle);
                 image1.setImageResource(R.drawable.step_green_true);
                 view1.setBackgroundColor(ContextCompat.getColor(activity, R.color.green_text));
@@ -252,7 +290,7 @@ public class Fragment_Client_Family_Order_Details extends Fragment {
                 tv2.setTextColor(ContextCompat.getColor(activity, R.color.colorPrimary));
 
                 break;
-            case 3:
+            case Tags.STATE_DELEGATE_COLLECTED_ORDER:
                 image1.setBackgroundResource(R.drawable.step_green_circle);
                 image1.setImageResource(R.drawable.step_green_true);
                 view1.setBackgroundColor(ContextCompat.getColor(activity, R.color.green_text));
@@ -264,8 +302,57 @@ public class Fragment_Client_Family_Order_Details extends Fragment {
                 tv2.setTextColor(ContextCompat.getColor(activity, R.color.colorPrimary));
 
                 image3.setBackgroundResource(R.drawable.step_green_circle);
-                image3.setImageResource(R.drawable.step_green_heart);
+                image3.setImageResource(R.drawable.step_green_box);
+                view3.setBackgroundColor(ContextCompat.getColor(activity, R.color.green_text));
                 tv3.setTextColor(ContextCompat.getColor(activity, R.color.colorPrimary));
+
+                break;
+            case Tags.STATE_DELEGATE_DELIVERING_ORDER:
+                image1.setBackgroundResource(R.drawable.step_green_circle);
+                image1.setImageResource(R.drawable.step_green_true);
+                view1.setBackgroundColor(ContextCompat.getColor(activity, R.color.green_text));
+                tv1.setTextColor(ContextCompat.getColor(activity, R.color.colorPrimary));
+
+                image2.setBackgroundResource(R.drawable.step_green_circle);
+                image2.setImageResource(R.drawable.step_green_list);
+                view2.setBackgroundColor(ContextCompat.getColor(activity, R.color.green_text));
+                tv2.setTextColor(ContextCompat.getColor(activity, R.color.colorPrimary));
+
+                image3.setBackgroundResource(R.drawable.step_green_circle);
+                image3.setImageResource(R.drawable.step_green_box);
+                view3.setBackgroundColor(ContextCompat.getColor(activity, R.color.green_text));
+                tv3.setTextColor(ContextCompat.getColor(activity, R.color.colorPrimary));
+
+                image4.setBackgroundResource(R.drawable.step_green_circle);
+                image4.setImageResource(R.drawable.step_green_truck);
+                view4.setBackgroundColor(ContextCompat.getColor(activity, R.color.green_text));
+                tv4.setTextColor(ContextCompat.getColor(activity, R.color.colorPrimary));
+
+                break;
+            case Tags.STATE_DELEGATE_DELIVERED_ORDER:
+                image1.setBackgroundResource(R.drawable.step_green_circle);
+                image1.setImageResource(R.drawable.step_green_true);
+                view1.setBackgroundColor(ContextCompat.getColor(activity, R.color.green_text));
+                tv1.setTextColor(ContextCompat.getColor(activity, R.color.colorPrimary));
+
+                image2.setBackgroundResource(R.drawable.step_green_circle);
+                image2.setImageResource(R.drawable.step_green_list);
+                view2.setBackgroundColor(ContextCompat.getColor(activity, R.color.green_text));
+                tv2.setTextColor(ContextCompat.getColor(activity, R.color.colorPrimary));
+
+                image3.setBackgroundResource(R.drawable.step_green_circle);
+                image3.setImageResource(R.drawable.step_green_box);
+                view3.setBackgroundColor(ContextCompat.getColor(activity, R.color.green_text));
+                tv3.setTextColor(ContextCompat.getColor(activity, R.color.colorPrimary));
+
+                image4.setBackgroundResource(R.drawable.step_green_circle);
+                image4.setImageResource(R.drawable.step_green_truck);
+                view4.setBackgroundColor(ContextCompat.getColor(activity, R.color.green_text));
+                tv4.setTextColor(ContextCompat.getColor(activity, R.color.colorPrimary));
+
+                image5.setBackgroundResource(R.drawable.step_green_circle);
+                image5.setImageResource(R.drawable.step_green_heart);
+                tv5.setTextColor(ContextCompat.getColor(activity, R.color.colorPrimary));
 
                 break;
 
@@ -284,9 +371,18 @@ public class Fragment_Client_Family_Order_Details extends Fragment {
         tv2.setTextColor(ContextCompat.getColor(activity, R.color.gray3));
 
         image3.setBackgroundResource(R.drawable.gray_circle);
-        image3.setImageResource(R.drawable.step_gray_heart);
+        image3.setImageResource(R.drawable.step_gray_box);
+        view3.setBackgroundColor(ContextCompat.getColor(activity, R.color.gray3));
         tv3.setTextColor(ContextCompat.getColor(activity, R.color.gray3));
 
+        image4.setBackgroundResource(R.drawable.gray_circle);
+        image4.setImageResource(R.drawable.step_gray_truck);
+        view4.setBackgroundColor(ContextCompat.getColor(activity, R.color.gray3));
+        tv4.setTextColor(ContextCompat.getColor(activity, R.color.gray3));
+
+        image5.setBackgroundResource(R.drawable.gray_circle);
+        image5.setImageResource(R.drawable.step_gray_heart);
+        tv5.setTextColor(ContextCompat.getColor(activity, R.color.gray3));
 
     }
 

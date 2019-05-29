@@ -47,6 +47,7 @@ public class OrderClientFamilyDataModel implements Serializable {
         private String total_order_cost;
         private List<ProductModel> products;
         private String family_order_end;
+        private String send_to_drivers;
 
 
         public String getOrder_id() {
@@ -164,6 +165,11 @@ public class OrderClientFamilyDataModel implements Serializable {
         public String getFamily_order_end() {
             return family_order_end;
         }
+
+        public String getSend_to_drivers() {
+            return send_to_drivers;
+        }
+
     }
 
 
