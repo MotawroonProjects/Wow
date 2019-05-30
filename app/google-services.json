@@ -8,9 +8,9 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:803706967898:android:b1876ed15186ef65",
+        "mobilesdk_app_id": "1:803706967898:android:a5108bfacdaa12dc",
         "android_client_info": {
-          "package_name": "com.creativeshare.mrsool"
+          "package_name": "com.creative_share_apps.wow"
         }
       },
       "oauth_client": [
@@ -44,9 +44,9 @@
     },
     {
       "client_info": {
-        "mobilesdk_app_id": "1:803706967898:android:599cd3e3e13ff13f",
+        "mobilesdk_app_id": "1:803706967898:android:811ad46a65574632",
         "android_client_info": {
-          "package_name": "com.creativeshare.wow"
+          "package_name": "com.creativeshare.mrsoolk"
         }
       },
       "oauth_client": [

@@ -308,6 +308,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
 
+
                         >
                         <co.ceryle.segmentedbutton.SegmentedButtonGroup
                             android:id="@+id/segmentGroup"

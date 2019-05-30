@@ -1,0 +1,487 @@
+package com.creative_share_apps.wow.activities_fragments.activity_home.client_home.fragments.fragment_home;
+
+import android.app.ProgressDialog;
+import android.content.Intent;
+import android.net.Uri;
+import android.os.Bundle;
+import android.text.TextUtils;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
+
+import com.creative_share_apps.wow.R;
+import com.creative_share_apps.wow.activities_fragments.activity_home.client_home.activity.ClientHomeActivity;
+import com.creative_share_apps.wow.models.SocialMediaModel;
+import com.creative_share_apps.wow.models.UserModel;
+import com.creative_share_apps.wow.remote.Api;
+import com.creative_share_apps.wow.share.Common;
+import com.creative_share_apps.wow.singletone.UserSingleTone;
+import com.creative_share_apps.wow.tags.Tags;
+import com.iarcuschin.simpleratingbar.SimpleRatingBar;
+import com.squareup.picasso.Picasso;
+
+import java.io.IOException;
+import java.util.Currency;
+import java.util.Locale;
+
+import io.paperdb.Paper;
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
+public class Fragment_Client_Profile extends Fragment {
+
+    private ImageView image_setting, image, arrow, arrow2, image_instagram, image_facebook, image_twitter, img_certified,arrow3,arrow4;
+    private TextView tv_name, tv_balance, tv_order_count, tv_feedback, tv_certified, tv_coupons;
+    private SimpleRatingBar rateBar;
+    private ConstraintLayout cons_logout, cons_register_delegate, cons_comment, cons_add_coupon,cons_register_family,cons_add_product,cons_coupons;
+    private LinearLayout ll_telegram, ll_certification;
+    private String current_language;
+    private ClientHomeActivity activity;
+    private UserModel userModel;
+    private UserSingleTone userSingleTone;
+    private String facebook = "0", twitter = "0", instegram = "0", telegram = "0";
+    private View view_add_product,view_coupon,view_delegate,view_family;
+
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_client_profile, container, false);
+        initView(view);
+        return view;
+    }
+
+    public static Fragment_Client_Profile newInstance() {
+        return new Fragment_Client_Profile();
+    }
+
+    private void initView(View view) {
+
+        activity = (ClientHomeActivity) getActivity();
+        userSingleTone = UserSingleTone.getInstance();
+        userModel = userSingleTone.getUserModel();
+        Paper.init(activity);
+        current_language = Paper.book().read("lang", Locale.getDefault().getLanguage());
+
+        view_add_product = view.findViewById(R.id.view_add_product);
+        view_coupon = view.findViewById(R.id.view_coupon);
+        view_delegate = view.findViewById(R.id.view_delegate);
+        view_family = view.findViewById(R.id.view_family);
+
+        arrow = view.findViewById(R.id.arrow);
+        arrow2 = view.findViewById(R.id.arrow2);
+        arrow3 = view.findViewById(R.id.arrow3);
+        arrow4 = view.findViewById(R.id.arrow4);
+
+        if (current_language.equals("ar")) {
+            arrow.setImageResource(R.drawable.ic_left_arrow);
+            arrow2.setImageResource(R.drawable.ic_left_arrow);
+            arrow3.setImageResource(R.drawable.ic_left_arrow);
+            arrow4.setImageResource(R.drawable.ic_left_arrow);
+
+        } else {
+            arrow.setImageResource(R.drawable.ic_right_arrow);
+            arrow2.setImageResource(R.drawable.ic_right_arrow);
+            arrow3.setImageResource(R.drawable.ic_right_arrow);
+            arrow4.setImageResource(R.drawable.ic_right_arrow);
+
+
+        }
+
+        image_facebook = view.findViewById(R.id.image_facebook);
+        image_twitter = view.findViewById(R.id.image_twitter);
+        image_instagram = view.findViewById(R.id.image_instagram);
+        img_certified = view.findViewById(R.id.img_certified);
+
+        tv_certified = view.findViewById(R.id.tv_certified);
+
+        image_setting = view.findViewById(R.id.image_setting);
+        image = view.findViewById(R.id.image);
+        tv_name = view.findViewById(R.id.tv_name);
+        tv_balance = view.findViewById(R.id.tv_balance);
+        tv_order_count = view.findViewById(R.id.tv_order_count);
+        tv_feedback = view.findViewById(R.id.tv_feedback);
+        tv_coupons = view.findViewById(R.id.tv_coupons);
+        rateBar = view.findViewById(R.id.rateBar);
+        cons_add_coupon = view.findViewById(R.id.cons_add_coupon);
+
+        cons_coupons = view.findViewById(R.id.cons_coupons);
+
+        cons_register_family = view.findViewById(R.id.cons_register_family);
+        cons_add_product = view.findViewById(R.id.cons_add_product);
+
+
+        cons_register_delegate = view.findViewById(R.id.cons_register_delegate);
+        cons_comment = view.findViewById(R.id.cons_comment);
+        cons_logout = view.findViewById(R.id.cons_logout);
+
+        ll_certification = view.findViewById(R.id.ll_certification);
+
+        ll_telegram = view.findViewById(R.id.ll_telegram);
+
+        image_setting.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                activity.DisplayFragmentSettings();
+            }
+        });
+
+
+        cons_logout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                activity.Logout();
+            }
+        });
+
+        cons_register_delegate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                activity.DisplayFragmentDocumentation();
+            }
+        });
+        cons_comment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (userModel.getData().getUser_type().equals(Tags.TYPE_DELEGATE)) {
+                    activity.DisplayFragmentDelegateComment();
+
+                }
+            }
+        });
+
+        cons_add_coupon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                activity.DisplayFragmentAddCoupon();
+            }
+        });
+
+
+        cons_add_product.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                activity.DisplayFragmentFamilyAddProduct();
+            }
+        });
+
+        image_twitter.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!twitter.equals("0")) {
+                    ViewSocial(twitter);
+
+                } else {
+                    CreateAlertDialog();
+                }
+            }
+        });
+
+        image_facebook.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!facebook.equals("0")) {
+                    ViewSocial(facebook);
+
+                } else {
+                    CreateAlertDialog();
+
+                }
+            }
+        });
+
+        image_instagram.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!instegram.equals("0")) {
+                    ViewSocial(instegram);
+
+                } else {
+                    CreateAlertDialog();
+
+                }
+            }
+        });
+
+        ll_telegram.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!telegram.equals("0")) {
+                    ViewSocial(telegram);
+
+                } else {
+                    CreateAlertDialog();
+                }
+            }
+        });
+
+        cons_register_family.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                CreateAddFamilyAddressDialog();
+            }
+        });
+        updateUI(userModel);
+
+        getSocialMedia();
+
+    }
+
+    private void register_family(String user_address)
+    {
+        final ProgressDialog dialog = Common.createProgressDialog(activity, getString(R.string.wait));
+        dialog.setCancelable(false);
+        dialog.show();
+        Api.getService(Tags.base_url)
+                .beFamily(userModel.getData().getUser_id(),user_address)
+                .enqueue(new Callback<ResponseBody>() {
+                    @Override
+                    public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                        dialog.dismiss();
+                        if (response.isSuccessful()) {
+
+                           Common.CreateSignAlertDialog(activity,getString(R.string.dear_will_review));
+
+
+                        }else if (response.code()== 409)
+                        {
+                            Common.CreateSignAlertDialog(activity,getString(R.string.req_already_sent));
+
+                        }else if (response.code()== 406)
+                        {
+                            Common.CreateSignAlertDialog(activity,getString(R.string.already_snt_courier));
+
+                        }
+                        else {
+                            dialog.dismiss();
+                            try {
+                                Log.e("error_code", response.code() + "" + response.errorBody().string());
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<ResponseBody> call, Throwable t) {
+                        try {
+                            dialog.dismiss();
+                            Log.e("Error", t.getMessage());
+                        } catch (Exception e) {
+                        }
+                    }
+                });
+    }
+
+    private void CreateAddFamilyAddressDialog()
+    {
+        final AlertDialog dialog = new AlertDialog.Builder(activity)
+                .setCancelable(true)
+                .create();
+
+        View view = LayoutInflater.from(activity).inflate(R.layout.dialog_add_delivery_address,null);
+        Button btn_add = view.findViewById(R.id.btn_add);
+        TextView tv_title = view.findViewById(R.id.tv_title);
+        tv_title.setText(getString(R.string.address));
+        final EditText edt_address = view.findViewById(R.id.edt_address);
+        btn_add.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String address = edt_address.getText().toString().trim();
+
+                if (!TextUtils.isEmpty(address))
+                {
+                    edt_address.setError(null);
+                    Common.CloseKeyBoard(activity,edt_address);
+                    dialog.dismiss();
+
+                    register_family(address);
+                }else
+                {
+                    edt_address.setError(getString(R.string.field_req));
+                }
+
+            }
+        });
+        dialog.getWindow().getAttributes().windowAnimations=R.style.dialog_congratulation_animation;
+        dialog.setCanceledOnTouchOutside(false);
+        dialog.getWindow().setBackgroundDrawableResource(R.drawable.dialog_window_bg);
+        dialog.setView(view);
+        dialog.show();
+    }
+    private void getSocialMedia() {
+
+        final ProgressDialog dialog = Common.createProgressDialog(activity, getString(R.string.wait));
+        dialog.setCancelable(false);
+        dialog.show();
+        Api.getService(Tags.base_url)
+                .getSocialMedia()
+                .enqueue(new Callback<SocialMediaModel>() {
+                    @Override
+                    public void onResponse(Call<SocialMediaModel> call, Response<SocialMediaModel> response) {
+                        dialog.dismiss();
+                        if (response.isSuccessful() && response.body() != null) {
+                            facebook = response.body().getCompany_facebook();
+                            twitter = response.body().getCompany_twitter();
+                            instegram = response.body().getCompany_instagram();
+                            telegram = response.body().getCompany_telegram();
+
+                        } else {
+                            dialog.dismiss();
+                            try {
+                                Log.e("error_code", response.code() + "" + response.errorBody().string());
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<SocialMediaModel> call, Throwable t) {
+                        try {
+                            dialog.dismiss();
+                            Log.e("Error", t.getMessage());
+                        } catch (Exception e) {
+                        }
+                    }
+                });
+
+    }
+
+    private void ViewSocial(String path) {
+        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(path));
+        startActivity(intent);
+
+    }
+
+    public void updateUI(UserModel userModel) {
+        if (userModel != null) {
+            this.userModel = userModel;
+
+            if (userModel.getData().getUser_type().equals(Tags.TYPE_CLIENT)) {
+
+                ll_certification.setVisibility(View.GONE);
+                cons_add_coupon.setVisibility(View.VISIBLE);
+                cons_coupons.setVisibility(View.VISIBLE);
+                cons_add_product.setVisibility(View.GONE);
+                view_add_product.setVisibility(View.GONE);
+                view_coupon.setVisibility(View.VISIBLE);
+                view_delegate.setVisibility(View.VISIBLE);
+
+                cons_register_family.setVisibility(View.VISIBLE);
+                view_family.setVisibility(View.VISIBLE);
+
+            } else if (userModel.getData().getUser_type().equals(Tags.TYPE_DELEGATE)){
+
+
+                cons_add_coupon.setVisibility(View.VISIBLE);
+                cons_coupons.setVisibility(View.VISIBLE);
+                cons_add_product.setVisibility(View.GONE);
+                view_add_product.setVisibility(View.GONE);
+                view_coupon.setVisibility(View.VISIBLE);
+                view_coupon.setVisibility(View.VISIBLE);
+                cons_register_delegate.setVisibility(View.VISIBLE);
+                view_delegate.setVisibility(View.VISIBLE);
+                cons_register_family.setVisibility(View.GONE);
+                view_family.setVisibility(View.GONE);
+
+                if (userModel.getData().getNum_orders() > 0) {
+                    tv_certified.setText(getString(R.string.certified_account));
+                    img_certified.setImageResource(R.drawable.checked_certified);
+                } else {
+                    tv_certified.setText(R.string.not_certified);
+                    img_certified.setImageResource(R.drawable.checked_not_certified);
+
+                }
+                ll_certification.setVisibility(View.VISIBLE);
+
+
+            }else
+                {
+                    cons_coupons.setVisibility(View.GONE);
+                    cons_add_product.setVisibility(View.VISIBLE);
+                    ll_certification.setVisibility(View.GONE);
+                    cons_add_coupon.setVisibility(View.GONE);
+                    cons_register_family.setVisibility(View.GONE);
+                    cons_register_delegate.setVisibility(View.GONE);
+                    view_add_product.setVisibility(View.VISIBLE);
+                    view_coupon.setVisibility(View.GONE);
+                    view_delegate.setVisibility(View.GONE);
+                    view_family.setVisibility(View.GONE);
+
+
+                }
+            tv_name.setText(userModel.getData().getUser_full_name());
+            tv_order_count.setText(String.valueOf(userModel.getData().getNum_orders()));
+            tv_coupons.setText(String.valueOf(userModel.getData().getNum_coupon()));
+            Picasso.with(activity).load(Uri.parse(Tags.IMAGE_URL + userModel.getData().getUser_image())).placeholder(R.drawable.logo_only).into(image);
+            Currency currency = Currency.getInstance(new Locale(current_language, userModel.getData().getUser_country()));
+            if (userModel.getData().getAccount_balance() > 0) {
+                tv_balance.setTextColor(ContextCompat.getColor(activity, R.color.active));
+            } else {
+                tv_balance.setTextColor(ContextCompat.getColor(activity, R.color.delete_color));
+
+            }
+            tv_balance.setText(String.valueOf(userModel.getData().getAccount_balance()) + " " + currency.getSymbol());
+
+            if (userModel.getData().getUser_type().equals(Tags.TYPE_DELEGATE)) {
+                tv_feedback.setText(String.valueOf(userModel.getData().getNum_comments()));
+
+                SimpleRatingBar.AnimationBuilder builder = rateBar.getAnimationBuilder()
+                        .setRepeatCount(0)
+                        .setDuration(1500)
+                        .setRatingTarget((float) userModel.getData().getRate());
+                builder.start();
+
+            }
+
+        }
+    }
+
+    public void updateUserData(UserModel userModel) {
+        this.userModel = userModel;
+        userSingleTone.setUserModel(userModel);
+        updateUI(userModel);
+    }
+
+    private void CreateAlertDialog() {
+
+        final AlertDialog dialog = new AlertDialog.Builder(activity)
+                .setCancelable(true)
+                .create();
+
+        View view = LayoutInflater.from(activity).inflate(R.layout.dialog_sign, null);
+        Button doneBtn = view.findViewById(R.id.doneBtn);
+        TextView tv_msg = view.findViewById(R.id.tv_msg);
+        TextView tv_title = view.findViewById(R.id.tv_title);
+        tv_title.setText(getString(R.string.app_name));
+        tv_msg.setText(R.string.no_media_available);
+
+        doneBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+        dialog.getWindow().getAttributes().windowAnimations = R.style.dialog_congratulation_animation;
+        dialog.setCanceledOnTouchOutside(false);
+        dialog.getWindow().setBackgroundDrawableResource(R.drawable.dialog_window_bg);
+        dialog.setView(view);
+        dialog.show();
+    }
+
+}
