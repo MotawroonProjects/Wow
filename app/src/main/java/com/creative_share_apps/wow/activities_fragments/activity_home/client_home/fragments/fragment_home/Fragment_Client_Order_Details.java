@@ -3,11 +3,13 @@ package com.creative_share_apps.wow.activities_fragments.activity_home.client_ho
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateInterpolator;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -27,6 +29,7 @@ import com.google.android.material.appbar.AppBarLayout;
 import com.iarcuschin.simpleratingbar.SimpleRatingBar;
 import com.squareup.picasso.Picasso;
 
+import java.util.Calendar;
 import java.util.Locale;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -36,15 +39,17 @@ public class Fragment_Client_Order_Details extends Fragment {
     private static final String TAG = "ORDER";
     private ClientHomeActivity activity;
     private ImageView image_back, image_chat, image_call;
-    private LinearLayout ll_back, ll_delegate_data_container,ll_shipment;
+    private LinearLayout ll_back, ll_delegate_data_container, ll_shipment;
     private CircleImageView image;
     private TextView tv_delegate_name, tv_rate;
     private SimpleRatingBar rateBar;
     private String current_lang;
-    private TextView tv_not_approved, tv_order_details,tv_location_pickup,tv_location_dropoff;
+    private TextView tv_not_approved, tv_order_details, tv_location_pickup, tv_location_dropoff;
     private RelativeLayout rl;
-    private LinearLayout ll;
+    private LinearLayout ll, ll_resend_container;
     private AppBarLayout app_bar;
+    private Button btn_resend, btn_cancel;
+    private CountDownTimer countDownTimer;
 
     ////////////////////////////////
     private ImageView image1, image2, image3, image4, image5;
@@ -93,6 +98,10 @@ public class Fragment_Client_Order_Details extends Fragment {
         app_bar = view.findViewById(R.id.app_bar);
         rl = view.findViewById(R.id.rl);
         ll = view.findViewById(R.id.ll);
+
+        ll_resend_container = view.findViewById(R.id.ll_resend_container);
+        btn_resend = view.findViewById(R.id.btn_resend);
+        btn_cancel = view.findViewById(R.id.btn_cancel);
 
         app_bar.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
             @Override
@@ -162,8 +171,22 @@ public class Fragment_Client_Order_Details extends Fragment {
         image_chat.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ChatUserModel chatUserModel = new ChatUserModel(order.getDriver_user_full_name(),order.getDriver_user_image(),order.getDriver_id(),order.getRoom_id_fk(),order.getDriver_user_phone_code(),order.getDriver_user_phone(),order.getOrder_id(),order.getDriver_offer());
-                activity.NavigateToChatActivity(chatUserModel,"from_fragment");
+                ChatUserModel chatUserModel = new ChatUserModel(order.getDriver_user_full_name(), order.getDriver_user_image(), order.getDriver_id(), order.getRoom_id_fk(), order.getDriver_user_phone_code(), order.getDriver_user_phone(), order.getOrder_id(), order.getDriver_offer());
+                activity.NavigateToChatActivity(chatUserModel, "from_fragment");
+            }
+        });
+
+        btn_cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                activity.clientCancelOrder(order.getOrder_id(),"normal_order");
+            }
+        });
+
+        btn_resend.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                activity.ClientResendOrder(order.getClient_id(),order.getOrder_id(),"normal_order");
             }
         });
 
@@ -178,16 +201,29 @@ public class Fragment_Client_Order_Details extends Fragment {
             tv_rate.setText("(" + order.getRate() + ")");
             tv_order_details.setText(order.getOrder_details());
 
-            if (order.getOrder_type().equals("1"))
-            {
+            if (order.getOrder_type().equals("1")) {
                 ll_shipment.setVisibility(View.GONE);
-            }else if (order.getOrder_type().equals("2"))
-            {
+            } else if (order.getOrder_type().equals("2")) {
                 tv_location_pickup.setText(order.getPlace_address());
                 tv_location_dropoff.setText(order.getClient_address());
                 ll_shipment.setVisibility(View.VISIBLE);
 
             }
+
+            long diff = Calendar.getInstance().getTimeInMillis() - Long.parseLong(order.getAccept_date());
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTimeInMillis(diff);
+            int min = calendar.get(Calendar.MINUTE);
+
+            if (min>10)
+            {
+                ll_resend_container.setVisibility(View.GONE);
+            }else
+                {
+                    ll_resend_container.setVisibility(View.VISIBLE);
+                    startCounter();
+
+                }
 
 
             SimpleRatingBar.AnimationBuilder builder = rateBar.getAnimationBuilder();
@@ -204,7 +240,7 @@ public class Fragment_Client_Order_Details extends Fragment {
                 image_call.setVisibility(View.GONE);
                 tv_not_approved.setVisibility(View.VISIBLE);
                 updateStepView(0);
-            } else{
+            } else {
 
                 ll_delegate_data_container.setVisibility(View.VISIBLE);
                 image_chat.setVisibility(View.VISIBLE);
@@ -222,9 +258,24 @@ public class Fragment_Client_Order_Details extends Fragment {
 
     }
 
+    private void startCounter() {
 
-    public void updateStepView(int completePosition) {
-        Log.e("completePosition",completePosition+"__");
+        countDownTimer = new CountDownTimer(60000, 1000) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+
+            }
+
+            @Override
+            public void onFinish() {
+                ll_resend_container.setVisibility(View.GONE);
+
+            }
+        }.start();
+    }
+
+        public void updateStepView(int completePosition) {
+        Log.e("completePosition", completePosition + "__");
         switch (completePosition) {
             case Tags.STATE_ORDER_NEW:
                 ClearStepUI();
@@ -345,4 +396,9 @@ public class Fragment_Client_Order_Details extends Fragment {
     }
 
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        countDownTimer.cancel();
+    }
 }

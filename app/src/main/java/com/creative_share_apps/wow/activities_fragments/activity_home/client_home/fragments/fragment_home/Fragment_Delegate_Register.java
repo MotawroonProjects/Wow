@@ -40,17 +40,17 @@ import io.paperdb.Paper;
 
 public class Fragment_Delegate_Register extends Fragment {
 
-    private ImageView image_id, image_id_icon, image_license, image_license_icon, arrow, image_register,car_front_image,car_front_icon,car_back_image,car_back_icon;
+    private ImageView image_id, image_id_icon, image_license, image_license_icon, arrow, image_register,car_front_image,car_front_icon,car_back_image,car_back_icon,image_car_plate_license,image_car_plate_icon;
     private LinearLayout ll_back;
-    private FrameLayout fl_id_image, fl_license_image,fl_car_front_image,fl_car_back_image;
-    private EditText edt_national_num, edt_address;
+    private FrameLayout fl_id_image, fl_license_image,fl_car_front_image,fl_car_back_image,fl_car_plate_image;
+    private EditText edt_national_num, edt_address,edt_plate_number;
     private ClientHomeActivity activity;
     private String current_language;
     private final String READ_PERM = Manifest.permission.READ_EXTERNAL_STORAGE;
     private final String write_permission = Manifest.permission.WRITE_EXTERNAL_STORAGE;
     private final String camera_permission = Manifest.permission.CAMERA;
-    private final int IMG_REQ1 = 1, IMG_REQ2 = 2,IMG_REQ3=3,IMG_REQ4=4;
-    private Uri imgUri1 = null, imgUri2 = null,imgUri3 = null,imgUri4 = null;
+    private final int IMG_REQ1 = 1, IMG_REQ2 = 2,IMG_REQ3=3,IMG_REQ4=4,IMG_REQ5=5;
+    private Uri imgUri1 = null, imgUri2 = null,imgUri3 = null,imgUri4 = null,imgUri5 = null;
     private int selectedType = 0;
 
     @Nullable
@@ -89,6 +89,8 @@ public class Fragment_Delegate_Register extends Fragment {
         ll_back = view.findViewById(R.id.ll_back);
         edt_national_num = view.findViewById(R.id.edt_national_num);
         edt_address = view.findViewById(R.id.edt_address);
+        edt_plate_number = view.findViewById(R.id.edt_plate_number);
+
 
         fl_id_image = view.findViewById(R.id.fl_id_image);
         fl_license_image = view.findViewById(R.id.fl_license_image);
@@ -96,6 +98,12 @@ public class Fragment_Delegate_Register extends Fragment {
 
         fl_car_front_image = view.findViewById(R.id.fl_car_front_image);
         fl_car_back_image = view.findViewById(R.id.fl_car_back_image);
+
+        fl_car_plate_image = view.findViewById(R.id.fl_car_plate_image);
+        image_car_plate_license = view.findViewById(R.id.image_car_plate_license);
+        image_car_plate_icon = view.findViewById(R.id.image_car_plate_icon);
+
+
         car_front_image = view.findViewById(R.id.car_front_image);
         car_front_icon = view.findViewById(R.id.car_front_icon);
         car_back_image = view.findViewById(R.id.car_back_image);
@@ -139,6 +147,12 @@ public class Fragment_Delegate_Register extends Fragment {
                 CreateImageAlertDialog(IMG_REQ4);
             }
         });
+        fl_car_plate_image.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                CreateImageAlertDialog(IMG_REQ5);
+            }
+        });
 
 
         image_register.setOnClickListener(new View.OnClickListener() {
@@ -153,20 +167,23 @@ public class Fragment_Delegate_Register extends Fragment {
     private void CheckData() {
         String m_national_id = edt_national_num.getText().toString().trim();
         String m_address = edt_address.getText().toString().trim();
+        String m_plate_number = edt_plate_number.getText().toString().trim();
 
         if (!TextUtils.isEmpty(m_national_id) &&
                 !TextUtils.isEmpty(m_address)&&
+                !TextUtils.isEmpty(m_plate_number)&&
                 imgUri1!=null&&
                 imgUri2!=null&&
                 imgUri3!=null&&
-                imgUri4!=null
+                imgUri4!=null&&
+                imgUri5!=null
                 
         )
         {
             edt_address.setError(null);
             edt_national_num.setError(null);
             Common.CloseKeyBoard(activity,edt_national_num);
-            activity.registerDelegate(m_national_id,m_address,imgUri1,imgUri2,imgUri3,imgUri4);
+            activity.registerDelegate(m_national_id,m_address,m_plate_number,imgUri1,imgUri2,imgUri3,imgUri4,imgUri5);
             
         }else 
             {
@@ -399,6 +416,24 @@ public class Fragment_Delegate_Register extends Fragment {
             }
 
         }
+        else if (requestCode == IMG_REQ5) {
+            if (selectedType ==1)
+            {
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    SelectImage(selectedType,IMG_REQ5);
+                } else {
+                    Toast.makeText(activity, getString(R.string.perm_image_denied), Toast.LENGTH_SHORT).show();
+                }
+            }else
+            {
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED&& grantResults[1] == PackageManager.PERMISSION_GRANTED) {
+                    SelectImage(selectedType,IMG_REQ5);
+                } else {
+                    Toast.makeText(activity, getString(R.string.perm_image_denied), Toast.LENGTH_SHORT).show();
+                }
+            }
+
+        }
     }
 
     @Override
@@ -539,6 +574,43 @@ public class Fragment_Delegate_Register extends Fragment {
 
 
         }
+
+        else if (requestCode == IMG_REQ5 && resultCode == Activity.RESULT_OK && data != null) {
+
+            if (selectedType == 1)
+            {
+                imgUri5 = data.getData();
+                image_car_plate_icon.setVisibility(View.GONE);
+                File file = new File(Common.getImagePath(activity, imgUri5));
+
+                Picasso.with(activity).load(file).fit().into(image_car_plate_license);
+            }else if (selectedType ==2)
+            {
+
+                image_car_plate_icon.setVisibility(View.GONE);
+
+                Bitmap bitmap = (Bitmap) data.getExtras().get("data");
+
+                imgUri5 = getUriFromBitmap(bitmap);
+                if (imgUri5 != null) {
+                    String path = Common.getImagePath(activity, imgUri5);
+
+                    if (path != null) {
+                        Picasso.with(activity).load(new File(path)).fit().into(image_car_plate_license);
+
+                    } else {
+                        Picasso.with(activity).load(imgUri5).fit().into(image_car_plate_license);
+
+                    }
+                }
+
+
+            }
+
+
+
+        }
+
     }
 
     private Uri getUriFromBitmap(Bitmap bitmap) {

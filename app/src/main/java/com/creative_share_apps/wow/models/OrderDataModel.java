@@ -44,6 +44,7 @@ public class OrderDataModel implements Serializable {
         private double rate;
         private String room_id_fk;
         private String place_address;
+        private String accept_date;
 
 
         public String getOrder_id() {
@@ -148,6 +149,10 @@ public class OrderDataModel implements Serializable {
 
         public String getPlace_address() {
             return place_address;
+        }
+
+        public String getAccept_date() {
+            return accept_date;
         }
     }
 

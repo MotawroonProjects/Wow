@@ -3,6 +3,7 @@ package com.creative_share_apps.wow.activities_fragments.activity_home.client_ho
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,6 +30,7 @@ import com.google.android.material.appbar.AppBarLayout;
 import com.iarcuschin.simpleratingbar.SimpleRatingBar;
 import com.squareup.picasso.Picasso;
 
+import java.util.Calendar;
 import java.util.Currency;
 import java.util.Locale;
 
@@ -46,11 +48,11 @@ public class Fragment_Client_Family_Delegate_Order_Details extends Fragment {
     private String current_lang;
     private TextView tv_not_approved;
     private RelativeLayout rl;
-    private LinearLayout ll;
+    private LinearLayout ll,ll_resend_container;
     private AppBarLayout app_bar;
 
     //private TextView tv_offer;
-    private Button btn_send_driver;
+    private Button btn_send_driver,btn_resend,btn_cancel;
 
     ////////////////////////////////
     private ImageView image1, image2, image3, image4, image5;
@@ -59,6 +61,7 @@ public class Fragment_Client_Family_Delegate_Order_Details extends Fragment {
     ////////////////////////////////
     private OrderClientFamilyDataModel.OrderModel order;
     private CardView cardViewProducts;
+    private CountDownTimer countDownTimer;
 
     @Nullable
     @Override
@@ -99,6 +102,10 @@ public class Fragment_Client_Family_Delegate_Order_Details extends Fragment {
         app_bar = view.findViewById(R.id.app_bar);
         rl = view.findViewById(R.id.rl);
         ll = view.findViewById(R.id.ll);
+
+        ll_resend_container = view.findViewById(R.id.ll_resend_container);
+        btn_resend = view.findViewById(R.id.btn_resend);
+        btn_cancel = view.findViewById(R.id.btn_cancel);
 
         //tv_offer = view.findViewById(R.id.tv_offer);
 
@@ -190,20 +197,32 @@ public class Fragment_Client_Family_Delegate_Order_Details extends Fragment {
             }
         });
 
+        btn_resend.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                activity.ClientResendOrder(order.getClient_id(),order.getOrder_id(),"family_order");
+            }
+        });
+
+
+
 
     }
 
 
-    private void UpdateUI(OrderClientFamilyDataModel.OrderModel order) {
+    private void UpdateUI(final OrderClientFamilyDataModel.OrderModel order) {
         if (order != null) {
 
 
             if (order.getSend_to_drivers().equals("0"))
             {
                 btn_send_driver.setVisibility(View.VISIBLE);
+                ll_resend_container.setVisibility(View.GONE);
             }else
                 {
                     btn_send_driver.setVisibility(View.GONE);
+                    ll_resend_container.setVisibility(View.VISIBLE);
+
 
                 }
 
@@ -256,9 +275,59 @@ public class Fragment_Client_Family_Delegate_Order_Details extends Fragment {
 
             tv_order_id.setText(getString(R.string.order_number) + " #" + order.getOrder_id());
 
+
+            long diff = Calendar.getInstance().getTimeInMillis() - Long.parseLong(order.getAccept_date());
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTimeInMillis(diff);
+            int min = calendar.get(Calendar.MINUTE);
+
+            if (min>10)
+            {
+                ll_resend_container.setVisibility(View.GONE);
+            }else
+            {
+                ll_resend_container.setVisibility(View.VISIBLE);
+                startCounter();
+
+
+            }
+
+            btn_cancel.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    activity.clientCancelOrder(order.getOrder_id(),"family_order");
+                }
+            });
+
+
         }
 
     }
+
+    private void startCounter() {
+
+        countDownTimer = new CountDownTimer(60000,1000) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+
+            }
+
+            @Override
+            public void onFinish() {
+                ll_resend_container.setVisibility(View.GONE);
+
+            }
+        }.start();
+
+
+
+    }
+
+    public void ClientResendOrder(String client_id,String order_id)
+    {
+
+    }
+
 
     public void UpdateBtnStateSendToDriver()
     {
@@ -387,4 +456,9 @@ public class Fragment_Client_Family_Delegate_Order_Details extends Fragment {
     }
 
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        countDownTimer.cancel();
+    }
 }

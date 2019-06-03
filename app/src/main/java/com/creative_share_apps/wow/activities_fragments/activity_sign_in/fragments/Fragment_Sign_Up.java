@@ -16,6 +16,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -52,6 +53,8 @@ public class Fragment_Sign_Up extends Fragment implements DatePickerDialog.OnDat
     private EditText edt_name, edt_email;
     private ImageView image_personal, image_icon1, image_back_photo;
     private LinearLayout ll_back, ll_birth_date;
+    private CheckBox checkbox;
+    private TextView tv_terms;
     private TextView tv_birth_date;
     private final int IMG1 = 1, IMG2 = 2;
     private Uri uri = null;
@@ -62,6 +65,7 @@ public class Fragment_Sign_Up extends Fragment implements DatePickerDialog.OnDat
     private String current_language;
     private int gender = Tags.MALE;
     private long date_of_birth = 0;
+    private boolean isAcceptTerms = false;
 
     @Nullable
     @Override
@@ -94,6 +98,9 @@ public class Fragment_Sign_Up extends Fragment implements DatePickerDialog.OnDat
 
 
         fab = view.findViewById(R.id.fab);
+
+        checkbox = view.findViewById(R.id.checkbox);
+        tv_terms = view.findViewById(R.id.tv_terms);
 
 
         if (current_language.equals("ar")) {
@@ -144,6 +151,25 @@ public class Fragment_Sign_Up extends Fragment implements DatePickerDialog.OnDat
                 }
             }
         });
+        tv_terms.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                activity.NavigateToTermsActivity();
+            }
+        });
+
+        checkbox.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (checkbox.isChecked())
+                {
+                    isAcceptTerms = true;
+                }else
+                    {
+                        isAcceptTerms = false;
+                    }
+            }
+        });
 
 
     }
@@ -177,7 +203,8 @@ public class Fragment_Sign_Up extends Fragment implements DatePickerDialog.OnDat
         if (!TextUtils.isEmpty(m_name) &&
                 !TextUtils.isEmpty(m_email) &&
                 Patterns.EMAIL_ADDRESS.matcher(m_email).matches() &&
-                date_of_birth != 0
+                date_of_birth != 0&&
+                isAcceptTerms
         ) {
             Common.CloseKeyBoard(activity, edt_name);
             edt_name.setError(null);
@@ -215,6 +242,10 @@ public class Fragment_Sign_Up extends Fragment implements DatePickerDialog.OnDat
                 tv_birth_date.setError(null);
             }
 
+            if (!isAcceptTerms)
+            {
+                Toast.makeText(activity, getString(R.string.to_continue_accept), Toast.LENGTH_SHORT).show();
+            }
 
         }
     }

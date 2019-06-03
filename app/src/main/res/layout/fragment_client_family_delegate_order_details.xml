@@ -616,14 +616,67 @@
         android:id="@+id/btn_send_driver"
         android:layout_width="match_parent"
         android:layout_height="40dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/ll_resend_container"
         android:background="@color/white"
         android:textColor="@color/colorPrimary"
         android:textSize="15sp"
         android:gravity="center"
         android:text="@string/send_order_to_delegates"
         android:visibility="visible"
+
         />
+    <LinearLayout
+        android:id="@+id/ll_resend_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:orientation="vertical"
+        >
+        <TextView
+            android:id="@+id/tv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@id/ll2"
+            android:background="@color/white"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:gravity="center"
+            android:text="@string/problem_delete_order"
+            />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:orientation="horizontal"
+
+            >
+            <Button
+                android:id="@+id/btn_resend"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_weight="1"
+                android:background="@color/colorPrimary"
+                android:textColor="@color/white"
+                android:textSize="14sp"
+                android:text="@string/resend_order"
+                />
+            <Button
+                android:id="@+id/btn_cancel"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_weight="1"
+                android:background="@color/white"
+                android:textColor="@color/delete"
+                android:textSize="14sp"
+                android:text="@string/cancel"
+
+                />
+        </LinearLayout>
+    </LinearLayout>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -55,6 +55,7 @@ public class OrderSpareDataModel  implements Serializable {
         private String part_amount;
         private String delivery_method;
         private String car_model;
+        private String accept_date;
 
 
         public String getOrder_id() {
@@ -199,6 +200,10 @@ public class OrderSpareDataModel  implements Serializable {
 
         public String getCar_model() {
             return car_model;
+        }
+
+        public String getAccept_date() {
+            return accept_date;
         }
     }
 

@@ -3,11 +3,13 @@ package com.creative_share_apps.wow.activities_fragments.activity_home.client_ho
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateInterpolator;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -27,6 +29,7 @@ import com.google.android.material.appbar.AppBarLayout;
 import com.iarcuschin.simpleratingbar.SimpleRatingBar;
 import com.squareup.picasso.Picasso;
 
+import java.util.Calendar;
 import java.util.Locale;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -42,10 +45,13 @@ public class Fragment_Client_Spare_Order_Details extends Fragment {
     private TextView tv_delegate_name, tv_rate;
     private SimpleRatingBar rateBar;
     private String current_lang;
-    private TextView tv_not_approved,tv_address,tv_model,tv_type,tv_year,tv_name,tv_quantity,tv_delivery;
+    private TextView tv_not_approved, tv_address, tv_model, tv_type, tv_year, tv_name, tv_quantity, tv_delivery;
     private RelativeLayout rl;
-    private LinearLayout ll;
+    private LinearLayout ll, ll_resend_container;
     private AppBarLayout app_bar;
+    private Button btn_resend, btn_cancel;
+    private CountDownTimer countDownTimer;
+
 
     ////////////////////////////////
     private ImageView image1, image2, image3, image4, image5;
@@ -98,6 +104,10 @@ public class Fragment_Client_Spare_Order_Details extends Fragment {
         app_bar = view.findViewById(R.id.app_bar);
         rl = view.findViewById(R.id.rl);
         ll = view.findViewById(R.id.ll);
+
+        ll_resend_container = view.findViewById(R.id.ll_resend_container);
+        btn_resend = view.findViewById(R.id.btn_resend);
+        btn_cancel = view.findViewById(R.id.btn_cancel);
 
         app_bar.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
             @Override
@@ -167,8 +177,21 @@ public class Fragment_Client_Spare_Order_Details extends Fragment {
         image_chat.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ChatUserModel chatUserModel = new ChatUserModel(order.getDriver_user_full_name(),order.getDriver_user_image(),order.getDriver_id(),order.getRoom_id_fk(),order.getDriver_user_phone_code(),order.getDriver_user_phone(),order.getOrder_id(),order.getDriver_offer());
-                activity.NavigateToChatActivity(chatUserModel,"from_fragment");
+                ChatUserModel chatUserModel = new ChatUserModel(order.getDriver_user_full_name(), order.getDriver_user_image(), order.getDriver_id(), order.getRoom_id_fk(), order.getDriver_user_phone_code(), order.getDriver_user_phone(), order.getOrder_id(), order.getDriver_offer());
+                activity.NavigateToChatActivity(chatUserModel, "from_fragment");
+            }
+        });
+
+        btn_cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                activity.clientCancelOrder(order.getOrder_id(),"spare_order");
+            }
+        });
+        btn_resend.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                activity.ClientResendOrder(order.getClient_id(),order.getOrder_id(),"spare_order");
             }
         });
 
@@ -193,18 +216,16 @@ public class Fragment_Client_Spare_Order_Details extends Fragment {
             tv_name.setText(order.getPart_num());
             tv_model.setText(order.getCar_model());
             tv_quantity.setText(order.getPart_amount());
-            Picasso.with(activity).load(Uri.parse(Tags.IMAGE_URL+order.getCar_image())).fit().into(image_spare);
-            if (order.getDelivery_method().equals("1"))
-            {
+            Picasso.with(activity).load(Uri.parse(Tags.IMAGE_URL + order.getCar_image())).fit().into(image_spare);
+            if (order.getDelivery_method().equals("1")) {
 
                 tv_delivery.setText(getString(R.string.transmit_via_postal_office));
 
-            }else
-                {
-                    tv_delivery.setText(getString(R.string.delivery_at_the_client_s_location));
+            } else {
+                tv_delivery.setText(getString(R.string.delivery_at_the_client_s_location));
 
 
-                }
+            }
 
             if (order.getOrder_status().equals(String.valueOf(Tags.STATE_ORDER_NEW))) {
                 ll_delegate_data_container.setVisibility(View.GONE);
@@ -213,7 +234,7 @@ public class Fragment_Client_Spare_Order_Details extends Fragment {
                 tv_not_approved.setVisibility(View.VISIBLE);
                 updateStepView(0);
 
-            } else{
+            } else {
                 tv_delegate_name.setText(order.getDriver_user_full_name());
                 Picasso.with(activity).load(Uri.parse(Tags.IMAGE_URL + order.getDriver_user_image())).placeholder(R.drawable.logo_only).fit().into(image);
                 tv_rate.setText("(" + order.getRate() + ")");
@@ -230,13 +251,44 @@ public class Fragment_Client_Spare_Order_Details extends Fragment {
 
             tv_order_id.setText(getString(R.string.order_number) + " #" + order.getOrder_id());
 
+
+            long diff = Calendar.getInstance().getTimeInMillis() - Long.parseLong(order.getAccept_date());
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTimeInMillis(diff);
+            int min = calendar.get(Calendar.MINUTE);
+
+            if (min > 10) {
+                ll_resend_container.setVisibility(View.GONE);
+            } else {
+                ll_resend_container.setVisibility(View.VISIBLE);
+                startCounter();
+
+            }
+
         }
 
     }
 
+    private void startCounter() {
+
+        countDownTimer = new CountDownTimer(60000, 1000) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+
+            }
+
+            @Override
+            public void onFinish() {
+                ll_resend_container.setVisibility(View.GONE);
+
+            }
+        }.start();
+    }
+
+
 
     public void updateStepView(int completePosition) {
-        Log.e("completePosition",completePosition+"__");
+        Log.e("completePosition", completePosition + "__");
         switch (completePosition) {
             case Tags.STATE_ORDER_NEW:
                 ClearStepUI();
@@ -357,4 +409,9 @@ public class Fragment_Client_Spare_Order_Details extends Fragment {
     }
 
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        countDownTimer.cancel();
+    }
 }

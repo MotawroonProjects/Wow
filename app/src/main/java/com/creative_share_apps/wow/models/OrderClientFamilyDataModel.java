@@ -48,6 +48,8 @@ public class OrderClientFamilyDataModel implements Serializable {
         private List<ProductModel> products;
         private String family_order_end;
         private String send_to_drivers;
+        private String accept_date;
+
 
 
         public String getOrder_id() {
@@ -170,6 +172,9 @@ public class OrderClientFamilyDataModel implements Serializable {
             return send_to_drivers;
         }
 
+        public String getAccept_date() {
+            return accept_date;
+        }
     }
 
 

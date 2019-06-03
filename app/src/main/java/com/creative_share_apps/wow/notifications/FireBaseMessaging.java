@@ -56,7 +56,9 @@ public class FireBaseMessaging extends FirebaseMessagingService {
 
             String current_user_id = getUserData().getData().getUser_id();
             String to_user_id = map.get("to_user");
-            if (current_user_id.equals(to_user_id)) {
+
+
+            if (current_user_id.equals(to_user_id)||to_user_id.equals("all")) {
                 ManageNotification(map);
             }
 
@@ -573,6 +575,21 @@ public class FireBaseMessaging extends FirebaseMessagingService {
 
             }
 
+            else if (notification_type.equals(Tags.FIREBASE_NOT_GENERAL_NOT)) {
+
+                String content = map.get("notification_message");
+                builder.setContentTitle(getString(R.string.admin));
+                builder.setContentText(content);
+
+                NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+                if (manager != null) {
+                    manager.createNotificationChannel(channel);
+                    manager.notify(new Random().nextInt(200), builder.build());
+                }
+
+
+            }
+
         }
 
 
@@ -1032,6 +1049,19 @@ public class FireBaseMessaging extends FirebaseMessagingService {
 
                             }
                         }, 1);
+
+            }
+            else if (notification_type.equals(Tags.FIREBASE_NOT_GENERAL_NOT)) {
+
+                String content = map.get("notification_message");
+                builder.setContentTitle(getString(R.string.admin));
+                builder.setContentText(content);
+
+                NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+                if (manager != null) {
+                    manager.notify(new Random().nextInt(200), builder.build());
+                }
+
 
             }
 

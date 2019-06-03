@@ -46,6 +46,7 @@ public class Tags {
     public static final String FIREBASE_NOT_RATE = "rate";
     public static final String FIREBASE_NOT_BE_DELEGATE= "be_driver";
     public static final String FIREBASE_NOT_BE_FAMILY = "be_family";
+    public static final String FIREBASE_NOT_GENERAL_NOT = "general_notifications";
 
     public static final String MESSAGE_TEXT = "1";
     public static final String MESSAGE_IMAGE_TEXT = "2";

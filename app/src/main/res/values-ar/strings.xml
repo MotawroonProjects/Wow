@@ -100,7 +100,7 @@
     <string name="account_balance">رصيد الحساب</string>
     <string name="user_feedback">التعليقات</string>
     <string name="logout">تسجيل الخروج</string>
-    <string name="my_field_complains">قائمة الشكاوي المقدمة</string>
+    <string name="my_field_complains">تقديم شكوى</string>
     <string name="edit_profile">تعديل الملف الشخصي</string>
     <string name="language_settings">إعدادات اللغة</string>
     <string name="terms_of_service">شروط الإستخدام</string>
@@ -332,6 +332,17 @@
     <string name="dear_will_review">عزيزي العميل : تم إرسال طلبك بنجاح سوف نقوم بمراجعة طلبك.</string>
     <string name="already_snt_courier">عفوا! لقد قمت بإرسال طلب كمرسول من قبل.</string>
     <string name="del_sent_offer">المندوب أرسل لك عرض التوصيل</string>
+    <string name="to_continue_accept">للاستمرار برجاء الموافقة على الشروط والاحكام.</string>
+    <string name="problem_delete_order">If you encounter a problem you can cancel the order within 10 minutes</string>
+    <string name="resend_order">إختيار مندول آخر</string>
+    <string name="send_message_via_whatsapp">المراسلة عبر الواتس اب</string>
+    <string name="plate_number">رقم لوحة السيارة</string>
+    <string name="car_license">صورة رخصة سير السيارة</string>
+    <string name="payment">سداد العمولة</string>
+    <string name="bank_name">إسم البنك</string>
+    <string name="transfer_image">صورة الحوالة</string>
+    <string name="account_no">رقم الحساب</string>
+    <string name="the_amount">مبلغ التحويل</string>
 
 
 </resources>

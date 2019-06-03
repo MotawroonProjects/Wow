@@ -115,6 +115,62 @@
 
 
                 />
+            <EditText
+                android:id="@+id/edt_plate_number"
+                android:layout_width="match_parent"
+                android:layout_height="35dp"
+                android:background="@drawable/edt_bg"
+                android:hint="@string/plate_number"
+                android:paddingLeft="8dp"
+                android:paddingRight="8dp"
+                android:singleLine="true"
+                android:textColor="@color/black"
+                android:layout_marginTop="8dp"
+                android:textSize="14sp"
+                android:textColorHint="@color/gray4"
+                android:inputType="number"
+
+
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:textColor="@color/gray4"
+                android:text="@string/car_license"
+                android:textSize="15sp"
+                />
+            <FrameLayout
+                android:id="@+id/fl_car_plate_image"
+                android:layout_width="match_parent"
+                android:layout_height="160dp"
+                android:layout_marginTop="10dp"
+                android:background="@color/white"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                >
+                <ImageView
+                    android:id="@+id/image_car_plate_license"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:clickable="false"
+                    android:longClickable="false"
+
+                    />
+                <ImageView
+                    android:id="@+id/image_car_plate_icon"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_picture"
+                    android:padding="8dp"
+                    android:tint="@color/gray4"
+                    android:clickable="false"
+                    android:longClickable="false"
+                    />
+            </FrameLayout>
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

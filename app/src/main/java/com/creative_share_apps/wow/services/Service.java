@@ -163,10 +163,12 @@ public interface Service {
     Call<UserModel> registerDelegate(@Part("user_id") RequestBody user_id,
                                      @Part("user_card_id") RequestBody user_card_id,
                                      @Part("user_address") RequestBody user_address,
+                                     @Part("car_plate_number") RequestBody car_plate_number,
                                      @Part MultipartBody.Part user_card_id_image,
                                      @Part MultipartBody.Part user_driving_license,
                                      @Part MultipartBody.Part image_car_front,
-                                     @Part MultipartBody.Part image_car_back
+                                     @Part MultipartBody.Part image_car_back,
+                                     @Part MultipartBody.Part image_plate
 
     );
 
@@ -454,7 +456,25 @@ public interface Service {
     @FormUrlEncoded
     @POST("App/beFamily")
     Call<ResponseBody> beFamily(@Field("user_id") String user_id,
-                                @Field("user_address") String user_address
+                                @Field("user_address") String user_address,
+                                @Field("user_google_lat") double user_google_lat,
+                                @Field("user_google_long") double user_google_long
+
+    );
+
+    @FormUrlEncoded
+    @POST("App/beFamily")
+    Call<OrderIdDataModel> resend_order(@Field("client_id") String client_id,
+                                        @Field("order_id") String order_id
+    );
+
+    @FormUrlEncoded
+    @POST("Api/contactUs")
+    Call<ResponseBody> send_complain(@Field("name") String name,
+                                         @Field("phone") String phone,
+                                         @Field("phone") String email,
+                                         @Field("phone") String message
+
     );
 
 

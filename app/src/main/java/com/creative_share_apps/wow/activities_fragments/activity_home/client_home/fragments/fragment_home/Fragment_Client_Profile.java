@@ -232,7 +232,7 @@ public class Fragment_Client_Profile extends Fragment {
         cons_register_family.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                CreateAddFamilyAddressDialog();
+                activity.DisplayFragmentMap("fragment_client_profile");
             }
         });
         updateUI(userModel);
@@ -241,13 +241,13 @@ public class Fragment_Client_Profile extends Fragment {
 
     }
 
-    private void register_family(String user_address)
+    public void register_family(double lat,double lng,String address)
     {
         final ProgressDialog dialog = Common.createProgressDialog(activity, getString(R.string.wait));
         dialog.setCancelable(false);
         dialog.show();
         Api.getService(Tags.base_url)
-                .beFamily(userModel.getData().getUser_id(),user_address)
+                .beFamily(userModel.getData().getUser_id(),address,lat,lng)
                 .enqueue(new Callback<ResponseBody>() {
                     @Override
                     public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
@@ -309,7 +309,6 @@ public class Fragment_Client_Profile extends Fragment {
                     Common.CloseKeyBoard(activity,edt_address);
                     dialog.dismiss();
 
-                    register_family(address);
                 }else
                 {
                     edt_address.setError(getString(R.string.field_req));

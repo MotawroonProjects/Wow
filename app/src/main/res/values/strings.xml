@@ -102,7 +102,7 @@
     <string name="account_balance">Account Balance</string>
     <string name="user_feedback">User Feedback</string>
     <string name="logout">Logout</string>
-    <string name="my_field_complains">My Field Complains</string>
+    <string name="my_field_complains">Make a complaint</string>
     <string name="edit_profile">Edit Profile</string>
     <string name="language_settings">Language Settings</string>
     <string name="terms_of_service">Terms of Service</string>
@@ -335,5 +335,16 @@
     <string name="dear_will_review">Dear Customer Your request has been successfully sent. We will review your request</string>
     <string name="already_snt_courier">Sorry! You have already sent a request as a courier</string>
     <string name="del_sent_offer">Delegate sent offer</string>
+    <string name="to_continue_accept">To continue please accept terms and conditions.</string>
+    <string name="problem_delete_order">If you encounter a problem you can cancel the order within 10 minutes</string>
+    <string name="resend_order">Resend Order</string>
+    <string name="send_message_via_whatsapp">Send Message via whatsapp</string>
+    <string name="plate_number">Plate number</string>
+    <string name="car_license">Car license</string>
+    <string name="payment">Payment</string>
+    <string name="bank_name">Bank Name</string>
+    <string name="transfer_image">Transfer Image</string>
+    <string name="account_no">Account No</string>
+    <string name="the_amount">The amount</string>
 
 </resources>
