@@ -589,6 +589,26 @@ public class FireBaseMessaging extends FirebaseMessagingService {
 
 
             }
+            else if (notification_type.equals(Tags.FIREBASE_NOT_BALANCE)) {
+
+                Intent intent = new Intent(this,ClientHomeActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                intent.putExtra("balance",true);
+                PendingIntent pendingIntent = PendingIntent.getActivity(this,1,intent,PendingIntent.FLAG_UPDATE_CURRENT);
+                builder.setContentIntent(pendingIntent);
+
+                String content = map.get("notification_message");
+                builder.setContentTitle(getString(R.string.admin));
+                builder.setContentText(content);
+
+                NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+                if (manager != null) {
+                    manager.createNotificationChannel(channel);
+                    manager.notify(new Random().nextInt(200), builder.build());
+                }
+
+
+            }
 
         }
 
@@ -1064,6 +1084,27 @@ public class FireBaseMessaging extends FirebaseMessagingService {
 
 
             }
+
+            else if (notification_type.equals(Tags.FIREBASE_NOT_BALANCE)) {
+
+                Intent intent = new Intent(this,ClientHomeActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                intent.putExtra("balance",true);
+                PendingIntent pendingIntent = PendingIntent.getActivity(this,1,intent,PendingIntent.FLAG_UPDATE_CURRENT);
+                builder.setContentIntent(pendingIntent);
+
+                String content = map.get("notification_message");
+                builder.setContentTitle(getString(R.string.admin));
+                builder.setContentText(content);
+
+                NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+                if (manager != null) {
+                    manager.notify(new Random().nextInt(200), builder.build());
+                }
+
+
+            }
+
 
         }
 

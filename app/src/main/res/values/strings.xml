@@ -346,5 +346,12 @@
     <string name="transfer_image">Transfer Image</string>
     <string name="account_no">Account No</string>
     <string name="the_amount">The amount</string>
+    <string name="nationality">Nationality</string>
+    <string name="select_location">Select Location</string>
+    <string name="edit">Edit</string>
+    <string name="no_changes">No Changes occur in Product data</string>
+    <string name="sel_fam_loc">Select Family Location</string>
+    <string name="delete_product">Delete product ?</string>
+    <string name="ch_trans_image">Choose transfer image</string>
 
 </resources>

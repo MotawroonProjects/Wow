@@ -72,7 +72,7 @@ public class Fragment_Send_Complain extends Fragment {
         activity = (ClientHomeActivity) getActivity();
         Paper.init(activity);
         current_language = Paper.book().read("language", Locale.getDefault().getLanguage());
-        image_back = view.findViewById(R.id.arrow);
+        image_back = view.findViewById(R.id.image_back);
 
         if (current_language.equals("ar")) {
             image_back.setImageResource(R.drawable.ic_right_arrow);
@@ -123,7 +123,8 @@ public class Fragment_Send_Complain extends Fragment {
         if (userModel != null) {
             edt_name.setText(userModel.getData().getUser_full_name());
             edt_email.setText(userModel.getData().getUser_email());
-            edt_phone.setText(String.format("%s%s", userModel.getData().getUser_phone_code(), userModel.getData().getUser_phone()));
+
+            edt_phone.setText(String.format("%s%s", userModel.getData().getUser_phone_code().replaceFirst("00","+"), userModel.getData().getUser_phone()));
         }
         getSocialMedia();
 
@@ -222,6 +223,10 @@ public class Fragment_Send_Complain extends Fragment {
 
     private void SendComplain(String m_name, String m_email, String m_phone, String m_msg) {
 
+        if (m_phone.startsWith("+"))
+        {
+            m_phone = m_phone.replace("+","00");
+        }
         final ProgressDialog dialog = Common.createProgressDialog(activity, getString(R.string.wait));
         dialog.show();
         Api.getService(Tags.base_url)

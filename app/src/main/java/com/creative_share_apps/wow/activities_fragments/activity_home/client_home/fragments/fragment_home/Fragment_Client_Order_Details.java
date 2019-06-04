@@ -210,18 +210,19 @@ public class Fragment_Client_Order_Details extends Fragment {
 
             }
 
-            long diff = Calendar.getInstance().getTimeInMillis() - Long.parseLong(order.getAccept_date());
+            long diff = Calendar.getInstance().getTimeInMillis() - (Long.parseLong(order.getAccept_date())*1000);
             Calendar calendar = Calendar.getInstance();
             calendar.setTimeInMillis(diff);
             int min = calendar.get(Calendar.MINUTE);
 
+            Log.e("min",min+"_");
             if (min>10)
             {
                 ll_resend_container.setVisibility(View.GONE);
             }else
                 {
                     ll_resend_container.setVisibility(View.VISIBLE);
-                    startCounter();
+                    startCounter(diff);
 
                 }
 
@@ -258,9 +259,9 @@ public class Fragment_Client_Order_Details extends Fragment {
 
     }
 
-    private void startCounter() {
+    private void startCounter(final long current_minute) {
 
-        countDownTimer = new CountDownTimer(60000, 1000) {
+        countDownTimer = new CountDownTimer(current_minute, 1000) {
             @Override
             public void onTick(long millisUntilFinished) {
 
@@ -269,6 +270,7 @@ public class Fragment_Client_Order_Details extends Fragment {
             @Override
             public void onFinish() {
                 ll_resend_container.setVisibility(View.GONE);
+                countDownTimer.cancel();
 
             }
         }.start();
@@ -398,7 +400,7 @@ public class Fragment_Client_Order_Details extends Fragment {
 
     @Override
     public void onDestroy() {
-        super.onDestroy();
         countDownTimer.cancel();
+        super.onDestroy();
     }
 }

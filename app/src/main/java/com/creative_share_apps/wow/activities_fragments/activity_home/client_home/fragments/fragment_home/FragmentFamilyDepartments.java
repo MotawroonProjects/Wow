@@ -57,6 +57,8 @@ public class FragmentFamilyDepartments extends Fragment {
     private FamilyDepartmentAdapter departmentAdapter;
     private ProductAdapter productAdapter;
     private int lastSelectedDeptPos = 0;
+    private int current_page=1;
+    private String department_id;
 
 
 
@@ -103,6 +105,21 @@ public class FragmentFamilyDepartments extends Fragment {
         recView.setLayoutManager(manager);
         productAdapter = new ProductAdapter(productModelList,activity,this);
         recView.setAdapter(productAdapter);
+        recView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                int lastCompleteVisibleItem = manager.findLastCompletelyVisibleItemPosition();
+
+                if (dy>0&&productModelList.size()>10&&lastCompleteVisibleItem == (productModelList.size()-6))
+                {
+                    productModelList.add(null);
+                    productAdapter.notifyItemInserted(productModelList.size()-1);
+                    int next_page =  current_page+1;
+                    loadMore(department_id,next_page);
+                }
+            }
+        });
 
         Bundle bundle = getArguments();
         if (bundle!=null)
@@ -110,6 +127,8 @@ public class FragmentFamilyDepartments extends Fragment {
             familyModel = (FamiliesStoreDataModel.FamilyModel) bundle.getSerializable(TAG);
             updateUI(familyModel);
         }
+
+
 
         fl_cart.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -124,6 +143,8 @@ public class FragmentFamilyDepartments extends Fragment {
             }
         });
     }
+
+
 
     private void updateUI(FamiliesStoreDataModel.FamilyModel familyModel) {
 
@@ -203,6 +224,56 @@ public class FragmentFamilyDepartments extends Fragment {
                 });
     }
 
+    private void loadMore(String department_id, int next_page) {
+
+        Api.getService(Tags.base_url)
+                .getProductsByDeptId(department_id,next_page)
+                .enqueue(new Callback<ProductsDataModel>() {
+                    @Override
+                    public void onResponse(Call<ProductsDataModel> call, Response<ProductsDataModel> response) {
+                        int last_pos = productModelList.size()-1;
+                        productModelList.remove(last_pos);
+                        productAdapter.notifyItemRemoved(last_pos);
+
+                        if (response.isSuccessful())
+                        {
+                            if (response.body()!=null&&response.body().getData()!=null)
+                            {
+                                if (response.body().getData().size()>0)
+                                {
+                                    int last_index = productModelList.size()-1;
+
+                                    productModelList.addAll(response.body().getData());
+                                    productAdapter.notifyItemRangeInserted(last_index,productModelList.size());
+
+                                }
+
+
+                            }
+                        }else
+                        {
+                            try {
+
+                                Log.e("Error_code", response.code() + "" + response.errorBody().string());
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<ProductsDataModel> call, Throwable t) {
+                        try {
+                            int last_pos = productModelList.size()-1;
+                            productModelList.remove(last_pos);
+                            productAdapter.notifyItemRemoved(last_pos);
+                            Log.e("Error", t.getMessage());
+                        } catch (Exception e) {
+
+                        }
+                    }
+                });
+    }
     public void updateCartCount(int count)
     {
         if (count>0)
@@ -215,7 +286,10 @@ public class FragmentFamilyDepartments extends Fragment {
                 tv_counter.setVisibility(View.GONE);
             }
     }
-    public void setItemData(Department_Model department_model,int lastSelectedDeptPos) {
+    public void setItemData(Department_Model department_model,int lastSelectedDeptPos)
+    {
+
+        this.department_id = department_model.getId_department();
         if (this.lastSelectedDeptPos!=lastSelectedDeptPos)
         {
             this.lastSelectedDeptPos = lastSelectedDeptPos;

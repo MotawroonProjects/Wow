@@ -8,10 +8,12 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.creative_share_apps.wow.R;
 import com.creative_share_apps.wow.activities_fragments.activity_home.client_home.fragments.fragment_home.FragmentFamilyDepartments;
+import com.creative_share_apps.wow.activities_fragments.activity_home.client_home.fragments.fragment_home.Fragment_Family_Own_Products;
 import com.creative_share_apps.wow.models.Department_Model;
 
 import java.util.List;
@@ -23,14 +25,14 @@ public class FamilyDepartmentAdapter extends RecyclerView.Adapter<FamilyDepartme
 
     private Context context;
     private List<Department_Model> department_modelList;
-    private FragmentFamilyDepartments fragmentFamilyDepartments;
+    private Fragment fragment;
     private String current_language;
     private SparseBooleanArray sparseBooleanArray;
 
-    public FamilyDepartmentAdapter(Context context, List<Department_Model> department_modelList,FragmentFamilyDepartments fragmentFamilyDepartments) {
+    public FamilyDepartmentAdapter(Context context, List<Department_Model> department_modelList,Fragment fragment) {
         this.context = context;
         this.department_modelList = department_modelList;
-        this.fragmentFamilyDepartments = fragmentFamilyDepartments;
+        this.fragment = fragment;
         Paper.init(context);
         current_language = Paper.book().read("lang", Locale.getDefault().getLanguage());
         sparseBooleanArray = new SparseBooleanArray();
@@ -67,7 +69,16 @@ public class FamilyDepartmentAdapter extends RecyclerView.Adapter<FamilyDepartme
                 sparseBooleanArray.clear();
                 sparseBooleanArray.put(holder.getAdapterPosition(),true);
                 holder.tv_dept_name.setBackgroundResource(R.drawable.selected_dept);
-                fragmentFamilyDepartments.setItemData(department_model,holder.getAdapterPosition());
+                if (fragment instanceof FragmentFamilyDepartments)
+                {
+                    FragmentFamilyDepartments fragmentFamilyDepartments = (FragmentFamilyDepartments) fragment;
+                    fragmentFamilyDepartments.setItemData(department_model,holder.getAdapterPosition());
+
+                }else if (fragment instanceof Fragment_Family_Own_Products)
+                {
+                    Fragment_Family_Own_Products fragment_family_own_products = (Fragment_Family_Own_Products) fragment;
+                    fragment_family_own_products.setItemDataModelDepartment(department_model,holder.getAdapterPosition());
+                }
                 notifyDataSetChanged();
 
             }

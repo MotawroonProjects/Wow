@@ -333,7 +333,7 @@
     <string name="already_snt_courier">عفوا! لقد قمت بإرسال طلب كمرسول من قبل.</string>
     <string name="del_sent_offer">المندوب أرسل لك عرض التوصيل</string>
     <string name="to_continue_accept">للاستمرار برجاء الموافقة على الشروط والاحكام.</string>
-    <string name="problem_delete_order">If you encounter a problem you can cancel the order within 10 minutes</string>
+    <string name="problem_delete_order">إذا واجهت مشكلة ، يمكنك إلغاء الطلب خلال 10 دقائق</string>
     <string name="resend_order">إختيار مندول آخر</string>
     <string name="send_message_via_whatsapp">المراسلة عبر الواتس اب</string>
     <string name="plate_number">رقم لوحة السيارة</string>
@@ -343,6 +343,13 @@
     <string name="transfer_image">صورة الحوالة</string>
     <string name="account_no">رقم الحساب</string>
     <string name="the_amount">مبلغ التحويل</string>
+    <string name="nationality">الجنسية</string>
+    <string name="select_location">حدد الموقع على الخريطة</string>
+    <string name="edit">تعديل</string>
+    <string name="no_changes">لا توجد تغييرات في بيانات المنتج</string>
+    <string name="sel_fam_loc">حدد موقع الاسرة</string>
+    <string name="delete_product">هل تريد حذف المنتج ؟</string>
+    <string name="ch_trans_image">إختر صورة الحوالة</string>
 
 
 </resources>

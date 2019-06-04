@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -48,7 +49,7 @@ public class Fragment_Client_Profile extends Fragment {
     private ImageView image_setting, image, arrow, arrow2, image_instagram, image_facebook, image_twitter, img_certified,arrow3,arrow4;
     private TextView tv_name, tv_balance, tv_order_count, tv_feedback, tv_certified, tv_coupons;
     private SimpleRatingBar rateBar;
-    private ConstraintLayout cons_logout, cons_register_delegate, cons_comment, cons_add_coupon,cons_register_family,cons_add_product,cons_coupons;
+    private ConstraintLayout cons_logout, cons_register_delegate, cons_comment, cons_add_coupon,cons_register_family,cons_products,cons_coupons;
     private LinearLayout ll_telegram, ll_certification;
     private String current_language;
     private ClientHomeActivity activity;
@@ -56,6 +57,7 @@ public class Fragment_Client_Profile extends Fragment {
     private UserSingleTone userSingleTone;
     private String facebook = "0", twitter = "0", instegram = "0", telegram = "0";
     private View view_add_product,view_coupon,view_delegate,view_family;
+    private String family_nationality="";
 
     @Nullable
     @Override
@@ -122,7 +124,7 @@ public class Fragment_Client_Profile extends Fragment {
         cons_coupons = view.findViewById(R.id.cons_coupons);
 
         cons_register_family = view.findViewById(R.id.cons_register_family);
-        cons_add_product = view.findViewById(R.id.cons_add_product);
+        cons_products = view.findViewById(R.id.cons_products);
 
 
         cons_register_delegate = view.findViewById(R.id.cons_register_delegate);
@@ -172,10 +174,10 @@ public class Fragment_Client_Profile extends Fragment {
         });
 
 
-        cons_add_product.setOnClickListener(new View.OnClickListener() {
+        cons_products.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                activity.DisplayFragmentFamilyAddProduct();
+                activity.DisplayFragmentFamilyOwnProduct();
             }
         });
 
@@ -232,7 +234,7 @@ public class Fragment_Client_Profile extends Fragment {
         cons_register_family.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                activity.DisplayFragmentMap("fragment_client_profile");
+                CreateAddFamilyAddressDialog();
             }
         });
         updateUI(userModel);
@@ -247,7 +249,7 @@ public class Fragment_Client_Profile extends Fragment {
         dialog.setCancelable(false);
         dialog.show();
         Api.getService(Tags.base_url)
-                .beFamily(userModel.getData().getUser_id(),address,lat,lng)
+                .beFamily(userModel.getData().getUser_id(),address,lat,lng,family_nationality)
                 .enqueue(new Callback<ResponseBody>() {
                     @Override
                     public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
@@ -294,24 +296,34 @@ public class Fragment_Client_Profile extends Fragment {
                 .create();
 
         View view = LayoutInflater.from(activity).inflate(R.layout.dialog_add_delivery_address,null);
-        Button btn_add = view.findViewById(R.id.btn_add);
-        TextView tv_title = view.findViewById(R.id.tv_title);
-        tv_title.setText(getString(R.string.address));
-        final EditText edt_address = view.findViewById(R.id.edt_address);
-        btn_add.setOnClickListener(new View.OnClickListener() {
+        Button btn_select_location = view.findViewById(R.id.btn_select_location);
+        final EditText edt_nationality = view.findViewById(R.id.edt_nationality);
+        btn_select_location.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String address = edt_address.getText().toString().trim();
+                 family_nationality = edt_nationality.getText().toString().trim();
 
-                if (!TextUtils.isEmpty(address))
+                if (!TextUtils.isEmpty(family_nationality))
                 {
-                    edt_address.setError(null);
-                    Common.CloseKeyBoard(activity,edt_address);
+                    edt_nationality.setError(null);
+                    Common.CloseKeyBoard(activity,edt_nationality);
                     dialog.dismiss();
+
+                    new Handler()
+                            .postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    activity.DisplayFragmentMap("fragment_client_profile");
+
+                                }
+                            },500);
+
+
+
 
                 }else
                 {
-                    edt_address.setError(getString(R.string.field_req));
+                    edt_nationality.setError(getString(R.string.field_req));
                 }
 
             }
@@ -376,7 +388,7 @@ public class Fragment_Client_Profile extends Fragment {
                 ll_certification.setVisibility(View.GONE);
                 cons_add_coupon.setVisibility(View.VISIBLE);
                 cons_coupons.setVisibility(View.VISIBLE);
-                cons_add_product.setVisibility(View.GONE);
+                cons_products.setVisibility(View.GONE);
                 view_add_product.setVisibility(View.GONE);
                 view_coupon.setVisibility(View.VISIBLE);
                 view_delegate.setVisibility(View.VISIBLE);
@@ -389,7 +401,7 @@ public class Fragment_Client_Profile extends Fragment {
 
                 cons_add_coupon.setVisibility(View.VISIBLE);
                 cons_coupons.setVisibility(View.VISIBLE);
-                cons_add_product.setVisibility(View.GONE);
+                cons_products.setVisibility(View.GONE);
                 view_add_product.setVisibility(View.GONE);
                 view_coupon.setVisibility(View.VISIBLE);
                 view_coupon.setVisibility(View.VISIBLE);
@@ -412,7 +424,7 @@ public class Fragment_Client_Profile extends Fragment {
             }else
                 {
                     cons_coupons.setVisibility(View.GONE);
-                    cons_add_product.setVisibility(View.VISIBLE);
+                    cons_products.setVisibility(View.VISIBLE);
                     ll_certification.setVisibility(View.GONE);
                     cons_add_coupon.setVisibility(View.GONE);
                     cons_register_family.setVisibility(View.GONE);

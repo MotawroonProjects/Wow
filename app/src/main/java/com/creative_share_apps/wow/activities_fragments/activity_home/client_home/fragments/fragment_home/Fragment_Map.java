@@ -57,7 +57,7 @@ public class Fragment_Map extends Fragment implements OnMapReadyCallback {
     private LinearLayout ll_back;
     private EditText edt_search, edt_floor;
     private ProgressBar progBar;
-    private TextView tv_address;
+    private TextView tv_address,tv_title;
     private FloatingActionButton fab;
     private String current_language;
     private double lat = 0.0, lng = 0.0;
@@ -114,6 +114,8 @@ public class Fragment_Map extends Fragment implements OnMapReadyCallback {
         progBar = view.findViewById(R.id.progBar);
         progBar.getIndeterminateDrawable().setColorFilter(ContextCompat.getColor(activity, R.color.colorPrimary), PorterDuff.Mode.SRC_IN);
         tv_address = view.findViewById(R.id.tv_address);
+        tv_title = view.findViewById(R.id.tv_title);
+
         fab = view.findViewById(R.id.fab);
 
         fab.setOnClickListener(new View.OnClickListener() {
@@ -166,6 +168,13 @@ public class Fragment_Map extends Fragment implements OnMapReadyCallback {
 
         SupportMapFragment fragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
         fragment.getMapAsync(this);
+        if (from.equals("fragment_client_profile"))
+        {
+            tv_title.setText(getString(R.string.sel_fam_loc));
+        }else {
+            tv_title.setText(getString(R.string.delivery_location));
+
+        }
 
     }
 

@@ -428,6 +428,42 @@ public interface Service {
 
     );
 
+
+    @Multipart
+    @POST("/App/updateProduct")
+    Call<ProductsDataModel.ProductModel> updateFamilyProductWithImage(@Part("id_product") RequestBody id_product,
+                                                                      @Part("user_id") RequestBody user_id_fk,
+                                                                      @Part("dep_id_fk") RequestBody dep_id_fk,
+                                                                      @Part("ar_title_pro") RequestBody ar_title_pro,
+                                                                      @Part("en_title_pro") RequestBody en_title_pro,
+                                                                      @Part("price") RequestBody price,
+                                                                      @Part("ar_details_pro") RequestBody ar_details_pro,
+                                                                      @Part("en_details_pro") RequestBody en_details_pro,
+                                                                      @Part("notes") RequestBody notes,
+                                                                      @Part MultipartBody.Part image
+    );
+
+    @Multipart
+    @POST("/App/updateProduct")
+    Call<ProductsDataModel.ProductModel> updateFamilyProductWithoutImage(@Part("id_product") RequestBody id_product,
+                                                                         @Part("user_id") RequestBody user_id_fk,
+                                                                         @Part("dep_id_fk") RequestBody dep_id_fk,
+                                                                         @Part("ar_title_pro") RequestBody ar_title_pro,
+                                                                         @Part("en_title_pro") RequestBody en_title_pro,
+                                                                         @Part("price") RequestBody price,
+                                                                         @Part("ar_details_pro") RequestBody ar_details_pro,
+                                                                         @Part("en_details_pro") RequestBody en_details_pro,
+                                                                         @Part("notes") RequestBody notes
+
+    );
+
+    @FormUrlEncoded
+    @POST("/App/deleteProduct")
+    Call<ResponseBody> deleteProduct(@Field("id_product") String id_product,
+                                     @Field("user_id") String user_id
+    );
+
+
     @POST("/App/familyStoreOrder")
     Call<ResponseBody> sendFamilyOrder(@Body OrderModelToUpload orderModelToUpload);
 
@@ -458,7 +494,8 @@ public interface Service {
     Call<ResponseBody> beFamily(@Field("user_id") String user_id,
                                 @Field("user_address") String user_address,
                                 @Field("user_google_lat") double user_google_lat,
-                                @Field("user_google_long") double user_google_long
+                                @Field("user_google_long") double user_google_long,
+                                @Field("user_nationality") String user_nationality
 
     );
 
@@ -471,9 +508,21 @@ public interface Service {
     @FormUrlEncoded
     @POST("Api/contactUs")
     Call<ResponseBody> send_complain(@Field("name") String name,
-                                         @Field("phone") String phone,
-                                         @Field("phone") String email,
-                                         @Field("phone") String message
+                                     @Field("phone") String phone,
+                                     @Field("email") String email,
+                                     @Field("message") String message
+
+    );
+
+    @Multipart
+    @POST("Api/payment")
+    Call<ResponseBody> payment(@Part("user_id") RequestBody user_id,
+                               @Part("name") RequestBody name,
+                               @Part("account_num") RequestBody account_num,
+                               @Part("bank_name") RequestBody bank_name,
+                               @Part("payment_value") RequestBody payment_value,
+                               @Part MultipartBody.Part image
+
 
     );
 

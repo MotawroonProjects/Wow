@@ -68,6 +68,8 @@ import com.creative_share_apps.wow.activities_fragments.activity_home.client_hom
 import com.creative_share_apps.wow.activities_fragments.activity_home.client_home.fragments.fragment_home.Fragment_Family_Add_Product;
 import com.creative_share_apps.wow.activities_fragments.activity_home.client_home.fragments.fragment_home.Fragment_Family_Current_Order_Details;
 import com.creative_share_apps.wow.activities_fragments.activity_home.client_home.fragments.fragment_home.Fragment_Family_New_Order_Action;
+import com.creative_share_apps.wow.activities_fragments.activity_home.client_home.fragments.fragment_home.Fragment_Family_Own_Products;
+import com.creative_share_apps.wow.activities_fragments.activity_home.client_home.fragments.fragment_home.Fragment_Family_Update_Product;
 import com.creative_share_apps.wow.activities_fragments.activity_home.client_home.fragments.fragment_home.Fragment_Home;
 import com.creative_share_apps.wow.activities_fragments.activity_home.client_home.fragments.fragment_home.Fragment_Map;
 import com.creative_share_apps.wow.activities_fragments.activity_home.client_home.fragments.fragment_home.Fragment_Map_Location_Details;
@@ -198,6 +200,8 @@ public class ClientHomeActivity extends AppCompatActivity implements GoogleApiCl
     private Fragment_Order_Products fragment_order_products;
     private Fragment_Send_Complain fragment_send_complain;
     private Fragment_Payment fragment_payment;
+    private Fragment_Family_Own_Products fragment_family_own_products;
+    private Fragment_Family_Update_Product fragment_family_update_product;
     private UserSingleTone userSingleTone;
     private UserModel userModel;
     private Preferences preferences;
@@ -542,15 +546,20 @@ public class ClientHomeActivity extends AppCompatActivity implements GoogleApiCl
                                 },1000);
                     }
 
-                    new Handler()
-                            .postDelayed(new Runnable() {
-                                @Override
-                                public void run() {
-                                    NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-                                    manager.cancelAll();
-                                }
-                            },1);
+
                 }
+            }else if (intent.hasExtra("balance"))
+            {
+
+                new Handler()
+                        .postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                DisplayFragmentPayment();
+                                NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+                                manager.cancelAll();
+                            }
+                        },1000);
             }
         }
     }
@@ -1945,6 +1954,56 @@ public class ClientHomeActivity extends AppCompatActivity implements GoogleApiCl
 
 
 
+    }
+
+    public void DisplayFragmentFamilyOwnProduct()
+    {
+
+        fragment_count+=1;
+        fragment_family_own_products = Fragment_Family_Own_Products.newInstance();
+
+        if (fragment_family_own_products.isAdded()) {
+            fragmentManager.beginTransaction().show(fragment_send_complain).commit();
+
+        } else {
+            fragmentManager.beginTransaction().add(R.id.fragment_app_container, fragment_family_own_products, "fragment_family_own_products").addToBackStack("fragment_family_own_products").commit();
+        }
+
+
+
+    }
+
+    public void DisplayFragmentFamilyUpdateOwnProduct(ProductsDataModel.ProductModel productModel)
+    {
+
+        fragment_count+=1;
+        fragment_family_update_product = Fragment_Family_Update_Product.newInstance(productModel);
+
+        if (fragment_family_update_product.isAdded()) {
+            fragmentManager.beginTransaction().show(fragment_send_complain).commit();
+
+        } else {
+            fragmentManager.beginTransaction().add(R.id.fragment_app_container, fragment_family_update_product, "fragment_family_update_product").addToBackStack("fragment_family_update_product").commit();
+        }
+
+
+
+    }
+
+    public void onProductUpdated(final ProductsDataModel.ProductModel productModel)
+    {
+        new Handler()
+                .postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (fragment_family_own_products!=null&&fragment_family_own_products.isAdded())
+                        {
+                            ClientHomeActivity.super.onBackPressed();
+                            fragment_count -=1;
+                            fragment_family_own_products.Update(productModel);
+                        }
+                    }
+                },1000);
     }
 
     public void DisplayFragmentPayment()
@@ -3782,9 +3841,55 @@ public class ClientHomeActivity extends AppCompatActivity implements GoogleApiCl
 
     public void Payment(String m_name, String m_bank_name, String m_account_number, String m_amount, Uri imgUri1) {
 
+        m_account_number = String.format(Locale.ENGLISH,"%d",Integer.parseInt(m_account_number));
+        m_amount = String.format(Locale.ENGLISH,"%d",Integer.parseInt(m_amount));
+
+
+        final ProgressDialog dialog = Common.createProgressDialog(this,getString(R.string.wait));
+        dialog.show();
+
+        RequestBody user_id_part = Common.getRequestBodyText(userModel.getData().getUser_id());
+        RequestBody name_part = Common.getRequestBodyText(m_name);
+
+        RequestBody bank_name_part = Common.getRequestBodyText(m_bank_name);
+        RequestBody account_number_part = Common.getRequestBodyText(m_account_number);
+        RequestBody amount_part = Common.getRequestBodyText(m_amount);
+        MultipartBody.Part image_part = Common.getMultiPart(this,imgUri1,"transformation_image");
 
 
 
+        Api.getService(Tags.base_url)
+                .payment(user_id_part,name_part,account_number_part,bank_name_part,amount_part,image_part)
+                .enqueue(new Callback<ResponseBody>() {
+                    @Override
+                    public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                        dialog.dismiss();
+                        if (response.isSuccessful())
+                        {
+                            Toast.makeText(ClientHomeActivity.this, getString(R.string.suc), Toast.LENGTH_LONG).show();
+                            fragment_count-=1;
+                            ClientHomeActivity.super.onBackPressed();
+
+                        }else
+                        {
+                            try {
+                                Log.e("Error_code",response.code()+""+response.errorBody().string());
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                            Toast.makeText(ClientHomeActivity.this, R.string.failed, Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<ResponseBody> call, Throwable t) {
+                        try {
+                            dialog.dismiss();
+                            Toast.makeText(ClientHomeActivity.this, getString(R.string.something), Toast.LENGTH_SHORT).show();
+                            Log.e("Error",t.getMessage());
+                        }catch (Exception e){}
+                    }
+                });
     }
 
     private void RefreshFragment_Order()

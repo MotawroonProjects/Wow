@@ -445,7 +445,7 @@
                 android:background="@color/gray5"/>
 
             <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/cons_add_product"
+                android:id="@+id/cons_products"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:paddingStart="16dp"
@@ -458,7 +458,7 @@
                     app:layout_constraintStart_toStartOf="parent"
                     android:textColor="@color/black"
                     android:textSize="15sp"
-                    android:text="@string/add_product"
+                    android:text="@string/products"
                     android:clickable="false"
                     android:longClickable="false"
                     />

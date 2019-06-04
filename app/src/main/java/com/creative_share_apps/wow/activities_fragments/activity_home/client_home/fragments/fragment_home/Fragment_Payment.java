@@ -199,7 +199,7 @@ public class Fragment_Payment extends Fragment {
 
             if (imgUri1==null)
             {
-                Toast.makeText(activity, R.string.choose_identity_card_image, Toast.LENGTH_SHORT).show();
+                Toast.makeText(activity, getString(R.string.ch_trans_image), Toast.LENGTH_SHORT).show();
             }
 
            
@@ -350,12 +350,12 @@ public class Fragment_Payment extends Fragment {
             if (selectedType == 1)
             {
                 imgUri1 = data.getData();
-                transfer_image.setVisibility(View.GONE);
+                transfer_icon.setVisibility(View.GONE);
                 File file = new File(Common.getImagePath(activity, imgUri1));
-                Picasso.with(activity).load(file).fit().into(transfer_icon);
+                Picasso.with(activity).load(file).fit().into(transfer_image);
             }else if (selectedType ==2)
             {
-                transfer_image.setVisibility(View.GONE);
+                transfer_icon.setVisibility(View.GONE);
 
                 Bitmap bitmap = (Bitmap) data.getExtras().get("data");
 
@@ -364,10 +364,10 @@ public class Fragment_Payment extends Fragment {
                     String path = Common.getImagePath(activity, imgUri1);
 
                     if (path != null) {
-                        Picasso.with(activity).load(new File(path)).fit().into(transfer_icon);
+                        Picasso.with(activity).load(new File(path)).fit().into(transfer_image);
 
                     } else {
-                        Picasso.with(activity).load(imgUri1).fit().into(transfer_icon);
+                        Picasso.with(activity).load(imgUri1).fit().into(transfer_image);
 
                     }
                 }
