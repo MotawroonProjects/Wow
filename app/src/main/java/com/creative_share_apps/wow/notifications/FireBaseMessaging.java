@@ -82,6 +82,24 @@ public class FireBaseMessaging extends FirebaseMessagingService {
 
         String sound_Path = "android.resource://" + getPackageName() + "/" + R.raw.not;
 
+        if (getTune() ==1)
+        {
+            sound_Path = "android.resource://" + getPackageName() + "/" + R.raw.not;
+        }else if (getTune()==2)
+        {
+            sound_Path = "android.resource://" + getPackageName() + "/" + R.raw.not1;
+
+        }
+        else if (getTune()==3)
+        {
+            sound_Path = "android.resource://" + getPackageName() + "/" + R.raw.not2;
+
+        }else if (getTune()==4)
+        {
+            sound_Path = "android.resource://" + getPackageName() + "/" + R.raw.not3;
+
+        }
+
         String notification_type = map.get("notification_type");
 
 
@@ -620,6 +638,25 @@ public class FireBaseMessaging extends FirebaseMessagingService {
 
         String sound_Path = "android.resource://" + getPackageName() + "/" + R.raw.not;
 
+
+        if (getTune() ==1)
+        {
+            sound_Path = "android.resource://" + getPackageName() + "/" + R.raw.not;
+        }else if (getTune()==2)
+        {
+            sound_Path = "android.resource://" + getPackageName() + "/" + R.raw.not1;
+
+        }
+        else if (getTune()==3)
+        {
+            sound_Path = "android.resource://" + getPackageName() + "/" + R.raw.not2;
+
+        }else if (getTune()==4)
+        {
+            sound_Path = "android.resource://" + getPackageName() + "/" + R.raw.not3;
+
+        }
+
         String notification_type = map.get("notification_type");
 
 
@@ -1111,6 +1148,10 @@ public class FireBaseMessaging extends FirebaseMessagingService {
 
     }
 
+    private int getTune()
+    {
+        return preferences.get_tune(this);
+    }
     private UserModel getUserData() {
         return preferences.getUserData(this);
     }

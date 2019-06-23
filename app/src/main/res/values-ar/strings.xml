@@ -354,6 +354,11 @@
     <string name="pharmacies">صيدليات</string>
     <string name="cont_via_whats">إتصل بنا عبر واتس اب</string>
     <string name="tone">تنبية الاشعارات</string>
+    <string name="default_tone">الافتراضية</string>
+    <string name="tune_1">تنبية 1</string>
+    <string name="tune_2">تنبية 2</string>
+    <string name="tune_3">تنبية 3</string>
+    <string name="notification_tune">نغمة الاشعارات</string>
 
 
 </resources>

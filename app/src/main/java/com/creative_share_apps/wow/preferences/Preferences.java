@@ -31,6 +31,26 @@ public class Preferences {
         return instance;
     }
 
+
+    public void create_update_tune(Context context,int tune)
+    {
+        SharedPreferences preferences = context.getSharedPreferences("tune_pref",Context.MODE_PRIVATE);
+
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putInt("tune",tune);
+        editor.apply();
+
+    }
+
+    public int get_tune(Context context)
+    {
+        SharedPreferences preferences = context.getSharedPreferences("tune_pref",Context.MODE_PRIVATE);
+
+        return preferences.getInt("tune",1);
+
+    }
+
+
     public void create_update_userData(Context context, UserModel userModel)
     {
         SharedPreferences preferences = context.getSharedPreferences("user",Context.MODE_PRIVATE);

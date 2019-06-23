@@ -356,6 +356,11 @@
     <string name="ch_cl_im">Choose car license image</string>
     <string name="pharmacies">Pharmacies</string>
     <string name="cont_via_whats">Contact us via whatsapp</string>
-    <string name="tone">Tone</string>
+    <string name="tone">Tune</string>
+    <string name="default_tone">Default</string>
+    <string name="tune_1">Tune 1</string>
+    <string name="tune_2">Tune 2</string>
+    <string name="tune_3">Tune 3</string>
+    <string name="notification_tune">Notification tune</string>
 
 </resources>
