@@ -350,6 +350,10 @@
     <string name="sel_fam_loc">حدد موقع الاسرة</string>
     <string name="delete_product">هل تريد حذف المنتج ؟</string>
     <string name="ch_trans_image">إختر صورة الحوالة</string>
+    <string name="ch_cl_im">إختر صورة إستمارة السيارة</string>
+    <string name="pharmacies">صيدليات</string>
+    <string name="cont_via_whats">إتصل بنا عبر واتس اب</string>
+    <string name="tone">تنبية الاشعارات</string>
 
 
 </resources>

@@ -206,26 +206,31 @@ public class Fragment_Delegate_Register extends Fragment {
                     edt_address.setError(null);
 
                 }
-                
+
                 if (imgUri1==null)
+                {
+                    Toast.makeText(activity,getString(R.string.ch_cl_im), Toast.LENGTH_SHORT).show();
+                }
+                if (imgUri2==null)
                 {
                     Toast.makeText(activity, R.string.choose_identity_card_image, Toast.LENGTH_SHORT).show();
                 }
 
-                if (imgUri2==null)
+                if (imgUri3==null)
                 {
                     Toast.makeText(activity, R.string.choose_license_image, Toast.LENGTH_SHORT).show();
                 }
 
-                if (imgUri3==null)
+                if (imgUri4==null)
                 {
                     Toast.makeText(activity, R.string.ch_img_front, Toast.LENGTH_SHORT).show();
                 }
 
-                if (imgUri4==null)
+                if (imgUri5==null)
                 {
                     Toast.makeText(activity, R.string.ch_img_behind, Toast.LENGTH_SHORT).show();
                 }
+
             }
     }
 

@@ -353,5 +353,9 @@
     <string name="sel_fam_loc">Select Family Location</string>
     <string name="delete_product">Delete product ?</string>
     <string name="ch_trans_image">Choose transfer image</string>
+    <string name="ch_cl_im">Choose car license image</string>
+    <string name="pharmacies">Pharmacies</string>
+    <string name="cont_via_whats">Contact us via whatsapp</string>
+    <string name="tone">Tone</string>
 
 </resources>

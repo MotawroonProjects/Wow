@@ -109,7 +109,13 @@ public class Fragment_Send_Complain extends Fragment {
             public void onClick(View v) {
                 if (socialMediaModel!=null&&!socialMediaModel.getCompany_whatsapp().equals("0")) {
 
-                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("whatsapp://send?phone="+socialMediaModel.getCompany_whatsapp())));
+
+                    String phone = socialMediaModel.getCompany_whatsapp();
+                    if (!phone.startsWith("966"))
+                    {
+                        phone = "966"+phone;
+                    }
+                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("whatsapp://send?phone="+phone)));
 
                 } else {
                     CreateAlertDialog();

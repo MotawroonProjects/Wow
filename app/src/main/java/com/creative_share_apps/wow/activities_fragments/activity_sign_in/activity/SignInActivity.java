@@ -55,7 +55,6 @@ public class SignInActivity extends AppCompatActivity {
     @Override
     protected void attachBaseContext(Context base)
     {
-
         super.attachBaseContext(Language_Helper.updateResources(base,Language_Helper.getLanguage(base)));
     }
     @Override
@@ -209,7 +208,7 @@ public class SignInActivity extends AppCompatActivity {
     public void NavigateToTermsActivity()
     {
         Intent intent = new Intent(this, TermsConditionsActivity.class);
-        intent.putExtra("type",1);
+        intent.putExtra("type",Tags.APPTERMS);
         startActivity(intent);
         if (current_lang.equals("ar"))
         {

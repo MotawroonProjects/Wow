@@ -50,12 +50,12 @@ public class Fragment_Client_Profile extends Fragment {
     private TextView tv_name, tv_balance, tv_order_count, tv_feedback, tv_certified, tv_coupons;
     private SimpleRatingBar rateBar;
     private ConstraintLayout cons_logout, cons_register_delegate, cons_comment, cons_add_coupon,cons_register_family,cons_products,cons_coupons;
-    private LinearLayout ll_telegram, ll_certification;
+    private LinearLayout ll_whatsapp, ll_certification;
     private String current_language;
     private ClientHomeActivity activity;
     private UserModel userModel;
     private UserSingleTone userSingleTone;
-    private String facebook = "0", twitter = "0", instegram = "0", telegram = "0";
+    private String facebook = "0", twitter = "0", instegram = "0", telegram = "0",whatsapp="0";
     private View view_add_product,view_coupon,view_delegate,view_family;
     private String family_nationality="";
 
@@ -133,7 +133,7 @@ public class Fragment_Client_Profile extends Fragment {
 
         ll_certification = view.findViewById(R.id.ll_certification);
 
-        ll_telegram = view.findViewById(R.id.ll_telegram);
+        ll_whatsapp = view.findViewById(R.id.ll_whatsapp);
 
         image_setting.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -219,11 +219,17 @@ public class Fragment_Client_Profile extends Fragment {
             }
         });
 
-        ll_telegram.setOnClickListener(new View.OnClickListener() {
+        ll_whatsapp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!telegram.equals("0")) {
-                    ViewSocial(telegram);
+                if (!whatsapp.equals("0")) {
+                    //ViewSocial(telegram);
+                    if (!whatsapp.startsWith("966"))
+                    {
+                        whatsapp = "966"+whatsapp;
+                    }
+                    Intent intent = new Intent(Intent.ACTION_VIEW,Uri.parse("whatsapp://send?phone="+whatsapp));
+                    startActivity(intent);
 
                 } else {
                     CreateAlertDialog();
@@ -350,6 +356,8 @@ public class Fragment_Client_Profile extends Fragment {
                             twitter = response.body().getCompany_twitter();
                             instegram = response.body().getCompany_instagram();
                             telegram = response.body().getCompany_telegram();
+                            whatsapp = response.body().getCompany_whatsapp();
+                            Log.e("wa",whatsapp+"_");
 
                         } else {
                             dialog.dismiss();

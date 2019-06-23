@@ -524,7 +524,7 @@
                 android:background="@color/gray5"/>
 
             <LinearLayout
-                android:id="@+id/ll_telegram"
+                android:id="@+id/ll_whatsapp"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:orientation="horizontal"
@@ -535,7 +535,7 @@
                 <ImageView
                     android:layout_width="25dp"
                     android:layout_height="25dp"
-                    android:src="@drawable/telegram"
+                    android:src="@drawable/whatsapp"
                     android:clickable="false"
                     android:longClickable="false"
                     />
@@ -544,7 +544,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="8dp"
                     android:layout_marginRight="8dp"
-                    android:text="@string/contact_us_on_telegram"
+                    android:text="@string/cont_via_whats"
                     android:clickable="false"
                     android:longClickable="false"
                     />
