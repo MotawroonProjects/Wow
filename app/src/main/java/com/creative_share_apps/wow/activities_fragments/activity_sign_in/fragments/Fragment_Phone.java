@@ -5,7 +5,9 @@ import android.content.Context;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.telephony.TelephonyManager;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -129,6 +131,27 @@ public class Fragment_Phone extends Fragment implements OnCountryPickerListener 
 
         });
 
+        edt_phone.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                String phone = edt_phone.getText().toString().trim();
+                if (phone.startsWith("0"))
+                {
+                    CreatePhoneAlertDialog(getString(R.string.num_with_no0));
+                }
+            }
+        });
+
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -140,12 +163,36 @@ public class Fragment_Phone extends Fragment implements OnCountryPickerListener 
     }
 
 
+    private void CreatePhoneAlertDialog(String msg)
+    {
+        final AlertDialog dialog = new AlertDialog.Builder(activity)
+                .setCancelable(true)
+                .create();
+
+        View view = LayoutInflater.from(activity).inflate(R.layout.dialog_sign,null);
+        Button doneBtn = view.findViewById(R.id.doneBtn);
+        TextView tv_msg = view.findViewById(R.id.tv_msg);
+        tv_msg.setText(msg);
+        doneBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+                edt_phone.setText("");
+            }
+        });
+
+        dialog.getWindow().getAttributes().windowAnimations=R.style.dialog_congratulation_animation;
+        dialog.setCanceledOnTouchOutside(false);
+        dialog.getWindow().setBackgroundDrawableResource(R.drawable.dialog_window_bg);
+        dialog.setView(view);
+        dialog.show();
+    }
+
     private void CheckData() {
-        String phone_regex = "^[+]?[0-9]{6,}$";
 
-        String phone = edt_phone.getText().toString().trim().replaceFirst("0","");
+        String phone = edt_phone.getText().toString().trim();
 
-        if (!TextUtils.isEmpty(phone) && phone.matches(phone_regex)) {
+        if (!TextUtils.isEmpty(phone) ) {
             edt_phone.setError(null);
             Common.CloseKeyBoard(activity, edt_phone);
             if (type.equals("signup"))
@@ -161,9 +208,7 @@ public class Fragment_Phone extends Fragment implements OnCountryPickerListener 
         } else {
             if (TextUtils.isEmpty(phone)) {
                 edt_phone.setError(getString(R.string.field_req));
-            } else if (!phone.matches(phone_regex)) {
-                edt_phone.setError(getString(R.string.inv_phone));
-            }else
+            } else
                 {
                     edt_phone.setError(null);
                 }
@@ -171,6 +216,7 @@ public class Fragment_Phone extends Fragment implements OnCountryPickerListener 
     }
 
     private void sendSMSCode(String phone_code, final String phone) {
+        Log.e("phone",phone);
         final ProgressDialog dialog = Common.createProgressDialog(activity,getString(R.string.wait));
         dialog.setCancelable(false);
         dialog.show();

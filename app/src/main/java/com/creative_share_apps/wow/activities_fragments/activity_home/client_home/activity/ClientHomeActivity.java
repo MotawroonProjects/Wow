@@ -40,6 +40,7 @@ import com.creative_share_apps.wow.activities_fragments.activity_home.client_hom
 import com.creative_share_apps.wow.activities_fragments.activity_home.client_home.fragments.fragment_home.FragmentFamilyDepartments;
 import com.creative_share_apps.wow.activities_fragments.activity_home.client_home.fragments.fragment_home.Fragment_Add_Coupon;
 import com.creative_share_apps.wow.activities_fragments.activity_home.client_home.fragments.fragment_home.Fragment_Add_Spare;
+import com.creative_share_apps.wow.activities_fragments.activity_home.client_home.fragments.fragment_home.Fragment_Bank_Account;
 import com.creative_share_apps.wow.activities_fragments.activity_home.client_home.fragments.fragment_home.Fragment_Cart;
 import com.creative_share_apps.wow.activities_fragments.activity_home.client_home.fragments.fragment_home.Fragment_Client_Delegate_Offer;
 import com.creative_share_apps.wow.activities_fragments.activity_home.client_home.fragments.fragment_home.Fragment_Client_Family_Delegate_Order_Details;
@@ -202,6 +203,8 @@ public class ClientHomeActivity extends AppCompatActivity implements GoogleApiCl
     private Fragment_Payment fragment_payment;
     private Fragment_Family_Own_Products fragment_family_own_products;
     private Fragment_Family_Update_Product fragment_family_update_product;
+    private Fragment_Bank_Account fragment_bank_account;
+
     private UserSingleTone userSingleTone;
     private UserModel userModel;
     private Preferences preferences;
@@ -699,7 +702,7 @@ public class ClientHomeActivity extends AppCompatActivity implements GoogleApiCl
                             if (canUpdateLocation)
                             {
                                 canUpdateLocation = false;
-                                fragment_client_store.getNearbyPlaces(location,"restaurant");
+                                fragment_client_store.getNearbyPlaces(location);
 
                             }
                             /*if (intentService!=null)
@@ -1987,6 +1990,23 @@ public class ClientHomeActivity extends AppCompatActivity implements GoogleApiCl
         }
 
 
+
+    }
+
+    public void DisplayFragmentBankAccount()
+    {
+
+        fragment_count+=1;
+
+        fragment_bank_account = Fragment_Bank_Account.newInstance();
+
+
+        if (fragment_bank_account.isAdded()) {
+            fragmentManager.beginTransaction().show(fragment_bank_account).commit();
+
+        } else {
+            fragmentManager.beginTransaction().add(R.id.fragment_app_container, fragment_bank_account, "fragment_bank_account").addToBackStack("fragment_bank_account").commit();
+        }
 
     }
 

@@ -17,6 +17,7 @@ public class Tags {
     public static final int APPABOUT = 1;
     public static final int APPTERMS = 3;
     public static final int APPPRIVACY = 4;
+    public static final int APPTERMSDeELEGATE = 5;
 
 
     public static final String ORDER_NEW = "0";

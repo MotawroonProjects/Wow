@@ -148,7 +148,7 @@
     <string name="couriers">مرسول</string>
     <string name="go_to_order">متابعة طلبك</string>
     <string name="order_sent_successfully_order_number_is">تم إرسال طلبك بنجاح رقم طلبك هو</string>
-    <string name="national_number">الرقم القومي</string>
+    <string name="national_number">رقم الهوية-رقم الإقامة</string>
     <string name="address">العنوان</string>
     <string name="identity_card_image">صورة البطاقة الشخصية</string>
     <string name="license_image">صورة رخصة القيادة</string>
@@ -359,6 +359,13 @@
     <string name="tune_2">تنبية 2</string>
     <string name="tune_3">تنبية 3</string>
     <string name="notification_tune">نغمة الاشعارات</string>
+    <string name="num_with_no0">أدخل رقم الجوال بدون 0</string>
+    <string name="all">الكل</string>
+    <string name="bank_accounts">الحسابات البنكية</string>
+    <string name="account_iban">الايبان</string>
+    <string name="account_number">رقم الحساب</string>
+    <string name="account_name">إسم الحساب</string>
+    <string name="bank_name2">إسم البنك</string>
 
 
 </resources>

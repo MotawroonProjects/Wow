@@ -32,11 +32,11 @@ import io.paperdb.Paper;
 public class Fragment_Settings extends Fragment {
 
     private ClientHomeActivity activity;
-    private ConstraintLayout cons_back,cons_complains,cons_edit_profile,cons_language,cons_terms,cons_privacy,cons_rate,cons_about,cons_payment,cons_not_tune;
-    private ImageView arrow_back,arrow1,arrow2,arrow3,arrow4,arrow5,arrow6,arrow7,arrow8,arrow9;
+    private ConstraintLayout cons_back, cons_complains, cons_edit_profile, cons_language, cons_terms, cons_privacy, cons_rate, cons_about, cons_payment, cons_not_tune,cons_banks;
+    private ImageView arrow_back, arrow1, arrow2, arrow3, arrow4, arrow5, arrow6, arrow7, arrow8, arrow9, arrow10;
     private String current_language;
-    private String [] language_array;
-    private int tune = 1,tune_raw;
+    private String[] language_array;
+    private int tune = 1, tune_raw;
     private MediaPlayer mp;
     private Preferences preferences;
 
@@ -44,20 +44,20 @@ public class Fragment_Settings extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_settings,container,false);
+        View view = inflater.inflate(R.layout.fragment_settings, container, false);
         initView(view);
         return view;
     }
 
-    public static Fragment_Settings newInstance()
-    {
+    public static Fragment_Settings newInstance() {
         return new Fragment_Settings();
     }
+
     private void initView(View view) {
 
         activity = (ClientHomeActivity) getActivity();
         Paper.init(activity);
-        current_language = Paper.book().read("lang",Locale.getDefault().getLanguage());
+        current_language = Paper.book().read("lang", Locale.getDefault().getLanguage());
         preferences = Preferences.getInstance();
 
         arrow_back = view.findViewById(R.id.arrow_back);
@@ -70,11 +70,11 @@ public class Fragment_Settings extends Fragment {
         arrow7 = view.findViewById(R.id.arrow7);
         arrow8 = view.findViewById(R.id.arrow8);
         arrow9 = view.findViewById(R.id.arrow9);
+        arrow10 = view.findViewById(R.id.arrow10);
 
-        language_array = new String[]{"English","العربية"};
+        language_array = new String[]{"English", "العربية"};
 
-        if (current_language.equals("ar"))
-        {
+        if (current_language.equals("ar")) {
             arrow_back.setImageResource(R.drawable.ic_right_arrow);
 
             arrow1.setImageResource(R.drawable.ic_left_arrow);
@@ -86,24 +86,25 @@ public class Fragment_Settings extends Fragment {
             arrow7.setImageResource(R.drawable.ic_left_arrow);
             arrow8.setImageResource(R.drawable.ic_left_arrow);
             arrow9.setImageResource(R.drawable.ic_left_arrow);
+            arrow10.setImageResource(R.drawable.ic_left_arrow);
 
-        }else
-            {
-                arrow_back.setImageResource(R.drawable.ic_left_arrow);
-                arrow1.setImageResource(R.drawable.ic_right_arrow);
-                arrow2.setImageResource(R.drawable.ic_right_arrow);
-                arrow3.setImageResource(R.drawable.ic_right_arrow);
-                arrow4.setImageResource(R.drawable.ic_right_arrow);
-                arrow5.setImageResource(R.drawable.ic_right_arrow);
-                arrow6.setImageResource(R.drawable.ic_right_arrow);
-                arrow7.setImageResource(R.drawable.ic_right_arrow);
-                arrow8.setImageResource(R.drawable.ic_right_arrow);
-                arrow9.setImageResource(R.drawable.ic_right_arrow);
+        } else {
+            arrow_back.setImageResource(R.drawable.ic_left_arrow);
+            arrow1.setImageResource(R.drawable.ic_right_arrow);
+            arrow2.setImageResource(R.drawable.ic_right_arrow);
+            arrow3.setImageResource(R.drawable.ic_right_arrow);
+            arrow4.setImageResource(R.drawable.ic_right_arrow);
+            arrow5.setImageResource(R.drawable.ic_right_arrow);
+            arrow6.setImageResource(R.drawable.ic_right_arrow);
+            arrow7.setImageResource(R.drawable.ic_right_arrow);
+            arrow8.setImageResource(R.drawable.ic_right_arrow);
+            arrow9.setImageResource(R.drawable.ic_right_arrow);
+            arrow10.setImageResource(R.drawable.ic_right_arrow);
 
 
+        }
 
-            }
-
+        cons_banks = view.findViewById(R.id.cons_banks);
         cons_back = view.findViewById(R.id.cons_back);
         cons_complains = view.findViewById(R.id.cons_complains);
         cons_edit_profile = view.findViewById(R.id.cons_edit_profile);
@@ -174,6 +175,13 @@ public class Fragment_Settings extends Fragment {
             }
         });
 
+        cons_banks.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                activity.DisplayFragmentBankAccount();
+            }
+        });
+
         cons_payment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -190,49 +198,42 @@ public class Fragment_Settings extends Fragment {
     }
 
 
-    private void CreateLanguageDialog()
-    {
+    private void CreateLanguageDialog() {
         final AlertDialog dialog = new AlertDialog.Builder(activity)
                 .setCancelable(true)
                 .create();
 
-        View view  = LayoutInflater.from(activity).inflate(R.layout.dialog_language,null);
+        View view = LayoutInflater.from(activity).inflate(R.layout.dialog_language, null);
         Button btn_select = view.findViewById(R.id.btn_select);
         Button btn_cancel = view.findViewById(R.id.btn_cancel);
 
         final NumberPicker numberPicker = view.findViewById(R.id.numberPicker);
 
         numberPicker.setMinValue(0);
-        numberPicker.setMaxValue(language_array.length-1);
+        numberPicker.setMaxValue(language_array.length - 1);
         numberPicker.setDisplayedValues(language_array);
         numberPicker.setWrapSelectorWheel(false);
-        if (current_language.equals("ar"))
-        {
+        if (current_language.equals("ar")) {
             numberPicker.setValue(1);
 
-        }else
-            {
-                numberPicker.setValue(0);
+        } else {
+            numberPicker.setValue(0);
 
-            }
+        }
         btn_select.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 dialog.dismiss();
                 int pos = numberPicker.getValue();
-                if (pos == 0)
-                {
+                if (pos == 0) {
                     activity.RefreshActivity("en");
-                }else
-                    {
-                        activity.RefreshActivity("ar");
+                } else {
+                    activity.RefreshActivity("ar");
 
-                    }
+                }
 
             }
         });
-
-
 
 
         btn_cancel.setOnClickListener(new View.OnClickListener() {
@@ -247,8 +248,7 @@ public class Fragment_Settings extends Fragment {
         dialog.show();
     }
 
-    private void CreateTuneDialog()
-    {
+    private void CreateTuneDialog() {
 
 
         final AlertDialog dialog = new AlertDialog.Builder(activity)
@@ -258,41 +258,35 @@ public class Fragment_Settings extends Fragment {
         int savedTune = preferences.get_tune(activity);
 
 
-        View view = LayoutInflater.from(activity).inflate(R.layout.dialog_not_rings,null);
+        View view = LayoutInflater.from(activity).inflate(R.layout.dialog_not_rings, null);
         final RadioButton rb1 = view.findViewById(R.id.rb1);
         final RadioButton rb2 = view.findViewById(R.id.rb2);
         final RadioButton rb3 = view.findViewById(R.id.rb3);
         final RadioButton rb4 = view.findViewById(R.id.rb4);
 
-        if (savedTune==1)
-        {
-            rb1.setBackgroundColor(ContextCompat.getColor(activity,R.color.white));
-            rb2.setBackgroundColor(ContextCompat.getColor(activity,R.color.transparent));
-            rb3.setBackgroundColor(ContextCompat.getColor(activity,R.color.transparent));
-            rb4.setBackgroundColor(ContextCompat.getColor(activity,R.color.transparent));
+        if (savedTune == 1) {
+            rb1.setBackgroundColor(ContextCompat.getColor(activity, R.color.white));
+            rb2.setBackgroundColor(ContextCompat.getColor(activity, R.color.transparent));
+            rb3.setBackgroundColor(ContextCompat.getColor(activity, R.color.transparent));
+            rb4.setBackgroundColor(ContextCompat.getColor(activity, R.color.transparent));
 
-        }else if (savedTune ==2)
-        {
-            rb1.setBackgroundColor(ContextCompat.getColor(activity,R.color.transparent));
-            rb2.setBackgroundColor(ContextCompat.getColor(activity,R.color.white));
-            rb3.setBackgroundColor(ContextCompat.getColor(activity,R.color.transparent));
-            rb4.setBackgroundColor(ContextCompat.getColor(activity,R.color.transparent));
+        } else if (savedTune == 2) {
+            rb1.setBackgroundColor(ContextCompat.getColor(activity, R.color.transparent));
+            rb2.setBackgroundColor(ContextCompat.getColor(activity, R.color.white));
+            rb3.setBackgroundColor(ContextCompat.getColor(activity, R.color.transparent));
+            rb4.setBackgroundColor(ContextCompat.getColor(activity, R.color.transparent));
 
-        }
-        else if (savedTune ==3)
-        {
-            rb1.setBackgroundColor(ContextCompat.getColor(activity,R.color.transparent));
-            rb2.setBackgroundColor(ContextCompat.getColor(activity,R.color.transparent));
-            rb3.setBackgroundColor(ContextCompat.getColor(activity,R.color.white));
-            rb4.setBackgroundColor(ContextCompat.getColor(activity,R.color.transparent));
+        } else if (savedTune == 3) {
+            rb1.setBackgroundColor(ContextCompat.getColor(activity, R.color.transparent));
+            rb2.setBackgroundColor(ContextCompat.getColor(activity, R.color.transparent));
+            rb3.setBackgroundColor(ContextCompat.getColor(activity, R.color.white));
+            rb4.setBackgroundColor(ContextCompat.getColor(activity, R.color.transparent));
 
-        }
-        else if (savedTune ==4)
-        {
-            rb1.setBackgroundColor(ContextCompat.getColor(activity,R.color.transparent));
-            rb2.setBackgroundColor(ContextCompat.getColor(activity,R.color.transparent));
-            rb3.setBackgroundColor(ContextCompat.getColor(activity,R.color.transparent));
-            rb4.setBackgroundColor(ContextCompat.getColor(activity,R.color.white));
+        } else if (savedTune == 4) {
+            rb1.setBackgroundColor(ContextCompat.getColor(activity, R.color.transparent));
+            rb2.setBackgroundColor(ContextCompat.getColor(activity, R.color.transparent));
+            rb3.setBackgroundColor(ContextCompat.getColor(activity, R.color.transparent));
+            rb4.setBackgroundColor(ContextCompat.getColor(activity, R.color.white));
 
         }
         rb1.setOnClickListener(new View.OnClickListener() {
@@ -300,21 +294,19 @@ public class Fragment_Settings extends Fragment {
             public void onClick(View v) {
                 tune = 1;
                 tune_raw = R.raw.not;
-                if (mp!=null)
-                {
+                if (mp != null) {
                     mp.stop();
                     mp.release();
                     playTune(tune_raw);
-                }else
-                    {
-                        playTune(tune_raw);
+                } else {
+                    playTune(tune_raw);
 
-                    }
+                }
 
-                rb1.setBackgroundColor(ContextCompat.getColor(activity,R.color.white));
-                rb2.setBackgroundColor(ContextCompat.getColor(activity,R.color.transparent));
-                rb3.setBackgroundColor(ContextCompat.getColor(activity,R.color.transparent));
-                rb4.setBackgroundColor(ContextCompat.getColor(activity,R.color.transparent));
+                rb1.setBackgroundColor(ContextCompat.getColor(activity, R.color.white));
+                rb2.setBackgroundColor(ContextCompat.getColor(activity, R.color.transparent));
+                rb3.setBackgroundColor(ContextCompat.getColor(activity, R.color.transparent));
+                rb4.setBackgroundColor(ContextCompat.getColor(activity, R.color.transparent));
 
             }
         });
@@ -324,20 +316,18 @@ public class Fragment_Settings extends Fragment {
             public void onClick(View v) {
                 tune = 2;
                 tune_raw = R.raw.not1;
-                if (mp!=null)
-                {
+                if (mp != null) {
                     mp.stop();
                     mp.release();
                     playTune(tune_raw);
-                }else
-                {
+                } else {
                     playTune(tune_raw);
 
                 }
-                rb1.setBackgroundColor(ContextCompat.getColor(activity,R.color.transparent));
-                rb2.setBackgroundColor(ContextCompat.getColor(activity,R.color.white));
-                rb3.setBackgroundColor(ContextCompat.getColor(activity,R.color.transparent));
-                rb4.setBackgroundColor(ContextCompat.getColor(activity,R.color.transparent));
+                rb1.setBackgroundColor(ContextCompat.getColor(activity, R.color.transparent));
+                rb2.setBackgroundColor(ContextCompat.getColor(activity, R.color.white));
+                rb3.setBackgroundColor(ContextCompat.getColor(activity, R.color.transparent));
+                rb4.setBackgroundColor(ContextCompat.getColor(activity, R.color.transparent));
 
             }
         });
@@ -347,20 +337,18 @@ public class Fragment_Settings extends Fragment {
             public void onClick(View v) {
                 tune = 3;
                 tune_raw = R.raw.not2;
-                if (mp!=null)
-                {
+                if (mp != null) {
                     mp.stop();
                     mp.release();
                     playTune(tune_raw);
-                }else
-                {
+                } else {
                     playTune(tune_raw);
 
                 }
-                rb1.setBackgroundColor(ContextCompat.getColor(activity,R.color.transparent));
-                rb2.setBackgroundColor(ContextCompat.getColor(activity,R.color.transparent));
-                rb3.setBackgroundColor(ContextCompat.getColor(activity,R.color.white));
-                rb4.setBackgroundColor(ContextCompat.getColor(activity,R.color.transparent));
+                rb1.setBackgroundColor(ContextCompat.getColor(activity, R.color.transparent));
+                rb2.setBackgroundColor(ContextCompat.getColor(activity, R.color.transparent));
+                rb3.setBackgroundColor(ContextCompat.getColor(activity, R.color.white));
+                rb4.setBackgroundColor(ContextCompat.getColor(activity, R.color.transparent));
 
             }
         });
@@ -370,20 +358,18 @@ public class Fragment_Settings extends Fragment {
             public void onClick(View v) {
                 tune = 4;
                 tune_raw = R.raw.not3;
-                if (mp!=null)
-                {
+                if (mp != null) {
                     mp.stop();
                     mp.release();
                     playTune(tune_raw);
-                }else
-                {
+                } else {
                     playTune(tune_raw);
 
                 }
-                rb1.setBackgroundColor(ContextCompat.getColor(activity,R.color.transparent));
-                rb2.setBackgroundColor(ContextCompat.getColor(activity,R.color.transparent));
-                rb3.setBackgroundColor(ContextCompat.getColor(activity,R.color.transparent));
-                rb4.setBackgroundColor(ContextCompat.getColor(activity,R.color.white));
+                rb1.setBackgroundColor(ContextCompat.getColor(activity, R.color.transparent));
+                rb2.setBackgroundColor(ContextCompat.getColor(activity, R.color.transparent));
+                rb3.setBackgroundColor(ContextCompat.getColor(activity, R.color.transparent));
+                rb4.setBackgroundColor(ContextCompat.getColor(activity, R.color.white));
 
             }
         });
@@ -402,27 +388,25 @@ public class Fragment_Settings extends Fragment {
         btn_select.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mp!=null)
-                {
+                if (mp != null) {
                     mp.stop();
                     mp.release();
                 }
-                preferences.create_update_tune(activity,tune);
+                preferences.create_update_tune(activity, tune);
                 dialog.dismiss();
             }
         });
 
 
-        dialog.getWindow().getAttributes().windowAnimations=R.style.dialog_congratulation_animation;
+        dialog.getWindow().getAttributes().windowAnimations = R.style.dialog_congratulation_animation;
         dialog.setCanceledOnTouchOutside(false);
         dialog.getWindow().setBackgroundDrawableResource(R.drawable.dialog_window_bg);
         dialog.setView(view);
         dialog.show();
     }
 
-    private void playTune(int tune)
-    {
-        mp = MediaPlayer.create(activity,tune);
+    private void playTune(int tune) {
+        mp = MediaPlayer.create(activity, tune);
         mp.setAudioStreamType(AudioManager.STREAM_MUSIC);
         mp.start();
     }

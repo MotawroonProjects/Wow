@@ -103,7 +103,7 @@ public class TermsConditionsActivity extends AppCompatActivity {
 
     private void UpdateUI(int type) {
 
-        if (type == Tags.APPTERMS)
+        if (type == Tags.APPTERMS||type == Tags.APPTERMSDeELEGATE)
         {
             tv_title.setText(getString(R.string.terms_and_conditions));
 

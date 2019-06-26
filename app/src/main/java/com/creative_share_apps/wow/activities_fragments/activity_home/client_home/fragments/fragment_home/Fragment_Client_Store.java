@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.graphics.PorterDuff;
 import android.location.Location;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -57,6 +58,7 @@ public class Fragment_Client_Store extends Fragment {
     private RecyclerView.LayoutManager manager,managerQueries;
     private NearbyAdapter adapter;
     private List<PlaceModel> nearbyModelList,mainNearbyModelList;
+    private List<NearbyModel> nearbyList;
     private ViewPager pager;
     private TabLayout tab;
     private FrameLayout fl_slider;
@@ -69,6 +71,7 @@ public class Fragment_Client_Store extends Fragment {
     private SliderAdapter sliderAdapter;
     private String current_language;
     private LinearLayout ll_shipment,ll_spare,ll_productive_families;
+    private int current_pos=1;
 
 
 
@@ -89,9 +92,11 @@ public class Fragment_Client_Store extends Fragment {
         activity = (ClientHomeActivity) getActivity();
         Paper.init(activity);
         current_language = Paper.book().read("lang", Locale.getDefault().getLanguage());
+        nearbyList = new ArrayList<>();
         nearbyModelList = new ArrayList<>();
         mainNearbyModelList = new ArrayList<>();
         queriesList = new ArrayList<>();
+        queriesList.add("All");
         queriesList.add("restaurant");
         queriesList.add("bakery");
         queriesList.add("supermarket");
@@ -101,6 +106,7 @@ public class Fragment_Client_Store extends Fragment {
         queriesList.add("pharmacy");
 
         en_ar_queriesList = new ArrayList<>();
+        en_ar_queriesList.add(new QuerySearchModel(getString(R.string.all),0));
         en_ar_queriesList.add(new QuerySearchModel(getString(R.string.restaurant),R.drawable.ic_restaurant));
         en_ar_queriesList.add(new QuerySearchModel(getString(R.string.bakery),R.drawable.ic_sweet));
         en_ar_queriesList.add(new QuerySearchModel(getString(R.string.supermarket),R.drawable.ic_nav_store));
@@ -252,9 +258,11 @@ public class Fragment_Client_Store extends Fragment {
 
 
     @SuppressLint("MissingPermission")
-    public void getNearbyPlaces(final Location location,String query)
+    public void getNearbyPlaces(final Location location)
     {
         getAds();
+        activity.DisplayFragmentHomeView();
+
         progBar.setVisibility(View.VISIBLE);
         cardView.setVisibility(View.VISIBLE);
         ll_no_store.setVisibility(View.GONE);
@@ -269,8 +277,98 @@ public class Fragment_Client_Store extends Fragment {
             this.location = location;
             String loc = location.getLatitude()+","+location.getLongitude();
 
+
+           getAllStore(loc,queriesList.get(1));
+
+
+        }
+
+    }
+    private void getAllStore(final String loc, final String query)
+    {
+        Api.getService("https://maps.googleapis.com/maps/api/")
+                .getNearbyStores(loc,5000,query,current_language,getString(R.string.map_api_key))
+                .enqueue(new Callback<NearbyStoreDataModel>() {
+                    @Override
+                    public void onResponse(Call<NearbyStoreDataModel> call, Response<NearbyStoreDataModel> response) {
+                        if (response.isSuccessful()&&response.body()!=null)
+                        {
+                            if (response.body().getResults().size()>0)
+                            {
+                                nearbyList.addAll(response.body().getResults());
+                                current_pos++;
+
+                                if (query.equals(queriesList.get(queriesList.size()-1)))
+                                {
+
+                                    progBar.setVisibility(View.GONE);
+
+                                    if (nearbyList.size()>0){
+                                        current_pos=1;
+                                        ll_no_store.setVisibility(View.GONE);
+                                        updateUi(nearbyList,location);
+
+                                    }else
+                                    {
+                                        ll_no_store.setVisibility(View.VISIBLE);
+                                    }
+
+                                }else
+                                    {
+                                        getAllStore(loc,queriesList.get(current_pos));
+                                    }
+
+                                //updateUi(response.body().getResults(),location);
+                            }
+                        }else
+                        {
+
+
+                            try {
+                                Log.e("error_code",response.errorBody().string());
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        }
+
+
+                    }
+
+                    @Override
+                    public void onFailure(Call<NearbyStoreDataModel> call, Throwable t) {
+                        try {
+
+                            Log.e("Error",t.getMessage());
+                            progBar.setVisibility(View.GONE);
+                            Toast.makeText(activity, getString(R.string.something), Toast.LENGTH_LONG).show();
+                        }catch (Exception e)
+                        {
+
+                        }
+                    }
+                });
+    }
+
+    private void getStoreByQuery(final Location location , String query)
+    {
+        progBar.setVisibility(View.VISIBLE);
+        cardView.setVisibility(View.VISIBLE);
+        ll_no_store.setVisibility(View.GONE);
+        nearbyModelList.clear();
+        if (adapter!=null)
+        {
+            adapter.notifyDataSetChanged();
+        }
+
+        if (location!=null)
+        {
+            this.location = location;
+            String loc = location.getLatitude()+","+location.getLongitude();
+
+
+
             Api.getService("https://maps.googleapis.com/maps/api/")
-                    .getNearbyStores(loc,15000,query,current_language,getString(R.string.map_api_key))
+                    .getNearbyStores(loc,10000,query,current_language,getString(R.string.map_api_key))
                     .enqueue(new Callback<NearbyStoreDataModel>() {
                         @Override
                         public void onResponse(Call<NearbyStoreDataModel> call, Response<NearbyStoreDataModel> response) {
@@ -280,23 +378,23 @@ public class Fragment_Client_Store extends Fragment {
                                 if (response.body().getResults().size()>0)
                                 {
                                     ll_no_store.setVisibility(View.GONE);
-                                    updateUi(response.body(),location);
+                                    updateStoreOnlyUi(response.body(),location);
                                 }else
                                 {
                                     ll_no_store.setVisibility(View.VISIBLE);
 
                                 }
                             }else
-                                {
+                            {
 
-                                    progBar.setVisibility(View.GONE);
+                                progBar.setVisibility(View.GONE);
 
-                                    try {
-                                        Log.e("error_code",response.errorBody().string());
-                                    } catch (IOException e) {
-                                        e.printStackTrace();
-                                    }
+                                try {
+                                    Log.e("error_code",response.errorBody().string());
+                                } catch (IOException e) {
+                                    e.printStackTrace();
                                 }
+                            }
 
 
                         }
@@ -315,10 +413,9 @@ public class Fragment_Client_Store extends Fragment {
                         }
                     });
         }
-
     }
 
-    private void updateUi(NearbyStoreDataModel nearbyStoreDataModel, Location location) {
+    private void updateUi(List<NearbyModel> nearbylList, Location location) {
 
 
 
@@ -326,11 +423,11 @@ public class Fragment_Client_Store extends Fragment {
         if (mainNearbyModelList.size()==0)
         {
             mainNearbyModelList.clear();
-            mainNearbyModelList.addAll(getPlaceModelFromResult(nearbyStoreDataModel.getResults()));
+            mainNearbyModelList.addAll(getPlaceModelFromResult(nearbylList));
 
         }
 
-        nearbyModelList.addAll(getPlaceModelFromResult(nearbyStoreDataModel.getResults()));
+        nearbyModelList.addAll(getPlaceModelFromResult(nearbylList));
 
 
         recViewQueries.setVisibility(View.VISIBLE);
@@ -344,10 +441,26 @@ public class Fragment_Client_Store extends Fragment {
                 adapter.notifyDataSetChanged();
             }
 
-            activity.DisplayFragmentHomeView();
 
     }
 
+    private void updateStoreOnlyUi(NearbyStoreDataModel nearbyStoreDataModel, Location location)
+    {
+        nearbyModelList.addAll(getPlaceModelFromResult(nearbyStoreDataModel.getResults()));
+
+
+        recViewQueries.setVisibility(View.VISIBLE);
+        if (adapter == null)
+        {
+            adapter = new NearbyAdapter(nearbyModelList,activity,this,location.getLatitude(),location.getLongitude());
+            recView.setAdapter(adapter);
+
+        }else
+        {
+            adapter.notifyDataSetChanged();
+        }
+
+    }
     private List<PlaceModel> getPlaceModelFromResult(List<NearbyModel> nearbyModelList)
     {
         List<PlaceModel> returnedList = new ArrayList<>();
@@ -380,23 +493,34 @@ public class Fragment_Client_Store extends Fragment {
 
     public void setQueryItemData(int pos)
     {
+
         if (pos == 0)
         {
             nearbyModelList.clear();
-            nearbyModelList.addAll(mainNearbyModelList);
-            if (mainNearbyModelList.size()>0)
-            {
-                ll_no_store.setVisibility(View.GONE);
+            adapter.notifyDataSetChanged();
+            progBar.setVisibility(View.VISIBLE);
 
-            }
-            if (adapter!=null)
-            {
-                adapter.notifyDataSetChanged();
-            }
+            new Handler()
+                    .postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            nearbyModelList.addAll(mainNearbyModelList);
+                            adapter.notifyDataSetChanged();
+                            progBar.setVisibility(View.GONE);
+
+                        }
+                    },1000);
+
+
+
+           /* String loc = location.getLatitude()+","+location.getLongitude();
+
+            getAllStore(loc,queriesList.get(1));*/
+
         }else
             {
                 String query = queriesList.get(pos);
-                getNearbyPlaces(location,query);
+                getStoreByQuery(location,query);
 
             }
     }
@@ -419,6 +543,7 @@ public class Fragment_Client_Store extends Fragment {
             });
         }
     }
+
 
     @Override
     public void onDestroyView() {

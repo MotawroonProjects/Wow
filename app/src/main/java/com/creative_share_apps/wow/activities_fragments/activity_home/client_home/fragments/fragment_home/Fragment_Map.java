@@ -191,8 +191,17 @@ public class Fragment_Map extends Fragment implements OnMapReadyCallback {
 
             AddMarker(lat, lng,true);
 
+            mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+                @Override
+                public void onMapClick(LatLng latLng) {
+                    lat = latLng.latitude;
+                    lng = latLng.longitude;
+                    getGeoData(lat,lng);
+                    AddMarker(latLng.latitude,latLng.longitude,false);
+                }
+            });
 
-
+/*
             mMap.setOnCameraIdleListener(new GoogleMap.OnCameraIdleListener() {
                 @Override
                 public void onCameraIdle() {
@@ -213,11 +222,11 @@ public class Fragment_Map extends Fragment implements OnMapReadyCallback {
 
 
                 }
-            });
+            });*/
 
 
 
-            mMap.setOnCameraMoveListener(new GoogleMap.OnCameraMoveListener() {
+           /* mMap.setOnCameraMoveListener(new GoogleMap.OnCameraMoveListener() {
                 @Override
                 public void onCameraMove() {
                     lat = mMap.getCameraPosition().target.latitude;
@@ -227,7 +236,7 @@ public class Fragment_Map extends Fragment implements OnMapReadyCallback {
 
 
                 }
-            });
+            });*/
 
         }
     }
@@ -309,7 +318,7 @@ public class Fragment_Map extends Fragment implements OnMapReadyCallback {
                                 place_id = response.body().getResults().get(0).getPlace_id();
                                 tv_address.setText(address+"");
                                 stop = true;
-                                AddMarker(response.body().getResults().get(0).getGeometry().getLocation().getLat(),response.body().getResults().get(0).getGeometry().getLocation().getLng(),true);
+                                //AddMarker(response.body().getResults().get(0).getGeometry().getLocation().getLat(),response.body().getResults().get(0).getGeometry().getLocation().getLng(),true);
                             }
                         }
                         else

@@ -150,7 +150,7 @@
     <string name="couriers">Couriers</string>
     <string name="go_to_order">Follow order</string>
     <string name="order_sent_successfully_order_number_is">Order sent successfully order number is</string>
-    <string name="national_number">National number</string>
+    <string name="national_number">National number-Residency number</string>
     <string name="address">Address</string>
     <string name="identity_card_image">Identity card image</string>
     <string name="license_image">License image</string>
@@ -362,5 +362,12 @@
     <string name="tune_2">Tune 2</string>
     <string name="tune_3">Tune 3</string>
     <string name="notification_tune">Notification tune</string>
+    <string name="num_with_no0">Enter phone number without 0</string>
+    <string name="all">All</string>
+    <string name="bank_accounts">Bank Account</string>
+    <string name="account_iban">Account IBAN</string>
+    <string name="account_number">Account Number</string>
+    <string name="account_name">Account Name</string>
+    <string name="bank_name2">Bank Name</string>
 
 </resources>

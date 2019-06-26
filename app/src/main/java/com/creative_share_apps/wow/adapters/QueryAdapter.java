@@ -93,7 +93,17 @@ public class QueryAdapter extends RecyclerView.Adapter<QueryAdapter.MyHolder> {
         public void BindData(QuerySearchModel querySearchModel) {
 
             tv_query.setText(querySearchModel.getQuery());
-            image.setImageResource(querySearchModel.getImage_resource());
+            if (querySearchModel.getImage_resource()!=0)
+            {
+
+                image.setImageResource(querySearchModel.getImage_resource());
+                tv_query.setPadding(0,0,0,0);
+
+            }else
+                {
+                    image.setVisibility(View.GONE);
+                    tv_query.setPadding(20,0,20,0);
+                }
         }
     }
 }

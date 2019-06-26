@@ -180,10 +180,10 @@
                     />
                 <ImageView
                     android:id="@+id/transfer_icon"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
                     android:layout_gravity="center"
-                    android:src="@drawable/ic_picture"
+                    android:src="@drawable/ic_upload_file"
                     android:padding="8dp"
                     android:tint="@color/gray4"
                     android:clickable="false"

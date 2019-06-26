@@ -14,10 +14,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -29,6 +31,7 @@ import androidx.fragment.app.Fragment;
 
 import com.creative_share_apps.wow.R;
 import com.creative_share_apps.wow.activities_fragments.activity_home.client_home.activity.ClientHomeActivity;
+import com.creative_share_apps.wow.activities_fragments.terms_conditions.TermsConditionsActivity;
 import com.creative_share_apps.wow.share.Common;
 import com.squareup.picasso.Picasso;
 
@@ -45,6 +48,8 @@ public class Fragment_Delegate_Register extends Fragment {
     private FrameLayout fl_id_image, fl_license_image,fl_car_front_image,fl_car_back_image,fl_car_plate_image;
     private EditText edt_national_num, edt_address,edt_plate_number;
     private ClientHomeActivity activity;
+    private CheckBox checkbox;
+    private TextView tv_terms;
     private String current_language;
     private final String READ_PERM = Manifest.permission.READ_EXTERNAL_STORAGE;
     private final String write_permission = Manifest.permission.WRITE_EXTERNAL_STORAGE;
@@ -52,6 +57,8 @@ public class Fragment_Delegate_Register extends Fragment {
     private final int IMG_REQ1 = 1, IMG_REQ2 = 2,IMG_REQ3=3,IMG_REQ4=4,IMG_REQ5=5;
     private Uri imgUri1 = null, imgUri2 = null,imgUri3 = null,imgUri4 = null,imgUri5 = null;
     private int selectedType = 0;
+    private boolean isAccept = false;
+
 
     @Nullable
     @Override
@@ -90,6 +97,9 @@ public class Fragment_Delegate_Register extends Fragment {
         edt_national_num = view.findViewById(R.id.edt_national_num);
         edt_address = view.findViewById(R.id.edt_address);
         edt_plate_number = view.findViewById(R.id.edt_plate_number);
+
+        checkbox = view.findViewById(R.id.checkbox);
+        tv_terms = view.findViewById(R.id.tv_terms);
 
 
         fl_id_image = view.findViewById(R.id.fl_id_image);
@@ -154,6 +164,28 @@ public class Fragment_Delegate_Register extends Fragment {
             }
         });
 
+        checkbox.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (checkbox.isChecked())
+                {
+                    isAccept = true;
+                }else
+                    {
+                        isAccept = false;
+
+                    }
+            }
+        });
+
+        tv_terms.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(activity, TermsConditionsActivity.class);
+                intent.putExtra("type",5);
+                startActivity(intent);
+            }
+        });
 
         image_register.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -172,6 +204,7 @@ public class Fragment_Delegate_Register extends Fragment {
         if (!TextUtils.isEmpty(m_national_id) &&
                 !TextUtils.isEmpty(m_address)&&
                 !TextUtils.isEmpty(m_plate_number)&&
+                isAccept&&
                 imgUri1!=null&&
                 imgUri2!=null&&
                 imgUri3!=null&&
@@ -229,6 +262,12 @@ public class Fragment_Delegate_Register extends Fragment {
                 if (imgUri5==null)
                 {
                     Toast.makeText(activity, R.string.ch_img_behind, Toast.LENGTH_SHORT).show();
+                }
+
+                if (!isAccept)
+                {
+                    Toast.makeText(activity, getString(R.string.to_continue_accept), Toast.LENGTH_SHORT).show();
+
                 }
 
             }

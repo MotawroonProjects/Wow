@@ -1,6 +1,7 @@
 package com.creative_share_apps.wow.services;
 
 import com.creative_share_apps.wow.models.AppDataModel;
+import com.creative_share_apps.wow.models.BankDataModel;
 import com.creative_share_apps.wow.models.CommentDataModel;
 import com.creative_share_apps.wow.models.DepartmentDataModel;
 import com.creative_share_apps.wow.models.Department_Model;
@@ -525,6 +526,9 @@ public interface Service {
 
 
     );
+
+    @GET("/Api/banks")
+    Call<BankDataModel> getBankAccount();
 
 
 }
