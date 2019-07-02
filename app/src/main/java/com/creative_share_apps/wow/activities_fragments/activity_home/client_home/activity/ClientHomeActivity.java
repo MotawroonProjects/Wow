@@ -878,11 +878,8 @@ public class ClientHomeActivity extends AppCompatActivity implements GoogleApiCl
     public void ListenChangeUserType(RegisterMeAsModel registerMeAsModel)
     {
 
-        if (registerMeAsModel.getStatus()==2)
-        {
-            getUserDataById(userModel.getData().getUser_id());
+        getUserDataById(userModel.getData().getUser_id());
 
-        }
 
 
     }

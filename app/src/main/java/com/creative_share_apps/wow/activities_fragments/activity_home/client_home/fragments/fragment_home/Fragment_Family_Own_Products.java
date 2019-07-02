@@ -154,6 +154,7 @@ public class Fragment_Family_Own_Products extends Fragment {
                                     getProductByDeptId(response.body().getData().get(0).getId_department());
                                 }else
                                     {
+                                        progBar.setVisibility(View.GONE);
                                         tv_no_products.setVisibility(View.VISIBLE);
 
                                     }

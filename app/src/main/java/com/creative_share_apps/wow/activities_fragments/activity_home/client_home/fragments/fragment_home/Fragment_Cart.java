@@ -219,8 +219,13 @@ public class Fragment_Cart extends Fragment {
                 .create();
 
         View view = LayoutInflater.from(activity).inflate(R.layout.dialog_add_delivery_address,null);
-        Button btn_add = view.findViewById(R.id.btn_add);
-        final EditText edt_address = view.findViewById(R.id.edt_address);
+        Button btn_add = view.findViewById(R.id.btn_select_location);
+        TextView tv_title = view.findViewById(R.id.tv_title);
+        TextView tv_sub_title = view.findViewById(R.id.tv_sub_title);
+
+        final EditText edt_address = view.findViewById(R.id.edt_nationality);
+        tv_title.setText(getString(R.string.address));
+        tv_sub_title.setText(getString(R.string.address));
 
         btn_add.setOnClickListener(new View.OnClickListener() {
             @Override
