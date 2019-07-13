@@ -233,6 +233,7 @@ public class Fragment_Family_Add_Product extends Fragment {
 
         )
         {
+            Log.e("dep_id",department_id);
             edt_name_ar.setError(null);
             edt_details_ar.setError(null);
             edt_price.setError(null);
@@ -310,7 +311,7 @@ public class Fragment_Family_Add_Product extends Fragment {
 
         }else
         {
-            details_en_part = Common.getRequestBodyText(m_details_en);
+            details_en_part = Common.getRequestBodyText(m_details_ar);
 
         }
         RequestBody user_id_part = Common.getRequestBodyText(userModel.getData().getUser_id());
@@ -329,6 +330,7 @@ public class Fragment_Family_Add_Product extends Fragment {
                         dialog.dismiss();
                         if (response.isSuccessful())
                         {
+                            activity.updateFragmentProductOwn();
                             Toast.makeText(activity, getString(R.string.suc), Toast.LENGTH_SHORT).show();
 
                         }else
@@ -380,7 +382,7 @@ public class Fragment_Family_Add_Product extends Fragment {
 
         }else
         {
-            details_en_part = Common.getRequestBodyText(m_details_en);
+            details_en_part = Common.getRequestBodyText(m_details_ar);
 
         }
         RequestBody user_id_part = Common.getRequestBodyText(userModel.getData().getUser_id());
@@ -398,6 +400,8 @@ public class Fragment_Family_Add_Product extends Fragment {
                         dialog.dismiss();
                         if (response.isSuccessful())
                         {
+                            activity.updateFragmentProductOwn();
+
                             Toast.makeText(activity, getString(R.string.suc), Toast.LENGTH_SHORT).show();
                         }else
                         {

@@ -18,6 +18,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -51,6 +52,7 @@ public class Fragment_Sign_Up extends Fragment implements DatePickerDialog.OnDat
     private FloatingActionButton fab;
     private SignInActivity activity;
     private EditText edt_name, edt_email;
+    private FrameLayout fl_image;
     private ImageView image_personal, image_icon1, image_back_photo;
     private LinearLayout ll_back, ll_birth_date;
     private CheckBox checkbox;
@@ -85,6 +87,7 @@ public class Fragment_Sign_Up extends Fragment implements DatePickerDialog.OnDat
         Paper.init(activity);
         current_language = Paper.book().read("lang", Locale.getDefault().getLanguage());
         ll_back = view.findViewById(R.id.ll_back);
+        fl_image = view.findViewById(R.id.fl_image);
 
         ll_birth_date = view.findViewById(R.id.ll_birth_date);
         tv_birth_date = view.findViewById(R.id.tv_birth_date);
@@ -116,12 +119,6 @@ public class Fragment_Sign_Up extends Fragment implements DatePickerDialog.OnDat
 
         }
 
-        image_personal.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                CreateImageAlertDialog();
-            }
-        });
 
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -170,8 +167,13 @@ public class Fragment_Sign_Up extends Fragment implements DatePickerDialog.OnDat
                     }
             }
         });
+        fl_image.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                CreateImageAlertDialog();
 
-
+            }
+        });
     }
 
     private void CreateDateDialog() {

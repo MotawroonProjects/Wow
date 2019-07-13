@@ -31,20 +31,25 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.creative_share_apps.wow.R;
 import com.creative_share_apps.wow.activities_fragments.activity_home.client_home.activity.ClientHomeActivity;
-import com.creative_share_apps.wow.adapters.NearbyAdapter;
+import com.creative_share_apps.wow.adapters.NearbySearchAdapter;
 import com.creative_share_apps.wow.adapters.SearchRecentAdapter;
+import com.creative_share_apps.wow.models.NearbyModel;
+import com.creative_share_apps.wow.models.NearbyStoreDataModel;
 import com.creative_share_apps.wow.models.PlaceModel;
 import com.creative_share_apps.wow.models.QueryModel;
-import com.creative_share_apps.wow.models.SearchDataModel;
 import com.creative_share_apps.wow.models.SearchModel;
 import com.creative_share_apps.wow.preferences.Preferences;
 import com.creative_share_apps.wow.remote.Api;
 import com.creative_share_apps.wow.share.Common;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.maps.android.SphericalUtil;
 
 import net.cachapa.expandablelayout.ExpandableLayout;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 
@@ -71,10 +76,12 @@ public class Fragment_Search extends Fragment {
     private List<QueryModel> queryModelList;
     private Preferences preferences;
     private SearchRecentAdapter searchRecentAdapter;
-    private NearbyAdapter adapter;
     private List<PlaceModel> placeModelList;
     private double lat = 0.0, lng = 0.0;
     private String user_address="";
+    private NearbySearchAdapter adapter;
+    private List<NearbyModel> nearbyModelList;
+
 
     @Nullable
     @Override
@@ -107,6 +114,8 @@ public class Fragment_Search extends Fragment {
 
         queryModelList = new ArrayList<>();
         placeModelList = new ArrayList<>();
+        nearbyModelList = new ArrayList<>();
+
 
 
 
@@ -135,7 +144,7 @@ public class Fragment_Search extends Fragment {
         manager = new LinearLayoutManager(activity);
         managerQueries = new LinearLayoutManager(activity);
         recView.setLayoutManager(manager);
-        adapter = new NearbyAdapter(placeModelList, activity, this, lat, lng);
+        adapter = new NearbySearchAdapter(nearbyModelList, activity, this, lat, lng);
         recView.setAdapter(adapter);
         recViewQueries.setLayoutManager(managerQueries);
 
@@ -236,19 +245,18 @@ public class Fragment_Search extends Fragment {
         progBar.setVisibility(View.VISIBLE);
 
 
-        String loc = "circle:15000@"+lat+","+lng;
-        String fields ="id,place_id,name,geometry,rating,formatted_address,icon,opening_hours";
+        String loc = lat+","+lng;
 
         Api.getService("https://maps.googleapis.com/maps/api/")
-                .getNearbyStoresWithKeyword(loc,"textquery",(query+user_address),fields,current_language,getString(R.string.map_api_key))
-                .enqueue(new Callback<SearchDataModel>() {
+                .getNearbySearchStores(loc,5000,query,current_language,getString(R.string.map_api_key))
+                .enqueue(new Callback<NearbyStoreDataModel>() {
                     @Override
-                    public void onResponse(Call<SearchDataModel> call, Response<SearchDataModel> response) {
+                    public void onResponse(Call<NearbyStoreDataModel> call, Response<NearbyStoreDataModel> response) {
                         if (response.isSuccessful() && response.body() != null) {
                             progBar.setVisibility(View.GONE);
-                            if (response.body().getCandidates().size() > 0) {
+                            if (response.body()!=null&&response.body().getResults()!=null&&response.body().getResults().size()>0) {
                                 preferences.saveQuery(activity, new QueryModel(query.trim()));
-                                updateAdapter(response.body().getCandidates());
+                                updateAdapter(response.body().getResults());
 
                             } else {
                                 ll_no_store.setVisibility(View.VISIBLE);
@@ -269,7 +277,7 @@ public class Fragment_Search extends Fragment {
                     }
 
                     @Override
-                    public void onFailure(Call<SearchDataModel> call, Throwable t) {
+                    public void onFailure(Call<NearbyStoreDataModel> call, Throwable t) {
                         try {
 
 
@@ -280,11 +288,13 @@ public class Fragment_Search extends Fragment {
                         }
                     }
                 });
+
     }
 
-    private void updateAdapter(List<SearchModel> candidates) {
+    private void updateAdapter(List<NearbyModel> results) {
 
-        placeModelList.addAll(getPlaceModelFromResult(candidates));
+
+        nearbyModelList.addAll(sortData(results));
         adapter.notifyDataSetChanged();
         queryModelList.clear();
         queryModelList.addAll(preferences.getAllQueries(activity));
@@ -335,7 +345,14 @@ public class Fragment_Search extends Fragment {
         Search();
     }
 
-    public void setItemData(PlaceModel placeModel) {
+    public void setItemData(NearbyModel nearbyModel) {
+
+        PlaceModel placeModel = new PlaceModel(nearbyModel.getId(),nearbyModel.getPlace_id(),nearbyModel.getName(),nearbyModel.getIcon(),nearbyModel.getRating(),nearbyModel.getGeometry().getLocation().getLat(),nearbyModel.getGeometry().getLocation().getLng(),nearbyModel.getVicinity());
+        if (nearbyModel.getOpening_hours()!=null)
+        {
+            placeModel.setOpenNow(nearbyModel.getOpening_hours().isOpen_now());
+
+        }
         activity.DisplayFragmentStoreDetails(placeModel);
     }
 
@@ -371,6 +388,34 @@ public class Fragment_Search extends Fragment {
         }
 
         return user_address;
+    }
+
+    private List<NearbyModel> sortData(List<NearbyModel> nearbylList) {
+
+        List<NearbyModel> nearbyModelList = new ArrayList<>();
+        for (NearbyModel nearbyModel :nearbylList)
+        {
+            double distance = SphericalUtil.computeDistanceBetween(new LatLng(lat,lng),new LatLng(nearbyModel.getGeometry().getLocation().getLat(),nearbyModel.getGeometry().getLocation().getLng()));
+            nearbyModel.setDistance(distance);
+            nearbyModelList.add(nearbyModel);
+        }
+
+        Collections.sort(nearbyModelList, new Comparator<NearbyModel>() {
+            @Override
+            public int compare(NearbyModel o1, NearbyModel o2) {
+                if (o1.getDistance()>o2.getDistance())
+                {
+                    return 1;
+                }else if (o1.getDistance()<o2.getDistance())
+                {
+                    return -1;
+                }else
+                {
+                    return 0;
+                }
+            }
+        });
+        return nearbyModelList;
     }
 
 }

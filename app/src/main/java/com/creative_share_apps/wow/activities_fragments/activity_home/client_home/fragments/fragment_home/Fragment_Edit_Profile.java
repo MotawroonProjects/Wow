@@ -523,7 +523,6 @@ public class Fragment_Edit_Profile extends Fragment implements DatePickerDialog.
 
     private void UploadUserDataToUpdate(String m_name, String m_email, String address) {
 
-        Log.e("date",date_of_birth+"_");
         final ProgressDialog dialog = Common.createProgressDialog(activity,getString(R.string.wait));
         dialog.show();
         dialog.setCancelable(false);
@@ -535,7 +534,7 @@ public class Fragment_Edit_Profile extends Fragment implements DatePickerDialog.
         RequestBody user_age_part = Common.getRequestBodyText(String.valueOf(date_of_birth));
         RequestBody user_address_part = Common.getRequestBodyText(address);
         RequestBody user_phone_code_part = Common.getRequestBodyText(phone_code.replace("+","00"));
-        RequestBody user_phone_part = Common.getRequestBodyText(phone);
+        RequestBody user_phone_part = Common.getRequestBodyText(phone.replaceFirst("0",""));
 
 
         Api.getService(Tags.base_url)

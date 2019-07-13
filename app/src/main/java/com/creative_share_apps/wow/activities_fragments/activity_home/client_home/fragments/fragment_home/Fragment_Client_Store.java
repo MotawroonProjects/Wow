@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.graphics.PorterDuff;
 import android.location.Location;
 import android.os.Bundle;
-import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -35,10 +34,14 @@ import com.creative_share_apps.wow.models.QuerySearchModel;
 import com.creative_share_apps.wow.models.SliderModel;
 import com.creative_share_apps.wow.remote.Api;
 import com.creative_share_apps.wow.tags.Tags;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.material.tabs.TabLayout;
+import com.google.maps.android.SphericalUtil;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Timer;
@@ -64,7 +67,7 @@ public class Fragment_Client_Store extends Fragment {
     private FrameLayout fl_slider;
     private Location location;
     private QueryAdapter queryAdapter;
-    private List<String> queriesList;
+    private List<String> queriesList,queriesListAll;
     private List<QuerySearchModel> en_ar_queriesList;
     private Timer timer;
     private TimerTask timerTask;
@@ -96,6 +99,10 @@ public class Fragment_Client_Store extends Fragment {
         nearbyModelList = new ArrayList<>();
         mainNearbyModelList = new ArrayList<>();
         queriesList = new ArrayList<>();
+        queriesListAll = new ArrayList<>();
+        queriesListAll.add("restaurant");
+        queriesListAll.add("store");
+
         queriesList.add("All");
         queriesList.add("restaurant");
         queriesList.add("bakery");
@@ -278,7 +285,7 @@ public class Fragment_Client_Store extends Fragment {
             String loc = location.getLatitude()+","+location.getLongitude();
 
 
-           getAllStore(loc,queriesList.get(1));
+           getAllStore(loc,queriesListAll.get(0));
 
 
         }
@@ -298,7 +305,7 @@ public class Fragment_Client_Store extends Fragment {
                                 nearbyList.addAll(response.body().getResults());
                                 current_pos++;
 
-                                if (query.equals(queriesList.get(queriesList.size()-1)))
+                                if (query.equals(queriesListAll.get(queriesListAll.size()-1)))
                                 {
 
                                     progBar.setVisibility(View.GONE);
@@ -427,7 +434,8 @@ public class Fragment_Client_Store extends Fragment {
 
         }
 
-        nearbyModelList.addAll(getPlaceModelFromResult(nearbylList));
+
+        nearbyModelList.addAll(getPlaceModelFromResult(sortData(nearbylList)));
 
 
         recViewQueries.setVisibility(View.VISIBLE);
@@ -444,9 +452,37 @@ public class Fragment_Client_Store extends Fragment {
 
     }
 
+    private List<NearbyModel> sortData(List<NearbyModel> nearbylList) {
+
+        List<NearbyModel> nearbyModelList = new ArrayList<>();
+        for (NearbyModel nearbyModel :nearbylList)
+        {
+            double distance = SphericalUtil.computeDistanceBetween(new LatLng(location.getLatitude(),location.getLongitude()),new LatLng(nearbyModel.getGeometry().getLocation().getLat(),nearbyModel.getGeometry().getLocation().getLng()));
+            nearbyModel.setDistance(distance);
+            nearbyModelList.add(nearbyModel);
+        }
+
+        Collections.sort(nearbyModelList, new Comparator<NearbyModel>() {
+            @Override
+            public int compare(NearbyModel o1, NearbyModel o2) {
+                if (o1.getDistance()>o2.getDistance())
+                {
+                    return 1;
+                }else if (o1.getDistance()<o2.getDistance())
+                {
+                    return -1;
+                }else
+                    {
+                        return 0;
+                    }
+            }
+        });
+        return nearbyModelList;
+    }
+
     private void updateStoreOnlyUi(NearbyStoreDataModel nearbyStoreDataModel, Location location)
     {
-        nearbyModelList.addAll(getPlaceModelFromResult(nearbyStoreDataModel.getResults()));
+        nearbyModelList.addAll(getPlaceModelFromResult(sortData(nearbyStoreDataModel.getResults())));
 
 
         recViewQueries.setVisibility(View.VISIBLE);
@@ -469,7 +505,7 @@ public class Fragment_Client_Store extends Fragment {
 
 
             PlaceModel placeModel = new PlaceModel(nearbyModel.getId(),nearbyModel.getPlace_id(),nearbyModel.getName(),nearbyModel.getIcon(),nearbyModel.getRating(),nearbyModel.getGeometry().getLocation().getLat(),nearbyModel.getGeometry().getLocation().getLng(),nearbyModel.getVicinity());
-
+            placeModel.setDistance(nearbyModel.getDistance());
 
             if (nearbyModel.getOpening_hours()!=null)
             {
@@ -499,23 +535,9 @@ public class Fragment_Client_Store extends Fragment {
             nearbyModelList.clear();
             adapter.notifyDataSetChanged();
             progBar.setVisibility(View.VISIBLE);
-
-            new Handler()
-                    .postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            nearbyModelList.addAll(mainNearbyModelList);
-                            adapter.notifyDataSetChanged();
-                            progBar.setVisibility(View.GONE);
-
-                        }
-                    },1000);
+            getAllStore(location.getLatitude()+","+location.getLongitude(),queriesList.get(0));
 
 
-
-           /* String loc = location.getLatitude()+","+location.getLongitude();
-
-            getAllStore(loc,queriesList.get(1));*/
 
         }else
             {

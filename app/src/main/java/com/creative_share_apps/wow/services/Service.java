@@ -59,6 +59,14 @@ public interface Service {
                                                      @Query(value = "key") String key
     );
 
+    @GET("place/nearbysearch/json")
+    Call<NearbyStoreDataModel> getNearbySearchStores(@Query(value = "location") String location,
+                                                     @Query(value = "radius") int radius,
+                                                     @Query(value = "name") String query,
+                                                     @Query(value = "language") String language,
+                                                     @Query(value = "key") String key
+    );
+
     @GET("place/details/json")
     Call<PlaceDetailsModel> getPlaceDetails(@Query(value = "placeid") String placeid,
                                             @Query(value = "fields") String fields,

@@ -1104,52 +1104,55 @@ public class ClientHomeActivity extends AppCompatActivity implements GoogleApiCl
     {
 
 
-        if (fragment_home != null && fragment_home.isAdded()) {
-            fragment_home.updateBottomNavigationPosition(0);
-        }
-        if (fragment_shipment != null && fragment_shipment.isAdded()) {
-            fragmentManager.beginTransaction().hide(fragment_shipment).commit();
-        }
-        if (fragment_client_orders != null && fragment_client_orders.isAdded()) {
-            fragmentManager.beginTransaction().hide(fragment_client_orders).commit();
-        }
+        try {
+            if (fragment_home != null && fragment_home.isAdded()) {
+                fragment_home.updateBottomNavigationPosition(0);
+            }
+            if (fragment_shipment != null && fragment_shipment.isAdded()) {
+                fragmentManager.beginTransaction().hide(fragment_shipment).commit();
+            }
+            if (fragment_client_orders != null && fragment_client_orders.isAdded()) {
+                fragmentManager.beginTransaction().hide(fragment_client_orders).commit();
+            }
 
-        if (fragment_family_orders != null && fragment_family_orders.isAdded()) {
-            fragmentManager.beginTransaction().hide(fragment_family_orders).commit();
-        }
+            if (fragment_family_orders != null && fragment_family_orders.isAdded()) {
+                fragmentManager.beginTransaction().hide(fragment_family_orders).commit();
+            }
 
-        if (fragment_spare_orders != null && fragment_spare_orders.isAdded()) {
-            fragmentManager.beginTransaction().hide(fragment_spare_orders).commit();
-        }
+            if (fragment_spare_orders != null && fragment_spare_orders.isAdded()) {
+                fragmentManager.beginTransaction().hide(fragment_spare_orders).commit();
+            }
 
 
-        if (fragment_client_notifications != null && fragment_client_notifications.isAdded()) {
-            fragmentManager.beginTransaction().hide(fragment_client_notifications).commit();
-        }
-        if (fragment_client_profile != null && fragment_client_profile.isAdded()) {
-            fragmentManager.beginTransaction().hide(fragment_client_profile).commit();
-        }
+            if (fragment_client_notifications != null && fragment_client_notifications.isAdded()) {
+                fragmentManager.beginTransaction().hide(fragment_client_notifications).commit();
+            }
+            if (fragment_client_profile != null && fragment_client_profile.isAdded()) {
+                fragmentManager.beginTransaction().hide(fragment_client_profile).commit();
+            }
 
-        if (fragment_client_store == null) {
-            fragment_client_store = Fragment_Client_Store.newInstance();
-        }
+            if (fragment_client_store == null) {
+                fragment_client_store = Fragment_Client_Store.newInstance();
+            }
 
-        if (fragment_client_store.isAdded()) {
-            fragmentManager.beginTransaction().show(fragment_client_store).commit();
+            if (fragment_client_store.isAdded()) {
+                fragmentManager.beginTransaction().show(fragment_client_store).commit();
 
-        } else {
-            fragmentManager.beginTransaction().add(R.id.fragment_home_container, fragment_client_store, "fragment_client_store").addToBackStack("fragment_client_store").commit();
-        }
+            } else {
+                fragmentManager.beginTransaction().add(R.id.fragment_home_container, fragment_client_store, "fragment_client_store").addToBackStack("fragment_client_store").commit();
+            }
 
-        new Handler()
-                .postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (fragment_home != null && fragment_home.isAdded()) {
-                            fragment_home.updateBottomNavigationPosition(0);
+            new Handler()
+                    .postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (fragment_home != null && fragment_home.isAdded()) {
+                                fragment_home.updateBottomNavigationPosition(0);
+                            }
                         }
-                    }
-                },5);
+                    },5);
+        }catch (Exception e){}
+
 
     }
     public void DisplayFragmentShipment()
@@ -1220,48 +1223,51 @@ public class ClientHomeActivity extends AppCompatActivity implements GoogleApiCl
     {
 
 
-        if (fragment_client_store != null && fragment_client_store.isAdded()) {
-            fragmentManager.beginTransaction().hide(fragment_client_store).commit();
-        }
-        if (fragment_shipment != null && fragment_shipment.isAdded()) {
-            fragmentManager.beginTransaction().hide(fragment_shipment).commit();
-        }
-        if (fragment_client_notifications != null && fragment_client_notifications.isAdded()) {
-            fragmentManager.beginTransaction().hide(fragment_client_notifications).commit();
-        }
-        if (fragment_client_profile != null && fragment_client_profile.isAdded()) {
-            fragmentManager.beginTransaction().hide(fragment_client_profile).commit();
-        }
+        try {
+            if (fragment_client_store != null && fragment_client_store.isAdded()) {
+                fragmentManager.beginTransaction().hide(fragment_client_store).commit();
+            }
+            if (fragment_shipment != null && fragment_shipment.isAdded()) {
+                fragmentManager.beginTransaction().hide(fragment_shipment).commit();
+            }
+            if (fragment_client_notifications != null && fragment_client_notifications.isAdded()) {
+                fragmentManager.beginTransaction().hide(fragment_client_notifications).commit();
+            }
+            if (fragment_client_profile != null && fragment_client_profile.isAdded()) {
+                fragmentManager.beginTransaction().hide(fragment_client_profile).commit();
+            }
 
-        if (fragment_client_orders != null && fragment_client_orders.isAdded()) {
-            fragmentManager.beginTransaction().hide(fragment_client_orders).commit();
-        }
+            if (fragment_client_orders != null && fragment_client_orders.isAdded()) {
+                fragmentManager.beginTransaction().hide(fragment_client_orders).commit();
+            }
 
-        if (fragment_spare_orders != null && fragment_spare_orders.isAdded()) {
-            fragmentManager.beginTransaction().hide(fragment_spare_orders).commit();
-        }
+            if (fragment_spare_orders != null && fragment_spare_orders.isAdded()) {
+                fragmentManager.beginTransaction().hide(fragment_spare_orders).commit();
+            }
 
-        if (fragment_family_orders == null) {
-            fragment_family_orders = Fragment_Family_Orders.newInstance();
-        }
+            if (fragment_family_orders == null) {
+                fragment_family_orders = Fragment_Family_Orders.newInstance();
+            }
 
 
-        if (fragment_family_orders.isAdded()) {
-            fragmentManager.beginTransaction().show(fragment_family_orders).commit();
+            if (fragment_family_orders.isAdded()) {
+                fragmentManager.beginTransaction().show(fragment_family_orders).commit();
 
-        } else {
-            fragmentManager.beginTransaction().add(R.id.fragment_home_container, fragment_family_orders, "fragment_family_orders").addToBackStack("fragment_family_orders").commit();
-        }
+            } else {
+                fragmentManager.beginTransaction().add(R.id.fragment_home_container, fragment_family_orders, "fragment_family_orders").addToBackStack("fragment_family_orders").commit();
+            }
 
-        new Handler()
-                .postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (fragment_home != null && fragment_home.isAdded()) {
-                            fragment_home.updateBottomNavigationPosition(1);
+            new Handler()
+                    .postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (fragment_home != null && fragment_home.isAdded()) {
+                                fragment_home.updateBottomNavigationPosition(1);
+                            }
                         }
-                    }
-                },5);
+                    },5);
+        }catch (Exception e){}
+
 
     }
 
@@ -1316,95 +1322,105 @@ public class ClientHomeActivity extends AppCompatActivity implements GoogleApiCl
     }
     public void DisplayFragmentNotification()
     {
-        readNotification();
+
+        try {
+            readNotification();
 
 
-        if (fragment_client_store != null && fragment_client_store.isAdded()) {
-            fragmentManager.beginTransaction().hide(fragment_client_store).commit();
-        }
-        if (fragment_shipment != null && fragment_shipment.isAdded()) {
-            fragmentManager.beginTransaction().hide(fragment_shipment).commit();
-        }
-        if (fragment_client_orders != null && fragment_client_orders.isAdded()) {
-            fragmentManager.beginTransaction().hide(fragment_client_orders).commit();
-        }
-        if (fragment_spare_orders != null && fragment_spare_orders.isAdded()) {
-            fragmentManager.beginTransaction().hide(fragment_spare_orders).commit();
-        }
+            if (fragment_client_store != null && fragment_client_store.isAdded()) {
+                fragmentManager.beginTransaction().hide(fragment_client_store).commit();
+            }
+            if (fragment_shipment != null && fragment_shipment.isAdded()) {
+                fragmentManager.beginTransaction().hide(fragment_shipment).commit();
+            }
+            if (fragment_client_orders != null && fragment_client_orders.isAdded()) {
+                fragmentManager.beginTransaction().hide(fragment_client_orders).commit();
+            }
+            if (fragment_spare_orders != null && fragment_spare_orders.isAdded()) {
+                fragmentManager.beginTransaction().hide(fragment_spare_orders).commit();
+            }
 
-        if (fragment_family_orders != null && fragment_family_orders.isAdded()) {
-            fragmentManager.beginTransaction().hide(fragment_family_orders).commit();
-        }
-        if (fragment_client_profile != null && fragment_client_profile.isAdded()) {
-            fragmentManager.beginTransaction().hide(fragment_client_profile).commit();
-        }
+            if (fragment_family_orders != null && fragment_family_orders.isAdded()) {
+                fragmentManager.beginTransaction().hide(fragment_family_orders).commit();
+            }
+            if (fragment_client_profile != null && fragment_client_profile.isAdded()) {
+                fragmentManager.beginTransaction().hide(fragment_client_profile).commit();
+            }
 
-        if (fragment_client_notifications == null) {
-            fragment_client_notifications = Fragment_Client_Notifications.newInstance();
-        }
+            if (fragment_client_notifications == null) {
+                fragment_client_notifications = Fragment_Client_Notifications.newInstance();
+            }
 
-        if (fragment_client_notifications.isAdded()) {
-            fragmentManager.beginTransaction().show(fragment_client_notifications).commit();
+            if (fragment_client_notifications.isAdded()) {
+                fragmentManager.beginTransaction().show(fragment_client_notifications).commit();
 
-        } else {
-            fragmentManager.beginTransaction().add(R.id.fragment_home_container, fragment_client_notifications, "fragment_client_notifications").addToBackStack("fragment_client_notifications").commit();
-        }
-        new Handler()
-                .postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (fragment_home != null && fragment_home.isAdded()) {
-                            fragment_home.updateBottomNavigationPosition(2);
+            } else {
+                fragmentManager.beginTransaction().add(R.id.fragment_home_container, fragment_client_notifications, "fragment_client_notifications").addToBackStack("fragment_client_notifications").commit();
+            }
+            new Handler()
+                    .postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (fragment_home != null && fragment_home.isAdded()) {
+                                fragment_home.updateBottomNavigationPosition(2);
+                            }
                         }
-                    }
-                },5);
+                    },5);
+
+        }catch (Exception e)
+        {
+
+        }
 
     }
     public void DisplayFragmentProfile()
     {
 
-        if (fragment_client_store != null && fragment_client_store.isAdded()) {
-            fragmentManager.beginTransaction().hide(fragment_client_store).commit();
-        }
-        if (fragment_shipment != null && fragment_shipment.isAdded()) {
-            fragmentManager.beginTransaction().hide(fragment_shipment).commit();
-        }
-        if (fragment_client_orders != null && fragment_client_orders.isAdded()) {
-            fragmentManager.beginTransaction().hide(fragment_client_orders).commit();
-        }
+        try {
+            if (fragment_client_store != null && fragment_client_store.isAdded()) {
+                fragmentManager.beginTransaction().hide(fragment_client_store).commit();
+            }
+            if (fragment_shipment != null && fragment_shipment.isAdded()) {
+                fragmentManager.beginTransaction().hide(fragment_shipment).commit();
+            }
+            if (fragment_client_orders != null && fragment_client_orders.isAdded()) {
+                fragmentManager.beginTransaction().hide(fragment_client_orders).commit();
+            }
 
-        if (fragment_spare_orders != null && fragment_spare_orders.isAdded()) {
-            fragmentManager.beginTransaction().hide(fragment_spare_orders).commit();
-        }
+            if (fragment_spare_orders != null && fragment_spare_orders.isAdded()) {
+                fragmentManager.beginTransaction().hide(fragment_spare_orders).commit();
+            }
 
-        if (fragment_family_orders != null && fragment_family_orders.isAdded()) {
-            fragmentManager.beginTransaction().hide(fragment_family_orders).commit();
-        }
+            if (fragment_family_orders != null && fragment_family_orders.isAdded()) {
+                fragmentManager.beginTransaction().hide(fragment_family_orders).commit();
+            }
 
-        if (fragment_client_notifications != null && fragment_client_notifications.isAdded()) {
-            fragmentManager.beginTransaction().hide(fragment_client_notifications).commit();
-        }
+            if (fragment_client_notifications != null && fragment_client_notifications.isAdded()) {
+                fragmentManager.beginTransaction().hide(fragment_client_notifications).commit();
+            }
 
-        if (fragment_client_profile == null) {
-            fragment_client_profile = Fragment_Client_Profile.newInstance();
-        }
+            if (fragment_client_profile == null) {
+                fragment_client_profile = Fragment_Client_Profile.newInstance();
+            }
 
-        if (fragment_client_profile.isAdded()) {
-            fragmentManager.beginTransaction().show(fragment_client_profile).commit();
+            if (fragment_client_profile.isAdded()) {
+                fragmentManager.beginTransaction().show(fragment_client_profile).commit();
 
-        } else {
-            fragmentManager.beginTransaction().add(R.id.fragment_home_container, fragment_client_profile, "fragment_client_profile").addToBackStack("fragment_client_profile").commit();
-        }
+            } else {
+                fragmentManager.beginTransaction().add(R.id.fragment_home_container, fragment_client_profile, "fragment_client_profile").addToBackStack("fragment_client_profile").commit();
+            }
 
-        new Handler()
-                .postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (fragment_home != null && fragment_home.isAdded()) {
-                            fragment_home.updateBottomNavigationPosition(3);
+            new Handler()
+                    .postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (fragment_home != null && fragment_home.isAdded()) {
+                                fragment_home.updateBottomNavigationPosition(3);
+                            }
                         }
-                    }
-                },5);
+                    },5);
+
+        }catch (Exception e){}
 
     }
     public void DisplayFragmentAddCoupon()
@@ -2251,6 +2267,18 @@ public class ClientHomeActivity extends AppCompatActivity implements GoogleApiCl
         }
     }
 
+    public void updateFragmentProductOwn()
+    {
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (fragment_family_own_products!=null&&fragment_family_own_products.isAdded())
+                {
+                    fragment_family_own_products.getDepartments();
+                }
+            }
+        },500);
+    }
     public void NavigateToChatActivity(ChatUserModel chatUserModel,String from)
     {
         Intent intent = new Intent(this, ChatActivity.class);

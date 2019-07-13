@@ -134,8 +134,10 @@ public class Fragment_Family_Own_Products extends Fragment {
 
     }
 
-    private void getDepartments()
+    public void getDepartments()
     {
+        department_modelList.clear();
+
         Api.getService(Tags.base_url)
                 .getAllFamilyDepts(userModel.getData().getUser_id())
                 .enqueue(new Callback<DepartmentDataModel>() {
