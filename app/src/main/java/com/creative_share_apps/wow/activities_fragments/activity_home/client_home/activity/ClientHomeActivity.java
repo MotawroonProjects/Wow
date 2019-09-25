@@ -8,12 +8,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
-import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.provider.Settings;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -644,6 +642,7 @@ public class ClientHomeActivity extends AppCompatActivity implements GoogleApiCl
                         if (task.isSuccessful())
                         {
                             String token = task.getResult().getToken();
+                            Log.e("token",token);
                             Api.getService(Tags.base_url)
                                     .updateToken(userModel.getData().getUser_id(),token)
                                     .enqueue(new Callback<ResponseBody>() {
@@ -4074,71 +4073,10 @@ public class ClientHomeActivity extends AppCompatActivity implements GoogleApiCl
         } else {
 
             initGoogleApiClient();
-           /* if (isGpsOpen())
-            {
-                StartService(LocationRequest.PRIORITY_HIGH_ACCURACY);
-            }else
-                {
-                    CreateGpsDialog();
 
-                }*/
         }
     }
-    private void StartService(int accuracy)
-    {
 
-       /* intentService = new Intent(this, UpdateLocationService.class);
-        intentService.putExtra("accuracy",accuracy);
-        startService(intentService);*/
-    }
-    private boolean isGpsOpen()
-    {
-        boolean isOpened = false;
-        LocationManager manager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        if (manager != null) {
-            if (manager.isProviderEnabled(LocationManager.GPS_PROVIDER)||manager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
-                isOpened = true;
-            }
-        }
-
-        return isOpened;
-    }
-    private void OpenGps()
-    {
-        Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-        startActivityForResult(intent, 33);
-    }
-    private void CreateGpsDialog()
-    {
-        final AlertDialog dialog = new AlertDialog.Builder(this)
-                .setCancelable(true)
-                .create();
-
-        View view = LayoutInflater.from(this).inflate(R.layout.gps_dialog,null);
-        Button btn_allow = view.findViewById(R.id.btn_allow);
-        Button btn_deny = view.findViewById(R.id.btn_deny);
-
-        btn_allow.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss();
-                OpenGps();
-            }
-        });
-        btn_deny.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss();
-            }
-        });
-
-
-        dialog.getWindow().getAttributes().windowAnimations=R.style.dialog_congratulation_animation;
-        dialog.setCanceledOnTouchOutside(false);
-        dialog.getWindow().setBackgroundDrawableResource(R.drawable.dialog_window_bg);
-        dialog.setView(view);
-        dialog.show();
-    }
 
     /////////////////////////////////////////////////////////////////
     private void intLocationRequest()

@@ -75,6 +75,7 @@ public class Fragment_Client_Store extends Fragment {
     private String current_language;
     private LinearLayout ll_shipment,ll_spare,ll_productive_families;
     private int current_pos=1;
+    private int min_dis = 5000;
 
 
 
@@ -231,6 +232,12 @@ public class Fragment_Client_Store extends Fragment {
 
     private void updateSliderData(SliderModel sliderModel) {
 
+        min_dis = sliderModel.getSearch_des()*1000;
+        String loc = location.getLatitude()+","+location.getLongitude();
+
+        getAllStore(loc,queriesListAll.get(0));
+
+
         if (sliderModel.getData().size()>0)
         {
             fl_slider.setVisibility(View.VISIBLE);
@@ -267,7 +274,6 @@ public class Fragment_Client_Store extends Fragment {
     @SuppressLint("MissingPermission")
     public void getNearbyPlaces(final Location location)
     {
-        getAds();
         activity.DisplayFragmentHomeView();
 
         progBar.setVisibility(View.VISIBLE);
@@ -282,10 +288,10 @@ public class Fragment_Client_Store extends Fragment {
         if (location!=null)
         {
             this.location = location;
-            String loc = location.getLatitude()+","+location.getLongitude();
+
+            getAds();
 
 
-           getAllStore(loc,queriesListAll.get(0));
 
 
         }
@@ -294,7 +300,7 @@ public class Fragment_Client_Store extends Fragment {
     private void getAllStore(final String loc, final String query)
     {
         Api.getService("https://maps.googleapis.com/maps/api/")
-                .getNearbyStores(loc,5000,query,current_language,getString(R.string.map_api_key))
+                .getNearbyStores(loc,min_dis,query,current_language,getString(R.string.map_api_key))
                 .enqueue(new Callback<NearbyStoreDataModel>() {
                     @Override
                     public void onResponse(Call<NearbyStoreDataModel> call, Response<NearbyStoreDataModel> response) {
@@ -375,7 +381,7 @@ public class Fragment_Client_Store extends Fragment {
 
 
             Api.getService("https://maps.googleapis.com/maps/api/")
-                    .getNearbyStores(loc,10000,query,current_language,getString(R.string.map_api_key))
+                    .getNearbyStores(loc,min_dis,query,current_language,getString(R.string.map_api_key))
                     .enqueue(new Callback<NearbyStoreDataModel>() {
                         @Override
                         public void onResponse(Call<NearbyStoreDataModel> call, Response<NearbyStoreDataModel> response) {
