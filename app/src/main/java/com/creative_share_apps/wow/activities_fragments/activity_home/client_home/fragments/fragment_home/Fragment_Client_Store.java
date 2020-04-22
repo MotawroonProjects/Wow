@@ -306,36 +306,34 @@ public class Fragment_Client_Store extends Fragment {
                     public void onResponse(Call<NearbyStoreDataModel> call, Response<NearbyStoreDataModel> response) {
                         if (response.isSuccessful()&&response.body()!=null)
                         {
-
-                            if (response.body().getResults().size()>0)
-                            {
-
+                            if (response.body().getResults().size()>0) {
                                 nearbyList.addAll(response.body().getResults());
                                 current_pos++;
 
-                                if (query.equals(queriesListAll.get(queriesListAll.size()-1)))
-                                {
+//                                if (query.equals(queriesListAll.get(queriesListAll.size()-1)))
+//                                {
 
-                                    progBar.setVisibility(View.GONE);
+                                progBar.setVisibility(View.GONE);
 
-                                    if (nearbyList.size()>0){
-                                        current_pos=1;
-                                        ll_no_store.setVisibility(View.GONE);
-                                        updateUi(nearbyList,location);
+                                // if (nearbyList.size()>0){
+                                current_pos = 1;
+                                ll_no_store.setVisibility(View.GONE);
+                                updateUi(nearbyList, location);
 
-                                    }else
-                                    {
-                                        ll_no_store.setVisibility(View.VISIBLE);
-                                    }
+//                                    }else
+//                                    {
+//                                        ll_no_store.setVisibility(View.VISIBLE);
+//                                    }
 
-                                }else
-                                    {
-                                        getAllStore(loc,queriesList.get(current_pos));
-                                    }
+                            }
+//                            else
+//                                    {
+//                                        getAllStore(loc,queriesList.get(current_pos));
+//                                    }
 
                                 //updateUi(response.body().getResults(),location);
                             }
-                        }else
+                        else
                         {
 
 
