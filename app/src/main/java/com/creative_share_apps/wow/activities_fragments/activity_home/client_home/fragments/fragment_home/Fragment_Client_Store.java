@@ -306,8 +306,10 @@ public class Fragment_Client_Store extends Fragment {
                     public void onResponse(Call<NearbyStoreDataModel> call, Response<NearbyStoreDataModel> response) {
                         if (response.isSuccessful()&&response.body()!=null)
                         {
+
                             if (response.body().getResults().size()>0)
                             {
+
                                 nearbyList.addAll(response.body().getResults());
                                 current_pos++;
 

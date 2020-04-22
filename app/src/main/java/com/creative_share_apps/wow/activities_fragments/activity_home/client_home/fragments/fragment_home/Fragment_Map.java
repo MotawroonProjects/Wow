@@ -303,7 +303,7 @@ public class Fragment_Map extends Fragment implements OnMapReadyCallback {
 
         String location = lat+","+lng;
         Api.getService("https://maps.googleapis.com/maps/api/")
-                .getGeoData(location,current_language,getString(R.string.map_api_key))
+                .getGeoData(location,current_language,getString(R.string.map_api_key2))
                 .enqueue(new Callback<PlaceGeocodeData>() {
                     @Override
                     public void onResponse(Call<PlaceGeocodeData> call, Response<PlaceGeocodeData> response) {
