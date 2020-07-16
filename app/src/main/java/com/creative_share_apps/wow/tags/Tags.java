@@ -6,10 +6,10 @@ public class Tags {
 
     public static final String base_url = "http://twseelwow.com";
     public static final String googleDirectionBase_url = "https://maps.googleapis.com/maps/api/";
-    public static final String IMAGE_URL = base_url+"/uploads/images/";
+    public static final String IMAGE_URL = base_url + "/uploads/images/";
     public static final String session_login = "login";
     public static final String session_logout = "logout";
-    public static final String local_folder_path = Environment.getExternalStorageDirectory().getAbsoluteFile()+"/Aamr_Audio";
+    public static final String local_folder_path = Environment.getExternalStorageDirectory().getAbsoluteFile() + "/Aamr_Audio";
 
     public static final int MALE = 1;
     public static final int FEMALE = 2;
@@ -29,7 +29,6 @@ public class Tags {
     public static final String ORDER_OLD = "7";
 
 
-
     public static final int STATE_ORDER_NEW = 0;
     public static final int STATE_DELEGATE_SEND_OFFER = 1;
     public static final int STATE_DELEGATE_REFUSE_ORDER = 2;
@@ -42,14 +41,14 @@ public class Tags {
 
 
     public static final int START_TYPING = 1;
-    public static final int END_TYPING= 2;
+    public static final int END_TYPING = 2;
 
 
     public static final String FIREBASE_NOT_TYPING = "typing";
     public static final String FIREBASE_NOT_ORDER_STATUS = "order_status";
     public static final String FIREBASE_NOT_SEND_MESSAGE = "send_message";
     public static final String FIREBASE_NOT_RATE = "rate";
-    public static final String FIREBASE_NOT_BE_DELEGATE= "be_driver";
+    public static final String FIREBASE_NOT_BE_DELEGATE = "be_driver";
     public static final String FIREBASE_NOT_BE_FAMILY = "be_family";
     public static final String FIREBASE_NOT_GENERAL_NOT = "general_notifications";
     public static final String FIREBASE_NOT_BALANCE = "balance_notifications";
@@ -59,8 +58,6 @@ public class Tags {
 
     public static final String MESSAGE_TEXT = "1";
     public static final String MESSAGE_IMAGE_TEXT = "2";
-
-
 
 
 }
