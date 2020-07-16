@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--suppress ALL -->
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@color/gray1"
+    android:background="@color/gray0"
     android:clickable="true"
     android:focusable="true"
     >
@@ -13,6 +14,7 @@
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@color/white"
         >
         <com.google.android.material.appbar.CollapsingToolbarLayout
             android:layout_width="match_parent"
@@ -24,6 +26,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 >
+
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                >
                 <de.hdodenhof.circleimageview.CircleImageView
                     android:id="@+id/image"
                     android:layout_width="80dp"
@@ -31,49 +41,71 @@
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    android:layout_marginTop="80dp"
+                    android:layout_margin="10dp"
                     app:civ_border_width="1dp"
                     app:civ_border_color="@color/white"
-                    android:src="@drawable/logo_only"
-
+                    android:src="@drawable/user_profile"
+                    app:civ_fill_color="@color/white"
+                    
                     />
-                <TextView
-                    android:id="@+id/tv_name"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    app:layout_constraintTop_toBottomOf="@id/image"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    android:layout_marginTop="5dp"
-                    android:textColor="@color/white"
-                    android:textSize="15sp"
-                    android:text="name"
-                    android:gravity="center"
-                    android:textStyle="bold"
-                    />
-                <com.iarcuschin.simpleratingbar.SimpleRatingBar
-                    android:id="@+id/rateBar"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/tv_name"
-                    android:layout_marginTop="10dp"
-                    app:layout_constraintBottom_toTopOf="@id/ll_certification"
-                    android:layout_marginBottom="20dp"
-                    app:srb_isIndicator="true"
-                    app:srb_stepSize=".5"
-                    app:srb_starSize="25dp"
-                    app:srb_starsSeparation="10dp"
-                    app:srb_numberOfStars="5"
-                    app:srb_fillColor="@color/rating"
-                    app:srb_borderColor="@color/white"
-                    app:srb_starBorderWidth="3"
-                    app:srb_drawBorderEnabled="true"
-                    app:srb_starBackgroundColor="@color/white"
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="20dp"
+                    android:orientation="vertical"
+                    android:layout_weight="1"
+                    >
+                    <TextView
+                        android:id="@+id/tv_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintTop_toBottomOf="@id/image"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        android:layout_marginTop="5dp"
+                        android:textColor="@color/colorPrimary"
+                        android:textSize="18sp"
+                        android:text="name"
+                        android:gravity="center"
+                        android:textStyle="bold"
+                        />
+                    <com.iarcuschin.simpleratingbar.SimpleRatingBar
+                        android:id="@+id/rateBar"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/tv_name"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginBottom="20dp"
+                        app:srb_isIndicator="true"
+                        app:srb_stepSize=".5"
+                        app:srb_starSize="25dp"
+                        app:srb_starsSeparation="10dp"
+                        app:srb_numberOfStars="5"
+                        app:srb_fillColor="@color/rating"
+                        app:srb_borderColor="@color/rating"
+                        app:srb_starBorderWidth="3"
+                        app:srb_drawBorderEnabled="true"
 
-                    />
+                        app:srb_starBackgroundColor="@color/white"
 
+                        />
+                </LinearLayout>
+
+<ImageView
+    android:layout_width="40dp"
+    android:layout_height="40dp"
+    android:id="@+id/image_logout"
+    android:src="@drawable/logout"
+    android:tint="@color/colorPrimary"
+    android:layout_marginTop="15dp"
+    android:layout_marginLeft="10dp"
+    android:layout_marginRight="10dp"
+    android:padding="5dp"
+
+    />
+<!--
                 <LinearLayout
                     android:id="@+id/ll_certification"
                     android:layout_width="wrap_content"
@@ -103,9 +135,10 @@
                         android:textStyle="bold"
                         />
                 </LinearLayout>
-            </androidx.constraintlayout.widget.ConstraintLayout>
+-->
+            </LinearLayout>
 
-            <androidx.appcompat.widget.Toolbar
+        <!--    <androidx.appcompat.widget.Toolbar
                 android:layout_width="match_parent"
                 android:layout_height="56dp"
                 app:contentInsetStart="0dp"
@@ -156,7 +189,7 @@
                         android:text="@string/profile"
                         />
                 </androidx.constraintlayout.widget.ConstraintLayout>
-            </androidx.appcompat.widget.Toolbar>
+            </androidx.appcompat.widget.Toolbar>-->
         </com.google.android.material.appbar.CollapsingToolbarLayout>
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -181,7 +214,7 @@
                 android:layout_marginTop="10dp"
                 android:paddingLeft="15dp"
                 android:paddingRight="15dp"
-
+android:visibility="gone"
                 >
                 <ImageView
                     android:id="@+id/coupon"
@@ -211,6 +244,7 @@
                 android:layout_marginTop="15dp"
                 android:paddingStart="16dp"
                 android:paddingEnd="16dp"
+                android:id="@+id/cons_balance"
 
                 >
                 <TextView
@@ -242,7 +276,47 @@
                 android:layout_width="match_parent"
                 android:layout_height="1px"
                 android:background="@color/gray5"/>
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/cons_pay"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:paddingStart="16dp"
+                tools:ignore="RtlCompat,RtlSymmetry"
+                android:background="@color/white"
 
+                >
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    android:textColor="@color/black"
+                    android:textSize="15sp"
+                    android:text="@string/rechager"
+                    android:clickable="false"
+                    android:longClickable="false"
+                    />
+
+                <ImageView
+                    android:id="@+id/arrow13"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    android:src="@drawable/ic_right_arrow"
+                    android:clickable="false"
+                    android:longClickable="false"
+                    android:padding="13dp"
+                    />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:background="@color/gray5"/>
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
@@ -323,7 +397,6 @@
                 android:background="@color/gray5"/>
 
             <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/cons_coupons"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:paddingStart="16dp"
@@ -359,7 +432,6 @@
 
             </androidx.constraintlayout.widget.ConstraintLayout>
             <View
-                android:id="@+id/view_coupon"
                 android:layout_width="match_parent"
                 android:layout_height="1px"
                 android:background="@color/gray5"/>
@@ -399,17 +471,19 @@
 
             </androidx.constraintlayout.widget.ConstraintLayout>
             <View
-                android:id="@+id/view_delegate"
                 android:layout_width="match_parent"
                 android:layout_height="1px"
                 android:background="@color/gray5"/>
-
             <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/cons_register_family"
+                android:id="@+id/cons_banks"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:paddingStart="16dp"
-                tools:ignore="RtlCompat,RtlSymmetry">
+                tools:ignore="RtlCompat,RtlSymmetry"
+                android:background="@color/white"
+                android:visibility="gone"
+
+                >
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -418,7 +492,7 @@
                     app:layout_constraintStart_toStartOf="parent"
                     android:textColor="@color/black"
                     android:textSize="15sp"
-                    android:text="@string/prductive_family"
+                    android:text="@string/bank_accounts"
                     android:clickable="false"
                     android:longClickable="false"
                     />
@@ -438,13 +512,15 @@
 
             </androidx.constraintlayout.widget.ConstraintLayout>
             <View
-                android:id="@+id/view_family"
                 android:layout_width="match_parent"
                 android:layout_height="1px"
-                android:background="@color/gray5"/>
+                android:background="@color/gray5"
+                android:visibility="gone"
+                />
+
 
             <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/cons_products"
+                android:id="@+id/cons_setting"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:paddingStart="16dp"
@@ -457,48 +533,7 @@
                     app:layout_constraintStart_toStartOf="parent"
                     android:textColor="@color/black"
                     android:textSize="15sp"
-                    android:text="@string/products"
-                    android:clickable="false"
-                    android:longClickable="false"
-                    />
-
-                <ImageView
-                    android:id="@+id/arrow4"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    android:src="@drawable/ic_right_arrow"
-                    android:clickable="false"
-                    android:longClickable="false"
-                    android:padding="13dp"
-                    />
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
-            <View
-                android:id="@+id/view_add_product"
-                android:layout_width="match_parent"
-                android:layout_height="1px"
-                android:background="@color/gray5"/>
-
-
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/cons_logout"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:paddingStart="16dp"
-                tools:ignore="RtlCompat,RtlSymmetry">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    android:textColor="@color/black"
-                    android:textSize="15sp"
-                    android:text="@string/logout"
+                    android:text="@string/settings"
                     android:clickable="false"
                     android:longClickable="false"
                     />
@@ -523,7 +558,7 @@
                 android:background="@color/gray5"/>
 
             <LinearLayout
-                android:id="@+id/ll_whatsapp"
+                android:id="@+id/ll_telegram"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:orientation="horizontal"
@@ -534,7 +569,7 @@
                 <ImageView
                     android:layout_width="25dp"
                     android:layout_height="25dp"
-                    android:src="@drawable/whatsapp"
+                    android:src="@drawable/telegram"
                     android:clickable="false"
                     android:longClickable="false"
                     />
@@ -543,13 +578,14 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="8dp"
                     android:layout_marginRight="8dp"
-                    android:text="@string/cont_via_whats"
+                    android:text="@string/contact_us_on_telegram"
                     android:clickable="false"
                     android:longClickable="false"
                     />
             </LinearLayout>
 
 
+<!--
             <LinearLayout
 
                 android:layout_width="wrap_content"
@@ -591,6 +627,7 @@
                     />
 
             </LinearLayout>
+-->
 
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>

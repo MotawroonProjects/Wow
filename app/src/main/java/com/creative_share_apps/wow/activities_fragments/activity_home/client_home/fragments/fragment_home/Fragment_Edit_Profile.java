@@ -416,6 +416,113 @@ public class Fragment_Edit_Profile extends Fragment implements DatePickerDialog.
 
     }
 
+
+    private void UpdateImage(Uri uri) {
+        final ProgressDialog dialog = Common.createProgressDialog(activity,getString(R.string.wait));
+        dialog.show();
+        dialog.setCancelable(false);
+        RequestBody user_id_part = Common.getRequestBodyText(userModel.getData().getUser_id());
+        RequestBody user_email_part = Common.getRequestBodyText(userModel.getData().getUser_email());
+        RequestBody user_name_part = Common.getRequestBodyText(userModel.getData().getUser_full_name());
+        RequestBody user_country_part = Common.getRequestBodyText(userModel.getData().getUser_country());
+        RequestBody user_gender_part = Common.getRequestBodyText(userModel.getData().getUser_gender());
+        RequestBody user_age_part = Common.getRequestBodyText(userModel.getData().getUser_age());
+        RequestBody user_address_part = Common.getRequestBodyText(userModel.getData().getUser_address()+"");
+        RequestBody user_phone_code_part = Common.getRequestBodyText(userModel.getData().getUser_phone_code());
+        RequestBody user_phone_part = Common.getRequestBodyText(userModel.getData().getUser_phone());
+
+        MultipartBody.Part image_part = Common.getMultiPart(activity,uri,"user_image");
+
+
+        Api.getService(Tags.base_url)
+                .updateImage(user_id_part,user_email_part,user_name_part,user_country_part,user_gender_part,user_age_part,user_address_part,user_phone_code_part,user_phone_part,image_part)
+                .enqueue(new Callback<UserModel>() {
+                    @Override
+                    public void onResponse(Call<UserModel> call, Response<UserModel> response) {
+                        dialog.dismiss();
+
+                        if (response.isSuccessful()&&response.body()!=null&&response.body().getData()!=null)
+                        {
+                            UpdateUserData(response.body());
+                        }else
+                            {
+                                Toast.makeText(activity, getString(R.string.failed), Toast.LENGTH_SHORT).show();
+                                try {
+                                    Log.e("Error_code",response.code()+"_"+response.errorBody().string());
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                    }
+
+                    @Override
+                    public void onFailure(Call<UserModel> call, Throwable t) {
+                        try {
+                            dialog.dismiss();
+                            Toast.makeText(activity, R.string.something, Toast.LENGTH_SHORT).show();
+                            Log.e("Error",t.getMessage());
+                        }catch (Exception e){}
+                    }
+                });
+    }
+
+    private void UploadUserDataToUpdate(String m_name, String m_email, String address) {
+
+        Log.e("date",date_of_birth+"_");
+        final ProgressDialog dialog = Common.createProgressDialog(activity,getString(R.string.wait));
+        dialog.show();
+        dialog.setCancelable(false);
+        RequestBody user_id_part = Common.getRequestBodyText(userModel.getData().getUser_id());
+        RequestBody user_email_part = Common.getRequestBodyText(m_email);
+        RequestBody user_name_part = Common.getRequestBodyText(m_name);
+        RequestBody user_country_part = Common.getRequestBodyText(country_code);
+        RequestBody user_gender_part = Common.getRequestBodyText(String.valueOf(gender));
+        RequestBody user_age_part = Common.getRequestBodyText(String.valueOf(date_of_birth));
+        RequestBody user_address_part = Common.getRequestBodyText(address);
+        RequestBody user_phone_code_part = Common.getRequestBodyText(phone_code.replace("+","00"));
+        RequestBody user_phone_part = Common.getRequestBodyText(phone);
+
+
+        Api.getService(Tags.base_url)
+                .updateProfile(user_id_part,user_email_part,user_name_part,user_country_part,user_gender_part,user_age_part,user_address_part,user_phone_code_part,user_phone_part)
+                .enqueue(new Callback<UserModel>() {
+                    @Override
+                    public void onResponse(Call<UserModel> call, Response<UserModel> response) {
+                        dialog.dismiss();
+                        if (response.isSuccessful()&&response.body()!=null&&response.body().getData()!=null)
+                        {
+                            UpdateUserData(response.body());
+                        }else
+                        {
+                            Toast.makeText(activity, getString(R.string.failed), Toast.LENGTH_SHORT).show();
+                            try {
+                                Log.e("Error_codesss",response.code()+"_"+response.errorBody().string());
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<UserModel> call, Throwable t) {
+                        try {
+                            dialog.dismiss();
+                            Toast.makeText(activity, R.string.something, Toast.LENGTH_SHORT).show();
+                            Log.e("Errorsss",t.getMessage());
+                        }catch (Exception e){}
+                    }
+                });
+    }
+
+
+    private void UpdateUserData(UserModel userModel)
+    {
+        this.userModel = userModel;
+        UpdateUI(userModel);
+        activity.updateUserData(userModel);
+        activity.Back();
+        activity.Back();
+    }
     private void CreateImageAlertDialog()
     {
 
@@ -463,119 +570,6 @@ public class Fragment_Edit_Profile extends Fragment implements DatePickerDialog.
         dialog.setView(view);
         dialog.show();
     }
-    private void UpdateImage(Uri uri) {
-        Log.e("uri",uri.toString());
-        final ProgressDialog dialog = Common.createProgressDialog(activity,getString(R.string.wait));
-        dialog.show();
-        dialog.setCancelable(false);
-        RequestBody user_id_part = Common.getRequestBodyText(userModel.getData().getUser_id());
-        RequestBody user_email_part = Common.getRequestBodyText(userModel.getData().getUser_email());
-        RequestBody user_name_part = Common.getRequestBodyText(userModel.getData().getUser_full_name());
-        RequestBody user_country_part = Common.getRequestBodyText(userModel.getData().getUser_country());
-        RequestBody user_gender_part = Common.getRequestBodyText(userModel.getData().getUser_gender());
-        RequestBody user_age_part = Common.getRequestBodyText(userModel.getData().getUser_age());
-        RequestBody user_address_part;
-        if (userModel.getData().getUser_address()!=null)
-        {
-            user_address_part = Common.getRequestBodyText(userModel.getData().getUser_address());
-
-        }else
-            {
-                user_address_part = Common.getRequestBodyText("");
-
-            }
-        RequestBody user_phone_code_part = Common.getRequestBodyText(userModel.getData().getUser_phone_code());
-        RequestBody user_phone_part = Common.getRequestBodyText(userModel.getData().getUser_phone());
-
-        MultipartBody.Part image_part = Common.getMultiPart(activity,uri,"user_image");
-
-
-        Api.getService(Tags.base_url)
-                .updateImage(user_id_part,user_email_part,user_name_part,user_country_part,user_gender_part,user_age_part,user_address_part,user_phone_code_part,user_phone_part,image_part)
-                .enqueue(new Callback<UserModel>() {
-                    @Override
-                    public void onResponse(Call<UserModel> call, Response<UserModel> response) {
-                        dialog.dismiss();
-                        if (response.isSuccessful()&&response.body()!=null&&response.body().getData()!=null)
-                        {
-                            UpdateUserData(response.body());
-                        }else
-                            {
-                                Toast.makeText(activity, getString(R.string.failed), Toast.LENGTH_SHORT).show();
-                                try {
-                                    Log.e("Error_code",response.code()+"_"+response.errorBody().string());
-                                } catch (IOException e) {
-                                    e.printStackTrace();
-                                }
-                            }
-                    }
-
-                    @Override
-                    public void onFailure(Call<UserModel> call, Throwable t) {
-                        try {
-                            dialog.dismiss();
-                            Toast.makeText(activity, R.string.something, Toast.LENGTH_SHORT).show();
-                            Log.e("Error",t.getMessage());
-                        }catch (Exception e){}
-                    }
-                });
-    }
-
-    private void UploadUserDataToUpdate(String m_name, String m_email, String address) {
-
-        final ProgressDialog dialog = Common.createProgressDialog(activity,getString(R.string.wait));
-        dialog.show();
-        dialog.setCancelable(false);
-        RequestBody user_id_part = Common.getRequestBodyText(userModel.getData().getUser_id());
-        RequestBody user_email_part = Common.getRequestBodyText(m_email);
-        RequestBody user_name_part = Common.getRequestBodyText(m_name);
-        RequestBody user_country_part = Common.getRequestBodyText(country_code);
-        RequestBody user_gender_part = Common.getRequestBodyText(String.valueOf(gender));
-        RequestBody user_age_part = Common.getRequestBodyText(String.valueOf(date_of_birth));
-        RequestBody user_address_part = Common.getRequestBodyText(address);
-        RequestBody user_phone_code_part = Common.getRequestBodyText(phone_code.replace("+","00"));
-        RequestBody user_phone_part = Common.getRequestBodyText(phone.replaceFirst("0",""));
-
-
-        Api.getService(Tags.base_url)
-                .updateProfile(user_id_part,user_email_part,user_name_part,user_country_part,user_gender_part,user_age_part,user_address_part,user_phone_code_part,user_phone_part)
-                .enqueue(new Callback<UserModel>() {
-                    @Override
-                    public void onResponse(Call<UserModel> call, Response<UserModel> response) {
-                        dialog.dismiss();
-                        if (response.isSuccessful()&&response.body()!=null&&response.body().getData()!=null)
-                        {
-                            UpdateUserData(response.body());
-                        }else
-                        {
-                            Toast.makeText(activity, getString(R.string.failed), Toast.LENGTH_SHORT).show();
-                            try {
-                                Log.e("Error_code",response.code()+"_"+response.errorBody().string());
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(Call<UserModel> call, Throwable t) {
-                        try {
-                            dialog.dismiss();
-                            Toast.makeText(activity, R.string.something, Toast.LENGTH_SHORT).show();
-                            Log.e("Error",t.getMessage());
-                        }catch (Exception e){}
-                    }
-                });
-    }
-
-
-    private void UpdateUserData(UserModel userModel)
-    {
-        this.userModel = userModel;
-        UpdateUI(userModel);
-        activity.updateUserData(userModel);
-    }
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data)
     {

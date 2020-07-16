@@ -38,6 +38,7 @@
                 android:src="@drawable/logo_only"
                 app:civ_border_color="@color/gray2"
                 app:civ_border_width="1dp"
+                app:civ_fill_color="@color/white"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
@@ -54,6 +55,22 @@
                 app:layout_constraintStart_toStartOf="@id/image"
                 app:layout_constraintTop_toTopOf="@id/image" />
 
+            <TextView
+                android:id="@+id/tv_order_date"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginRight="5dp"
+                android:textColor="@color/colorPrimary"
+                android:textSize="13sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintWidth_default="wrap"
+
+                />
 
             <TextView
                 android:id="@+id/order_num"
@@ -71,7 +88,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0"
                 app:layout_constraintStart_toEndOf="@id/image"
-                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_order_date"
                 app:layout_constraintWidth_default="wrap"
                 android:layout_marginTop="3dp"
                 />
@@ -163,7 +180,7 @@
 
     </androidx.cardview.widget.CardView>
     <TextView
-        android:id="@+id/tv_order_date"
+        android:id="@+id/tv_delivery_time"
         android:layout_width="match_parent"
         android:layout_height="35dp"
         android:layout_marginLeft="50dp"

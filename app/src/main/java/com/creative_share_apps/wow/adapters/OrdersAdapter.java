@@ -17,12 +17,16 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.creative_share_apps.wow.R;
 import com.creative_share_apps.wow.activities_fragments.activity_home.client_home.fragments.fragment_orders.Fragment_Client_Current_Orders;
 import com.creative_share_apps.wow.activities_fragments.activity_home.client_home.fragments.fragment_orders.Fragment_Client_New_Orders;
+import com.creative_share_apps.wow.activities_fragments.activity_home.client_home.fragments.fragment_orders.Fragment_Client_Orders;
 import com.creative_share_apps.wow.models.OrderDataModel;
 import com.creative_share_apps.wow.share.TimeAgo;
 import com.creative_share_apps.wow.tags.Tags;
 import com.squareup.picasso.Picasso;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -81,6 +85,10 @@ public class OrdersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                         Fragment_Client_New_Orders fragment_client_new_orders = (Fragment_Client_New_Orders) fragment;
                         fragment_client_new_orders.setItemData(orderModel);
                     }
+                    else if(fragment instanceof Fragment_Client_Orders &&!orderModel.getOrder_status().equals("8")){
+                        Fragment_Client_Orders fragment_client_orders = (Fragment_Client_Orders) fragment;
+                        fragment_client_orders.setItemData(orderModel);
+                    }
                 }
             });
 
@@ -100,7 +108,7 @@ public class OrdersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     public class MyHolder extends RecyclerView.ViewHolder {
         private CircleImageView image;
         private ImageView image_state;
-        private TextView tv_order_num,tv_order_date,tv_order_state,tv_details;
+        private TextView tv_delivery_time,tv_order_num,tv_order_date,tv_order_state,tv_details;
 
         public MyHolder(View itemView) {
             super(itemView);
@@ -108,6 +116,7 @@ public class OrdersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             image = itemView.findViewById(R.id.image);
             image_state = itemView.findViewById(R.id.image_state);
             tv_order_date = itemView.findViewById(R.id.tv_order_date);
+            tv_delivery_time = itemView.findViewById(R.id.tv_delivery_time);
             tv_order_num = itemView.findViewById(R.id.tv_order_num);
             tv_order_state = itemView.findViewById(R.id.tv_order_state);
             tv_details = itemView.findViewById(R.id.tv_details);
@@ -122,7 +131,7 @@ public class OrdersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                 Picasso.with(context).load(R.drawable.logo_only).fit().into(image);
                 image_state.setBackgroundResource(R.drawable.wait_bg_gray);
                 image_state.setImageResource(R.drawable.ic_time_left);
-                tv_order_state.setText(R.string.not_approved);
+                tv_order_state.setText(context.getString(R.string.new_order_2));
 
             }else
                 {
@@ -150,9 +159,9 @@ public class OrdersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                             }
 
                 }
-           /* SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy , hh:mm aa", Locale.ENGLISH);
+            SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy , hh:mm aa", Locale.ENGLISH);
             String deliveryTime = dateFormat.format(new Date(Long.parseLong(orderModel.getOrder_time_arrival())*1000));
-            tv_delivery_time.setText(deliveryTime);*/
+            tv_delivery_time.setText(deliveryTime);
             tv_order_num.setText("#"+orderModel.getOrder_id());
             tv_order_date.setText(TimeAgo.getTimeAgo(Long.parseLong(orderModel.getOrder_date())*1000,context));
 

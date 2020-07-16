@@ -2,10 +2,10 @@ package com.creative_share_apps.wow.adapters;
 
 import android.content.Context;
 import android.net.Uri;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -15,12 +15,15 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.creative_share_apps.wow.R;
 import com.creative_share_apps.wow.activities_fragments.activity_home.client_home.fragments.fragment_home.Fragment_Client_Store;
+import com.creative_share_apps.wow.activities_fragments.activity_home.client_home.fragments.fragment_home.Fragment_Search;
 import com.creative_share_apps.wow.models.PlaceModel;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.maps.android.SphericalUtil;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class NearbyAdapter extends RecyclerView.Adapter<NearbyAdapter.MyHolder> {
 
@@ -59,6 +62,10 @@ public class NearbyAdapter extends RecyclerView.Adapter<NearbyAdapter.MyHolder> 
                     Fragment_Client_Store fragment_client_store = (Fragment_Client_Store) fragment;
                     fragment_client_store.setItemData(placeModel);
 
+                }else if (fragment instanceof Fragment_Search)
+                {
+                   // Fragment_Search fragment_search = (Fragment_Search) fragment;
+                    //fragment_search.setItemData(placeModel);
                 }
 
 
@@ -72,7 +79,7 @@ public class NearbyAdapter extends RecyclerView.Adapter<NearbyAdapter.MyHolder> 
     }
 
     public class MyHolder extends RecyclerView.ViewHolder {
-        private ImageView image;
+        private CircleImageView image;
         private TextView tv_name, tv_address, tv_rate, tv_state,tv_distance;
 
         public MyHolder(View itemView) {
@@ -89,7 +96,17 @@ public class NearbyAdapter extends RecyclerView.Adapter<NearbyAdapter.MyHolder> 
         }
 
         public void BindData(PlaceModel placeModel) {
-            Picasso.with(context).load(Uri.parse(placeModel.getIcon())).fit().into(image);
+            if (placeModel.getPhotosList()!=null&&placeModel.getPhotosList().size()>0)
+            {
+                String url = "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference="+placeModel.getPhotosList().get(0).getPhoto_reference()+"&key=AIzaSyDhauu7VGauXPs9aX41Qw6mcB17iuIW2gI";
+                Log.e("lllll",url);
+                Picasso.with(context).load(Uri.parse(url)).fit().into(image);
+
+            }else
+            {
+                Picasso.with(context).load(Uri.parse(placeModel.getIcon())).fit().into(image);
+
+            }
             tv_name.setText(placeModel.getName());
             tv_address.setText(placeModel.getAddress());
             tv_rate.setText(String.valueOf(placeModel.getRating()));

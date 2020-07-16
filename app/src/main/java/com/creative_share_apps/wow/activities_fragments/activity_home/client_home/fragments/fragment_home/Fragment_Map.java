@@ -22,12 +22,12 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import com.creative_share_apps.wow.R;
-import com.creative_share_apps.wow.activities_fragments.activity_home.client_home.activity.ClientHomeActivity;
 import com.creative_share_apps.wow.models.Favourite_location;
 import com.creative_share_apps.wow.models.PlaceGeocodeData;
 import com.creative_share_apps.wow.models.PlaceMapDetailsData;
 import com.creative_share_apps.wow.remote.Api;
 import com.creative_share_apps.wow.share.Common;
+import com.creative_share_apps.wow.activities_fragments.activity_home.client_home.activity.ClientHomeActivity;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -57,7 +57,7 @@ public class Fragment_Map extends Fragment implements OnMapReadyCallback {
     private LinearLayout ll_back;
     private EditText edt_search, edt_floor;
     private ProgressBar progBar;
-    private TextView tv_address,tv_title;
+    private TextView tv_address;
     private FloatingActionButton fab;
     private String current_language;
     private double lat = 0.0, lng = 0.0;
@@ -114,8 +114,6 @@ public class Fragment_Map extends Fragment implements OnMapReadyCallback {
         progBar = view.findViewById(R.id.progBar);
         progBar.getIndeterminateDrawable().setColorFilter(ContextCompat.getColor(activity, R.color.colorPrimary), PorterDuff.Mode.SRC_IN);
         tv_address = view.findViewById(R.id.tv_address);
-        tv_title = view.findViewById(R.id.tv_title);
-
         fab = view.findViewById(R.id.fab);
 
         fab.setOnClickListener(new View.OnClickListener() {
@@ -168,13 +166,6 @@ public class Fragment_Map extends Fragment implements OnMapReadyCallback {
 
         SupportMapFragment fragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
         fragment.getMapAsync(this);
-        if (from.equals("fragment_client_profile"))
-        {
-            tv_title.setText(getString(R.string.sel_fam_loc));
-        }else {
-            tv_title.setText(getString(R.string.delivery_location));
-
-        }
 
     }
 
@@ -187,21 +178,13 @@ public class Fragment_Map extends Fragment implements OnMapReadyCallback {
             mMap.setTrafficEnabled(false);
             mMap.setBuildingsEnabled(false);
             mMap.setIndoorEnabled(true);
-            //getGeoData(lat,lng);
+            Log.e(";;;;",lat+":"+lng);
+            getGeoData(lat,lng);
 
             AddMarker(lat, lng,true);
 
-            mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
-                @Override
-                public void onMapClick(LatLng latLng) {
-                    lat = latLng.latitude;
-                    lng = latLng.longitude;
-                    getGeoData(lat,lng);
-                    AddMarker(latLng.latitude,latLng.longitude,false);
-                }
-            });
 
-/*
+
             mMap.setOnCameraIdleListener(new GoogleMap.OnCameraIdleListener() {
                 @Override
                 public void onCameraIdle() {
@@ -222,11 +205,11 @@ public class Fragment_Map extends Fragment implements OnMapReadyCallback {
 
 
                 }
-            });*/
+            });
 
 
 
-           /* mMap.setOnCameraMoveListener(new GoogleMap.OnCameraMoveListener() {
+            mMap.setOnCameraMoveListener(new GoogleMap.OnCameraMoveListener() {
                 @Override
                 public void onCameraMove() {
                     lat = mMap.getCameraPosition().target.latitude;
@@ -236,7 +219,7 @@ public class Fragment_Map extends Fragment implements OnMapReadyCallback {
 
 
                 }
-            });*/
+            });
 
         }
     }
@@ -307,6 +290,7 @@ public class Fragment_Map extends Fragment implements OnMapReadyCallback {
                 .enqueue(new Callback<PlaceGeocodeData>() {
                     @Override
                     public void onResponse(Call<PlaceGeocodeData> call, Response<PlaceGeocodeData> response) {
+                        Log.e("kkkkkk",response.code()+""+response.body().getResults().size());
                         if (response.isSuccessful() && response.body() != null) {
 
                             image_pin.setVisibility(View.VISIBLE);
@@ -318,7 +302,7 @@ public class Fragment_Map extends Fragment implements OnMapReadyCallback {
                                 place_id = response.body().getResults().get(0).getPlace_id();
                                 tv_address.setText(address+"");
                                 stop = true;
-                                //AddMarker(response.body().getResults().get(0).getGeometry().getLocation().getLat(),response.body().getResults().get(0).getGeometry().getLocation().getLng(),true);
+                                AddMarker(response.body().getResults().get(0).getGeometry().getLocation().getLat(),response.body().getResults().get(0).getGeometry().getLocation().getLng(),true);
                             }
                         }
                         else

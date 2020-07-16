@@ -4,17 +4,15 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -25,8 +23,11 @@ import androidx.fragment.app.Fragment;
 
 import com.creative_share_apps.wow.R;
 import com.creative_share_apps.wow.activities_fragments.activity_home.client_home.activity.ClientHomeActivity;
+import com.creative_share_apps.wow.activities_fragments.activity_home.telr_activity.TelrActivity;
+import com.creative_share_apps.wow.models.PayPalLinkModel;
 import com.creative_share_apps.wow.models.SocialMediaModel;
 import com.creative_share_apps.wow.models.UserModel;
+import com.creative_share_apps.wow.preferences.Preferences;
 import com.creative_share_apps.wow.remote.Api;
 import com.creative_share_apps.wow.share.Common;
 import com.creative_share_apps.wow.singletone.UserSingleTone;
@@ -39,25 +40,22 @@ import java.util.Currency;
 import java.util.Locale;
 
 import io.paperdb.Paper;
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 public class Fragment_Client_Profile extends Fragment {
 
-    private ImageView image_setting, image, arrow, arrow2, image_instagram, image_facebook, image_twitter, img_certified,arrow3,arrow4;
+    private ImageView image_logout, image, arrow, arrow2,arrow3,arrow13, image_instagram, image_facebook, image_twitter, img_certified;
     private TextView tv_name, tv_balance, tv_order_count, tv_feedback, tv_certified, tv_coupons;
     private SimpleRatingBar rateBar;
-    private ConstraintLayout cons_logout, cons_register_delegate, cons_comment, cons_add_coupon,cons_register_family,cons_products,cons_coupons;
-    private LinearLayout ll_whatsapp, ll_certification;
+    private ConstraintLayout cons_setting,cons_balance, cons_register_delegate, cons_comment, cons_add_coupon,cons_banks,cons_pay;
+    private LinearLayout ll_telegram, ll_certification;
     private String current_language;
     private ClientHomeActivity activity;
     private UserModel userModel;
     private UserSingleTone userSingleTone;
-    private String facebook = "0", twitter = "0", instegram = "0", telegram = "0",whatsapp="0";
-    private View view_add_product,view_coupon,view_delegate,view_family;
-    private String family_nationality="";
+    private String facebook = "0", twitter = "0", instegram = "0", telegram = "0";
 
     @Nullable
     @Override
@@ -79,80 +77,88 @@ public class Fragment_Client_Profile extends Fragment {
         Paper.init(activity);
         current_language = Paper.book().read("lang", Locale.getDefault().getLanguage());
 
-        view_add_product = view.findViewById(R.id.view_add_product);
-        view_coupon = view.findViewById(R.id.view_coupon);
-        view_delegate = view.findViewById(R.id.view_delegate);
-        view_family = view.findViewById(R.id.view_family);
-
         arrow = view.findViewById(R.id.arrow);
         arrow2 = view.findViewById(R.id.arrow2);
         arrow3 = view.findViewById(R.id.arrow3);
-        arrow4 = view.findViewById(R.id.arrow4);
+        arrow13 = view.findViewById(R.id.arrow13);
 
         if (current_language.equals("ar")) {
             arrow.setImageResource(R.drawable.ic_left_arrow);
             arrow2.setImageResource(R.drawable.ic_left_arrow);
             arrow3.setImageResource(R.drawable.ic_left_arrow);
-            arrow4.setImageResource(R.drawable.ic_left_arrow);
+            arrow13.setImageResource(R.drawable.ic_left_arrow);
 
         } else {
             arrow.setImageResource(R.drawable.ic_right_arrow);
             arrow2.setImageResource(R.drawable.ic_right_arrow);
             arrow3.setImageResource(R.drawable.ic_right_arrow);
-            arrow4.setImageResource(R.drawable.ic_right_arrow);
+            arrow13.setImageResource(R.drawable.ic_left_arrow);
 
 
         }
 
-        image_facebook = view.findViewById(R.id.image_facebook);
+     /*   image_facebook = view.findViewById(R.id.image_facebook);
         image_twitter = view.findViewById(R.id.image_twitter);
         image_instagram = view.findViewById(R.id.image_instagram);
-        img_certified = view.findViewById(R.id.img_certified);
+        img_certified = view.findViewById(R.id.img_certified);*/
 
-        tv_certified = view.findViewById(R.id.tv_certified);
+        //  tv_certified = view.findViewById(R.id.tv_certified);
 
-        image_setting = view.findViewById(R.id.image_setting);
+        image_logout = view.findViewById(R.id.image_logout);
         image = view.findViewById(R.id.image);
         tv_name = view.findViewById(R.id.tv_name);
         tv_balance = view.findViewById(R.id.tv_balance);
+        cons_balance = view.findViewById(R.id.cons_balance);
+
         tv_order_count = view.findViewById(R.id.tv_order_count);
         tv_feedback = view.findViewById(R.id.tv_feedback);
         tv_coupons = view.findViewById(R.id.tv_coupons);
         rateBar = view.findViewById(R.id.rateBar);
         cons_add_coupon = view.findViewById(R.id.cons_add_coupon);
-
-        cons_coupons = view.findViewById(R.id.cons_coupons);
-
-        cons_register_family = view.findViewById(R.id.cons_register_family);
-        cons_products = view.findViewById(R.id.cons_products);
-
+        cons_banks = view.findViewById(R.id.cons_banks);
+        cons_pay = view.findViewById(R.id.cons_pay);
 
         cons_register_delegate = view.findViewById(R.id.cons_register_delegate);
         cons_comment = view.findViewById(R.id.cons_comment);
-        cons_logout = view.findViewById(R.id.cons_logout);
+        cons_setting = view.findViewById(R.id.cons_setting);
 
-        ll_certification = view.findViewById(R.id.ll_certification);
+        //  ll_certification = view.findViewById(R.id.ll_certification);
 
-        ll_whatsapp = view.findViewById(R.id.ll_whatsapp);
+        ll_telegram = view.findViewById(R.id.ll_telegram);
 
-        image_setting.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                activity.DisplayFragmentSettings();
-            }
-        });
-
-
-        cons_logout.setOnClickListener(new View.OnClickListener() {
+        image_logout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 activity.Logout();
+
             }
         });
 
+
+        cons_setting.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                activity.DisplayFragmentSettings();
+            }
+        });
+cons_pay.setOnClickListener(new View.OnClickListener() {
+    @Override
+    public void onClick(View v) {
+        if(userModel.getData().getAccount_balance()!=0){
+        Common.CreatePAyDialog(activity,activity.getResources().getString(R.string.you_pay)+Math.abs(userModel.getData().getAccount_balance()));
+    }
+
+    else {
+        Common.CreateSuccessDialog(activity,activity.getResources().getString(R.string.you_cant));
+    }
+    }
+});
         cons_register_delegate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+
                 activity.DisplayFragmentDocumentation();
             }
         });
@@ -172,23 +178,22 @@ public class Fragment_Client_Profile extends Fragment {
                 activity.DisplayFragmentAddCoupon();
             }
         });
-
-
-        cons_products.setOnClickListener(new View.OnClickListener() {
+        cons_banks.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                activity.DisplayFragmentFamilyOwnProduct();
+                activity.DisplayFragmentBankAccount();
             }
         });
 
-        image_twitter.setOnClickListener(new View.OnClickListener() {
+
+       /* image_twitter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (!twitter.equals("0")) {
                     ViewSocial(twitter);
 
                 } else {
-                    CreateAlertDialog();
+
                 }
             }
         });
@@ -219,127 +224,41 @@ public class Fragment_Client_Profile extends Fragment {
             }
         });
 
-        ll_whatsapp.setOnClickListener(new View.OnClickListener() {
+        ll_telegram.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!whatsapp.equals("0")) {
-                    //ViewSocial(telegram);
-                    if (!whatsapp.startsWith("966"))
-                    {
-                        whatsapp = "966"+whatsapp;
-                    }
-                    Intent intent = new Intent(Intent.ACTION_VIEW,Uri.parse("whatsapp://send?phone="+whatsapp));
-                    startActivity(intent);
+                if (!telegram.equals("0")) {
+                    ViewSocial(telegram);
 
                 } else {
                     CreateAlertDialog();
                 }
             }
         });
-
-        cons_register_family.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                CreateAddFamilyAddressDialog();
-            }
-        });
+*/
         updateUI(userModel);
 
         getSocialMedia();
-
-    }
-
-    public void register_family(double lat,double lng,String address)
-    {
-        final ProgressDialog dialog = Common.createProgressDialog(activity, getString(R.string.wait));
-        dialog.setCancelable(false);
-        dialog.show();
-        Api.getService(Tags.base_url)
-                .beFamily(userModel.getData().getUser_id(),address,lat,lng,family_nationality)
-                .enqueue(new Callback<ResponseBody>() {
-                    @Override
-                    public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                        dialog.dismiss();
-                        if (response.isSuccessful()) {
-
-                           Common.CreateSignAlertDialog(activity,getString(R.string.dear_will_review));
-
-
-                        }else if (response.code()== 409)
-                        {
-                            Common.CreateSignAlertDialog(activity,getString(R.string.req_already_sent));
-
-                        }else if (response.code()== 406)
-                        {
-                            Common.CreateSignAlertDialog(activity,getString(R.string.already_snt_courier));
-
-                        }
-                        else {
-                            dialog.dismiss();
-                            try {
-                                Log.e("error_code", response.code() + "" + response.errorBody().string());
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(Call<ResponseBody> call, Throwable t) {
-                        try {
-                            dialog.dismiss();
-                            Log.e("Error", t.getMessage());
-                        } catch (Exception e) {
-                        }
-                    }
-                });
-    }
-
-    private void CreateAddFamilyAddressDialog()
-    {
-        final AlertDialog dialog = new AlertDialog.Builder(activity)
-                .setCancelable(true)
-                .create();
-
-        View view = LayoutInflater.from(activity).inflate(R.layout.dialog_add_delivery_address,null);
-        Button btn_select_location = view.findViewById(R.id.btn_select_location);
-        final EditText edt_nationality = view.findViewById(R.id.edt_nationality);
-        btn_select_location.setOnClickListener(new View.OnClickListener() {
+        ll_telegram.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                 family_nationality = edt_nationality.getText().toString().trim();
+             /*   Intent intent = new Intent(Intent.ACTION_VIEW,Uri.parse("https://web.telegram.org/#/im"));
+                startActivity(intent);*/
 
-                if (!TextUtils.isEmpty(family_nationality))
-                {
-                    edt_nationality.setError(null);
-                    Common.CloseKeyBoard(activity,edt_nationality);
-                    dialog.dismiss();
+                try {
 
-                    new Handler()
-                            .postDelayed(new Runnable() {
-                                @Override
-                                public void run() {
-                                    activity.DisplayFragmentMap("fragment_client_profile");
+                    Intent telegramIntent = new Intent(Intent.ACTION_VIEW);
+                    telegramIntent.setData(Uri.parse("http://telegram.me/"+telegram));
+                    startActivity(telegramIntent);
 
-                                }
-                            },500);
-
-
-
-
-                }else
-                {
-                    edt_nationality.setError(getString(R.string.field_req));
+                } catch (Exception e) {
+                    // show error message
                 }
-
             }
         });
-        dialog.getWindow().getAttributes().windowAnimations=R.style.dialog_congratulation_animation;
-        dialog.setCanceledOnTouchOutside(false);
-        dialog.getWindow().setBackgroundDrawableResource(R.drawable.dialog_window_bg);
-        dialog.setView(view);
-        dialog.show();
+
     }
+
     private void getSocialMedia() {
 
         final ProgressDialog dialog = Common.createProgressDialog(activity, getString(R.string.wait));
@@ -356,8 +275,6 @@ public class Fragment_Client_Profile extends Fragment {
                             twitter = response.body().getCompany_twitter();
                             instegram = response.body().getCompany_instagram();
                             telegram = response.body().getCompany_telegram();
-                            whatsapp = response.body().getCompany_whatsapp();
-                            Log.e("wa",whatsapp+"_");
 
                         } else {
                             dialog.dismiss();
@@ -392,58 +309,24 @@ public class Fragment_Client_Profile extends Fragment {
             this.userModel = userModel;
 
             if (userModel.getData().getUser_type().equals(Tags.TYPE_CLIENT)) {
+                cons_balance.setVisibility(View.GONE);
+//                ll_certification.setVisibility(View.GONE);
+                cons_pay.setVisibility(View.GONE);
+            } else {
+                cons_register_delegate.setVisibility(View.GONE);
 
-                ll_certification.setVisibility(View.GONE);
-                cons_add_coupon.setVisibility(View.VISIBLE);
-                cons_coupons.setVisibility(View.VISIBLE);
-                cons_products.setVisibility(View.GONE);
-                view_add_product.setVisibility(View.GONE);
-                view_coupon.setVisibility(View.VISIBLE);
-                view_delegate.setVisibility(View.VISIBLE);
-
-                cons_register_family.setVisibility(View.VISIBLE);
-                view_family.setVisibility(View.VISIBLE);
-
-            } else if (userModel.getData().getUser_type().equals(Tags.TYPE_DELEGATE)){
-
-
-                cons_add_coupon.setVisibility(View.VISIBLE);
-                cons_coupons.setVisibility(View.VISIBLE);
-                cons_products.setVisibility(View.GONE);
-                view_add_product.setVisibility(View.GONE);
-                view_coupon.setVisibility(View.VISIBLE);
-                view_coupon.setVisibility(View.VISIBLE);
-                cons_register_delegate.setVisibility(View.VISIBLE);
-                view_delegate.setVisibility(View.VISIBLE);
-                cons_register_family.setVisibility(View.GONE);
-                view_family.setVisibility(View.GONE);
-
-                if (userModel.getData().getNum_orders() > 0) {
-                    tv_certified.setText(getString(R.string.certified_account));
-                    img_certified.setImageResource(R.drawable.checked_certified);
-                } else {
-                    tv_certified.setText(R.string.not_certified);
-                    img_certified.setImageResource(R.drawable.checked_not_certified);
-
-                }
-                ll_certification.setVisibility(View.VISIBLE);
+//                if (userModel.getData().getNum_orders() > 0) {
+//                    tv_certified.setText(getString(R.string.certified_account));
+//                    img_certified.setImageResource(R.drawable.checked_certified);
+//                } else {
+//                    tv_certified.setText(R.string.not_certified);
+//                    img_certified.setImageResource(R.drawable.checked_not_certified);
+//
+//                }
+//                ll_certification.setVisibility(View.VISIBLE);
 
 
-            }else
-                {
-                    cons_coupons.setVisibility(View.GONE);
-                    cons_products.setVisibility(View.VISIBLE);
-                    ll_certification.setVisibility(View.GONE);
-                    cons_add_coupon.setVisibility(View.GONE);
-                    cons_register_family.setVisibility(View.GONE);
-                    cons_register_delegate.setVisibility(View.GONE);
-                    view_add_product.setVisibility(View.VISIBLE);
-                    view_coupon.setVisibility(View.GONE);
-                    view_delegate.setVisibility(View.GONE);
-                    view_family.setVisibility(View.GONE);
-
-
-                }
+            }
             tv_name.setText(userModel.getData().getUser_full_name());
             tv_order_count.setText(String.valueOf(userModel.getData().getNum_orders()));
             tv_coupons.setText(String.valueOf(userModel.getData().getNum_coupon()));
@@ -472,8 +355,10 @@ public class Fragment_Client_Profile extends Fragment {
     }
 
     public void updateUserData(UserModel userModel) {
+        Preferences.getInstance().create_update_userData(activity,userModel);
         this.userModel = userModel;
         userSingleTone.setUserModel(userModel);
+
         updateUI(userModel);
     }
 
@@ -501,6 +386,115 @@ public class Fragment_Client_Profile extends Fragment {
         dialog.getWindow().setBackgroundDrawableResource(R.drawable.dialog_window_bg);
         dialog.setView(view);
         dialog.show();
+    }
+    public void pay() {
+if(userModel.getData().getAccount_balance()!=0.0) {
+    ProgressDialog dialog = Common.createProgressDialog(activity, getString(R.string.wait));
+    dialog.setCancelable(false);
+    dialog.show();
+    try {
+
+        Api.getService(Tags.base_url)
+                .getPayPalLink(userModel.getData().getUser_id(), userModel.getData().getUser_type(), Math.abs(userModel.getData().getAccount_balance()))
+                .enqueue(new Callback<PayPalLinkModel>() {
+                    @Override
+                    public void onResponse(Call<PayPalLinkModel> call, Response<PayPalLinkModel> response) {
+                        dialog.dismiss();
+                        if (response.isSuccessful() && response.body() != null) {
+                            if (response.body() != null) {
+                                // Log.e("body",response.body().getData()+"______");
+                                Intent intent = new Intent(activity, TelrActivity.class);
+                                intent.putExtra("data", response.body());
+                                startActivityForResult(intent, 100);
+
+
+                            } else {
+                                Toast.makeText(activity, R.string.failed, Toast.LENGTH_SHORT).show();
+                            }
+
+
+                        } else {
+                            try {
+
+                                Log.e("error", response.code() + "_" + response.errorBody().string());
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                            if (response.code() == 500) {
+                                Toast.makeText(activity, "Server Error", Toast.LENGTH_SHORT).show();
+
+                            } else {
+                                Toast.makeText(activity, getString(R.string.failed), Toast.LENGTH_SHORT).show();
+
+                                try {
+
+                                    Log.e("error", response.code() + "_" + response.errorBody().string());
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<PayPalLinkModel> call, Throwable t) {
+                        try {
+                            dialog.dismiss();
+                            if (t.getMessage() != null) {
+                                Log.e("error", t.getMessage());
+                                if (t.getMessage().toLowerCase().contains("failed to connect") || t.getMessage().toLowerCase().contains("unable to resolve host")) {
+                                    Toast.makeText(activity, R.string.something, Toast.LENGTH_SHORT).show();
+                                } else {
+                                    Toast.makeText(activity, t.getMessage(), Toast.LENGTH_SHORT).show();
+                                }
+                            }
+
+                        } catch (Exception e) {
+                        }
+                    }
+                });
+    } catch (Exception e) {
+        dialog.dismiss();
+
+    }
+}
+else {
+    Common.CreateSuccessDialog(activity,activity.getResources().getString(R.string.you_cant));
+}
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+       getUserDataById(userModel.getData().getUser_id());
+       Log.e("lokkkk","llll");
+
+    }
+    private void getUserDataById(String user_id) {
+        ProgressDialog dialog = Common.createProgressDialog(activity,getString(R.string.wait));
+        dialog.setCancelable(false);
+        dialog.show();
+        Api.getService(Tags.base_url)
+                .getUserDataById(user_id)
+                .enqueue(new Callback<UserModel>() {
+                    @Override
+                    public void onResponse(Call<UserModel> call, Response<UserModel> response) {
+                        dialog.dismiss();
+                        if (response.isSuccessful() && response.body() != null) {
+                            updateUserData(response.body());
+
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<UserModel> call, Throwable t) {
+                        try {
+                            dialog.dismiss();
+                            Log.e("Error", t.getMessage());
+                        } catch (Exception e) {
+                        }
+                    }
+                });
     }
 
 }

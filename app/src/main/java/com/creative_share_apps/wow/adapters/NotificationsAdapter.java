@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.creative_share_apps.wow.R;
 import com.creative_share_apps.wow.activities_fragments.activity_home.client_home.fragments.fragment_home.Fragment_Client_Notifications;
 import com.creative_share_apps.wow.models.NotificationModel;
+import com.creative_share_apps.wow.preferences.Preferences;
 import com.creative_share_apps.wow.share.TimeAgo;
 import com.creative_share_apps.wow.tags.Tags;
 import com.squareup.picasso.Picasso;
@@ -63,34 +64,36 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
 
             final MyHolder myHolder = (MyHolder) holder;
             NotificationModel notificationModel = notificationModelList.get(myHolder.getAdapterPosition());
-
-            if (notificationModel.getOrder_type().equals("1")||notificationModel.getOrder_type().equals("2")||notificationModel.getOrder_type().equals("3"))
+            if (notificationModel.getOrder_status().equals(String.valueOf(Tags.STATE_ORDER_NEW)))
             {
-                if (notificationModel.getOrder_status().equals(String.valueOf(Tags.STATE_ORDER_NEW))) {
-                    if (user_type.equals(Tags.TYPE_DELEGATE)) {
-                        myHolder.BindData(notificationModel);
-
-                    }
-                } else {
+                if (user_type.equals(Tags.TYPE_DELEGATE))
+                {
                     myHolder.BindData(notificationModel);
 
                 }
-            }else if (notificationModel.getOrder_type().equals("4"))
-            {
-                myHolder.BindData(notificationModel);
+            }else
+                {
+                    myHolder.BindData(notificationModel);
 
-            }
-
+                }
             myHolder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     NotificationModel notificationModel = notificationModelList.get(myHolder.getAdapterPosition());
                     //delegate send price offer client accept or refused
-                    fragment.setItemData(notificationModel, myHolder.getAdapterPosition());
+                    fragment.setItemData(notificationModel,myHolder.getAdapterPosition());
 
 
                 }
 
+            });
+            myHolder.imageDelete.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    notificationModelList.remove(0);
+                    Preferences.getInstance().saveVisitdelegete(context,0);
+                    notifyDataSetChanged();
+                }
             });
 
         } else {
@@ -106,8 +109,8 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
 
     public class MyHolder extends RecyclerView.ViewHolder {
         private CircleImageView image;
-        private ImageView image_state;
-        private TextView tv_name, tv_order_num, tv_notification_date, tv_order_state, tv_add_rate;
+        private ImageView image_state,imageDelete;
+        private TextView tv_name, tv_order_num, tv_notification_date, tv_order_state,tv_add_rate,order_num,order_state;
 
         public MyHolder(View itemView) {
             super(itemView);
@@ -119,254 +122,153 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
             tv_order_state = itemView.findViewById(R.id.tv_order_state);
             tv_name = itemView.findViewById(R.id.tv_name);
             tv_add_rate = itemView.findViewById(R.id.tv_add_rate);
-
-
+            order_num=itemView.findViewById(R.id.order_num);
+            order_state=itemView.findViewById(R.id.order_state);
+            imageDelete=itemView.findViewById(R.id.imageDelete);
         }
 
         public void BindData(NotificationModel notificationModel) {
-            tv_order_num.setText("#" + notificationModel.getOrder_id());
-            tv_notification_date.setText(TimeAgo.getTimeAgo(Long.parseLong(notificationModel.getDate_notification()) * 1000, context));
+          Log.e("nfnfnfn",notificationModel.getOrder_status());
+            if(!notificationModel.getOrder_status().equals("sss")) {
+                tv_order_num.setText("#" + notificationModel.getOrder_id());
+                tv_notification_date.setText(TimeAgo.getTimeAgo(Long.parseLong(notificationModel.getDate_notification()) * 1000, context));
 
 
-
-            String order_type = notificationModel.getOrder_type();
-
-            Log.e("order_status",notificationModel.getOrder_status()+"_");
-
-            if (order_type.equals("1") || order_type.equals("2")) {
-                tv_add_rate.setText(context.getString(R.string.add_rate2));
-
-                if (notificationModel.getOrder_status().equals(String.valueOf(Tags.STATE_ORDER_NEW))) {
-                    // delegate only
+            }
+            if (notificationModel.getOrder_status().equals(String.valueOf(Tags.STATE_ORDER_NEW)))
+            {
+                if (user_type.equals(Tags.TYPE_CLIENT))
+                {
                     tv_order_state.setText(R.string.not_approved);
-                    image_state.setVisibility(View.GONE);
-                    image_state.setVisibility(View.GONE);
-                    tv_add_rate.setVisibility(View.GONE);
+
+                }else
+                    {
+                        tv_order_state.setText(context.getString(R.string.new_order_sent2));
+
+                    }
+                image_state.setVisibility(View.GONE);
+                image_state.setVisibility(View.GONE);
+                tv_add_rate.setVisibility(View.GONE);
+                Picasso.with(context).load(R.drawable.logo_only).fit().into(image);
+                tv_name.setText(notificationModel.getOrder_details());
+
+
+
+
+            }
+             else if (notificationModel.getOrder_status().equals(String.valueOf(Tags.STATE_DELEGATE_SEND_OFFER)) || notificationModel.getOrder_status().equals(String.valueOf(Tags.STATE_CLIENT_ACCEPT_OFFER))) {
+                image_state.setBackgroundResource(R.drawable.wait_bg);
+                image_state.setImageResource(R.drawable.ic_time_left);
+                image_state.setVisibility(View.VISIBLE);
+                image_state.setVisibility(View.VISIBLE);
+                tv_add_rate.setVisibility(View.GONE);
+
+                if (user_type.equals(Tags.TYPE_CLIENT)) {
+                    tv_order_state.setText(context.getString(R.string.del_sent_offer));
+
                     Picasso.with(context).load(R.drawable.logo_only).fit().into(image);
                     tv_name.setText(notificationModel.getOrder_details());
 
 
-                } else if (notificationModel.getOrder_status().equals(String.valueOf(Tags.STATE_DELEGATE_SEND_OFFER)) || notificationModel.getOrder_status().equals(String.valueOf(Tags.STATE_CLIENT_ACCEPT_OFFER))) {
-                    image_state.setBackgroundResource(R.drawable.wait_bg);
-                    image_state.setImageResource(R.drawable.ic_time_left);
-                    image_state.setVisibility(View.VISIBLE);
-                    image_state.setVisibility(View.VISIBLE);
-                    tv_add_rate.setVisibility(View.GONE);
-
-
-                    if (user_type.equals(Tags.TYPE_CLIENT)) {
-                        tv_order_state.setText(context.getString(R.string.del_sent_offer));
-
-                        Picasso.with(context).load(R.drawable.logo_only).fit().into(image);
-                        tv_name.setText(notificationModel.getOrder_details());
-
-
-                    } else {
-                        tv_order_state.setText(context.getString(R.string.offer_accepted));
-                        Picasso.with(context).load(Uri.parse(Tags.IMAGE_URL + notificationModel.getFrom_user_image())).placeholder(R.drawable.logo_only).fit().into(image);
-                        tv_name.setText(notificationModel.getFrom_user_full_name());
-
-                    }
-
-                } else if (notificationModel.getOrder_status().equals(String.valueOf(Tags.STATE_DELEGATE_REFUSE_ORDER)) || notificationModel.getOrder_status().equals(String.valueOf(Tags.STATE_CLIENT_REFUSE_OFFER))) {
-
-
-                    image_state.setBackgroundResource(R.drawable.delete_bg);
-                    image_state.setImageResource(R.drawable.ic_delete_state);
-
-                    image_state.setVisibility(View.VISIBLE);
-                    tv_add_rate.setVisibility(View.GONE);
-
-                    if (user_type.equals(Tags.TYPE_CLIENT)) {
-                        tv_order_state.setText(R.string.order_refused_send_again);
-
-                    } else {
-                        Picasso.with(context).load(Uri.parse(Tags.IMAGE_URL + notificationModel.getFrom_user_image())).placeholder(R.drawable.logo_only).fit().into(image);
-                        tv_name.setText(notificationModel.getFrom_user_full_name());
-                        tv_order_state.setText(R.string.offer_refused);
-
-                    }
-                } else if (notificationModel.getOrder_status().equals(String.valueOf(Tags.STATE_DELEGATE_DELIVERED_ORDER))) {
-                    if (user_type.equals(Tags.TYPE_CLIENT)) {
-                        Picasso.with(context).load(Uri.parse(Tags.IMAGE_URL + notificationModel.getFrom_user_image())).placeholder(R.drawable.logo_only).fit().into(image);
-                        tv_name.setText(notificationModel.getFrom_user_full_name());
-                        tv_order_state.setText(context.getString(R.string.done));
-
-                        image_state.setBackgroundResource(R.drawable.finish_bg);
-                        image_state.setImageResource(R.drawable.ic_correct);
-                        image_state.setVisibility(View.VISIBLE);
-
-                        if (notificationModel.getClient_rate().equals("0"))
-                        {
-                            tv_add_rate.setVisibility(View.VISIBLE);
-
-                        }else
-                            {
-                                tv_add_rate.setVisibility(View.GONE);
-
-                            }
-                    }
-                }
-
-            } else if (order_type.equals("3")) {
-                tv_add_rate.setText(context.getString(R.string.add_rate2));
-
-                if (notificationModel.getOrder_status().equals(String.valueOf(Tags.STATE_ORDER_NEW))) {
-
-                    tv_order_state.setText(R.string.not_approved);
-                    image_state.setVisibility(View.GONE);
-                    tv_add_rate.setVisibility(View.GONE);
-                    Picasso.with(context).load(R.drawable.logo_only).fit().into(image);
-                    tv_name.setText(notificationModel.getFrom_user_full_name());
-
-
-                } else if (notificationModel.getOrder_status().equals(String.valueOf(Tags.STATE_DELEGATE_SEND_OFFER)) || notificationModel.getOrder_status().equals(String.valueOf(Tags.STATE_CLIENT_ACCEPT_OFFER))) {
-                    image_state.setBackgroundResource(R.drawable.wait_bg);
-                    image_state.setImageResource(R.drawable.ic_time_left);
-                    image_state.setVisibility(View.VISIBLE);
-                    tv_add_rate.setVisibility(View.GONE);
-
-
-                    if (user_type.equals(Tags.TYPE_CLIENT)) {
-                        tv_order_state.setText(R.string.order_accepted);
-
-                        Picasso.with(context).load(R.drawable.logo_only).fit().into(image);
-                        tv_name.setText(notificationModel.getOrder_details());
-
-
-                    } else {
-                        tv_order_state.setText(context.getString(R.string.offer_accepted));
-                        Picasso.with(context).load(Uri.parse(Tags.IMAGE_URL + notificationModel.getFrom_user_image())).placeholder(R.drawable.logo_only).fit().into(image);
-                        tv_name.setText(notificationModel.getFrom_user_full_name());
-
-                    }
-
-                } else if (notificationModel.getOrder_status().equals(String.valueOf(Tags.STATE_DELEGATE_REFUSE_ORDER)) || notificationModel.getOrder_status().equals(String.valueOf(Tags.STATE_CLIENT_REFUSE_OFFER))) {
-
-
-                    image_state.setBackgroundResource(R.drawable.delete_bg);
-                    image_state.setImageResource(R.drawable.ic_delete_state);
-
-                    image_state.setVisibility(View.VISIBLE);
-                    tv_add_rate.setVisibility(View.GONE);
-
-                    if (user_type.equals(Tags.TYPE_CLIENT)) {
-                        tv_order_state.setText(R.string.order_refused_send_again);
-
-                    } else {
-                        Picasso.with(context).load(Uri.parse(Tags.IMAGE_URL + notificationModel.getFrom_user_image())).placeholder(R.drawable.logo_only).fit().into(image);
-                        tv_name.setText(notificationModel.getFrom_user_full_name());
-                        tv_order_state.setText(R.string.offer_refused);
-
-                    }
-                } else if (notificationModel.getOrder_status().equals(String.valueOf(Tags.STATE_DELEGATE_DELIVERED_ORDER))) {
-                    if (user_type.equals(Tags.TYPE_CLIENT)) {
-                        Picasso.with(context).load(Uri.parse(Tags.IMAGE_URL + notificationModel.getFrom_user_image())).placeholder(R.drawable.logo_only).fit().into(image);
-                        tv_name.setText(notificationModel.getFrom_user_full_name());
-                        tv_order_state.setText(context.getString(R.string.done));
-
-                        image_state.setBackgroundResource(R.drawable.finish_bg);
-                        image_state.setImageResource(R.drawable.ic_correct);
-                        image_state.setVisibility(View.VISIBLE);
-
-                        if (notificationModel.getClient_rate().equals("0"))
-                        {
-                            tv_add_rate.setVisibility(View.VISIBLE);
-
-                        }else
-                        {
-                            tv_add_rate.setVisibility(View.GONE);
-
-                        }
-                    }
-                }
-
-
-            } else if (order_type.equals("4")) {
-                tv_add_rate.setText(context.getString(R.string.add_rate2));
-
-                tv_name.setText(notificationModel.getFrom_user_full_name());
-                if (user_type.equals(Tags.TYPE_CLIENT)) {
-                    Picasso.with(context).load(R.drawable.logo_only).fit().into(image);
-
                 } else {
+                    tv_order_state.setText(context.getString(R.string.offer_accepted));
                     Picasso.with(context).load(Uri.parse(Tags.IMAGE_URL + notificationModel.getFrom_user_image())).placeholder(R.drawable.logo_only).fit().into(image);
-                }
-
-
-
-                if (notificationModel.getOrder_status().equals("0"))
-                {
-                    tv_order_state.setText(R.string.not_approved);
-                    image_state.setVisibility(View.GONE);
-                    tv_add_rate.setVisibility(View.GONE);
-                }
-                else if (notificationModel.getOrder_status().equals("1"))
-                {
-                    tv_order_state.setText(R.string.del_sent_offer);
-                    image_state.setVisibility(View.GONE);
+                    tv_name.setText(notificationModel.getFrom_user_full_name());
                     tv_add_rate.setVisibility(View.GONE);
 
-
-
-
-                }else  if (notificationModel.getOrder_status().equals("2"))
-                {
-                    tv_order_state.setText(R.string.order_pend);
-
-                    image_state.setBackgroundResource(R.drawable.wait_bg);
-                    image_state.setImageResource(R.drawable.ic_time_left);
-                    image_state.setVisibility(View.VISIBLE);
-                    tv_add_rate.setVisibility(View.GONE);
-
-                }
-                else  if (notificationModel.getOrder_status().equals("3")||notificationModel.getOrder_status().equals("8"))
-                {
-                    tv_order_state.setText(R.string.done);
-
-                    image_state.setBackgroundResource(R.drawable.finish_bg);
-                    image_state.setImageResource(R.drawable.ic_correct);
-                    image_state.setVisibility(View.VISIBLE);
-
-                    if (notificationModel.getDriver_id().equals("0"))
-                    {
-                        if (notificationModel.getClient_family_rate().equals("0"))
-                        {
-                            tv_add_rate.setVisibility(View.VISIBLE);
-
-                        }else
-                        {
-                            tv_add_rate.setVisibility(View.GONE);
-
-                        }
-
-                    }else
-                        {
-                            if (notificationModel.getClient_rate().equals("0"))
-                            {
-                                tv_add_rate.setVisibility(View.VISIBLE);
-
-                            }else
-                            {
-                                tv_add_rate.setVisibility(View.GONE);
-
-                            }
-                        }
-
-                }
-
-                else  if (notificationModel.getOrder_status().equals("4"))
-                {
-                    tv_order_state.setText(context.getString(R.string.order_canceled));
-
-                    image_state.setBackgroundResource(R.drawable.delete_bg);
-                    image_state.setImageResource(R.drawable.ic_delete_state);
-                    image_state.setVisibility(View.VISIBLE);
-                    tv_add_rate.setVisibility(View.GONE);
                 }
 
             }
+            else if (notificationModel.getOrder_status().equals(String.valueOf(Tags.STATE_DELEGATE_REFUSE_ORDER)) || notificationModel.getOrder_status().equals(String.valueOf(Tags.STATE_CLIENT_REFUSE_OFFER))) {
 
+
+                image_state.setBackgroundResource(R.drawable.delete_bg);
+                image_state.setImageResource(R.drawable.ic_delete_state);
+
+                image_state.setVisibility(View.VISIBLE);
+                image_state.setVisibility(View.VISIBLE);
+                tv_add_rate.setVisibility(View.GONE);
+
+                if (user_type.equals(Tags.TYPE_CLIENT))
+                {
+                    tv_order_state.setText(R.string.order_refused_send_again);
+
+                }else
+
+                {
+                    Picasso.with(context).load(Uri.parse(Tags.IMAGE_URL + notificationModel.getFrom_user_image())).placeholder(R.drawable.logo_only).fit().into(image);
+                    tv_name.setText(notificationModel.getFrom_user_full_name());
+                    tv_order_state.setText(R.string.offer_refused);
+
+                }
+            }
+            else if (notificationModel.getOrder_status().equals(String.valueOf(Tags.STATE_DELEGATE_DELIVERED_ORDER)))
+
+            {
+
+                    Picasso.with(context).load(Uri.parse(Tags.IMAGE_URL + notificationModel.getFrom_user_image())).placeholder(R.drawable.logo_only).fit().into(image);
+                    tv_name.setText(notificationModel.getFrom_user_full_name());
+                    tv_order_state.setText(context.getString(R.string.done));
+
+                    image_state.setBackgroundResource(R.drawable.finish_bg);
+                    image_state.setImageResource(R.drawable.ic_correct);
+                    tv_add_rate.setVisibility(View.VISIBLE);
+                    image_state.setVisibility(View.VISIBLE);
+                    image_state.setVisibility(View.VISIBLE);
+                    if(notificationModel.getFrom_user_type().equals(Tags.TYPE_CLIENT)){
+                        tv_add_rate.setVisibility(View.GONE);
+                    }
+
+            }
+            else if (notificationModel.getOrder_status().equals(String.valueOf(Tags.STATE_DELEGATE_COLLECTING_ORDER)) || notificationModel.getOrder_status().equals(String.valueOf(Tags.STATE_DELEGATE_COLLECTED_ORDER))) {
+
+
+
+image_state.setVisibility(View.GONE);
+                image_state.setVisibility(View.VISIBLE);
+                image_state.setVisibility(View.VISIBLE);
+                tv_add_rate.setVisibility(View.GONE);
+
+                if (user_type.equals(Tags.TYPE_CLIENT))
+                {
+                    tv_order_state.setText(notificationModel.getTitle_notification());
+                    tv_name.setText(notificationModel.getOrder_details());
+
+                }else
+
+                {
+                    Picasso.with(context).load(Uri.parse(Tags.IMAGE_URL + notificationModel.getFrom_user_image())).placeholder(R.drawable.logo_only).fit().into(image);
+                    tv_name.setText(notificationModel.getOrder_details());
+                    tv_order_state.setText(notificationModel.getTitle_notification());
+
+                }
+            }
+            else if (notificationModel.getOrder_status().equals(String.valueOf(Tags.STATE_DELEGATE_DELIVERING_ORDER)))
+            {
+
+                    Picasso.with(context).load(Uri.parse(Tags.IMAGE_URL + notificationModel.getFrom_user_image())).placeholder(R.drawable.logo_only).fit().into(image);
+                tv_name.setText(notificationModel.getOrder_details());
+                    tv_order_state.setText(notificationModel.getTitle_notification());
+
+                    image_state.setBackgroundResource(R.drawable.finish_bg);
+                    image_state.setImageResource(R.drawable.ic_correct);
+                    tv_add_rate.setVisibility(View.VISIBLE);
+                    image_state.setVisibility(View.VISIBLE);
+                    image_state.setVisibility(View.VISIBLE);
+
+            }
+
+            else {
+                tv_name.setText(notificationModel.getTitle_notification());
+order_num.setVisibility(View.GONE);
+order_state.setVisibility(View.GONE);
+tv_notification_date.setVisibility(View.GONE);
+tv_add_rate.setVisibility(View.GONE);
+tv_order_num.setVisibility(View.GONE);
+tv_order_state.setVisibility(View.GONE);
+imageDelete.setVisibility(View.VISIBLE);
+tv_name.setLineSpacing(1.5f,1.5f);
+           }
 
         }
     }

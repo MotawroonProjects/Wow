@@ -1,11 +1,15 @@
 package com.creative_share_apps.wow.tags;
 
+import android.os.Environment;
+
 public class Tags {
 
     public static final String base_url = "http://twseelwow.com";
+    public static final String googleDirectionBase_url = "https://maps.googleapis.com/maps/api/";
     public static final String IMAGE_URL = base_url+"/uploads/images/";
     public static final String session_login = "login";
     public static final String session_logout = "logout";
+    public static final String local_folder_path = Environment.getExternalStorageDirectory().getAbsoluteFile()+"/Aamr_Audio";
 
     public static final int MALE = 1;
     public static final int FEMALE = 2;
@@ -49,6 +53,9 @@ public class Tags {
     public static final String FIREBASE_NOT_BE_FAMILY = "be_family";
     public static final String FIREBASE_NOT_GENERAL_NOT = "general_notifications";
     public static final String FIREBASE_NOT_BALANCE = "balance_notifications";
+    public static final String FIREBASE_Order_Deleted = "order_deleted";
+    public static final String FIREBASE_NOT_BEDRIVER = "be_driver";
+    public static final String FIREBASE_NOT_DRIVER_UPDATE_LOCATION = "driver_update_location";
 
     public static final String MESSAGE_TEXT = "1";
     public static final String MESSAGE_IMAGE_TEXT = "2";

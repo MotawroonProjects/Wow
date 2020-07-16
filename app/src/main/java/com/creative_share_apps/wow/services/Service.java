@@ -2,26 +2,26 @@ package com.creative_share_apps.wow.services;
 
 import com.creative_share_apps.wow.models.AppDataModel;
 import com.creative_share_apps.wow.models.BankDataModel;
+import com.creative_share_apps.wow.models.CategoryModel;
 import com.creative_share_apps.wow.models.CommentDataModel;
-import com.creative_share_apps.wow.models.DepartmentDataModel;
-import com.creative_share_apps.wow.models.Department_Model;
-import com.creative_share_apps.wow.models.FamiliesStoreDataModel;
+import com.creative_share_apps.wow.models.FollowModel;
 import com.creative_share_apps.wow.models.MessageDataModel;
 import com.creative_share_apps.wow.models.MessageModel;
 import com.creative_share_apps.wow.models.NearDelegateDataModel;
 import com.creative_share_apps.wow.models.NearbyStoreDataModel;
 import com.creative_share_apps.wow.models.NotificationCountModel;
 import com.creative_share_apps.wow.models.NotificationDataModel;
-import com.creative_share_apps.wow.models.OrderClientFamilyDataModel;
 import com.creative_share_apps.wow.models.OrderDataModel;
 import com.creative_share_apps.wow.models.OrderIdDataModel;
-import com.creative_share_apps.wow.models.OrderModelToUpload;
-import com.creative_share_apps.wow.models.OrderSpareDataModel;
+import com.creative_share_apps.wow.models.OrderModel;
+import com.creative_share_apps.wow.models.PayPalLinkModel;
 import com.creative_share_apps.wow.models.PlaceDetailsModel;
+import com.creative_share_apps.wow.models.PlaceDirectionModel;
 import com.creative_share_apps.wow.models.PlaceGeocodeData;
 import com.creative_share_apps.wow.models.PlaceMapDetailsData;
-import com.creative_share_apps.wow.models.ProductsDataModel;
+import com.creative_share_apps.wow.models.ReviewsCategoryModel;
 import com.creative_share_apps.wow.models.SearchDataModel;
+import com.creative_share_apps.wow.models.SingleCategoryModel;
 import com.creative_share_apps.wow.models.SliderModel;
 import com.creative_share_apps.wow.models.SocialMediaModel;
 import com.creative_share_apps.wow.models.UserModel;
@@ -31,10 +31,10 @@ import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
-import retrofit2.http.Body;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
+import retrofit2.http.Header;
 import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.Part;
@@ -89,7 +89,7 @@ public interface Service {
                                       @Query(value = "key") String key);
 
     @FormUrlEncoded
-    @POST("/Api/signup")
+    @POST("/api/signup")
     Call<UserModel> signUpWithoutImage(@Field("user_email") String user_email,
                                        @Field("user_phone") String user_phone,
                                        @Field("user_phone_code") String user_phone_code,
@@ -102,7 +102,7 @@ public interface Service {
 
 
     @Multipart
-    @POST("/Api/signup")
+    @POST("/api/signup")
     Call<UserModel> signUpWithImage(@Part("user_email") RequestBody user_email,
                                     @Part("user_phone") RequestBody user_phone,
                                     @Part("user_phone_code") RequestBody user_phone_code,
@@ -115,41 +115,45 @@ public interface Service {
 
 
     @FormUrlEncoded
-    @POST("/Api/login")
+    @POST("/api/login")
     Call<UserModel> signIn(@Field("user_phone") String user_phone,
                            @Field("user_phone_code") String user_phone_code
 
     );
 
-    @GET("/Api/appDetails")
+    @GET("/api/appDetails")
     Call<AppDataModel> getAppData(@Query("type") int type);
 
     @FormUrlEncoded
-    @POST("/Api/updateLocation")
+    @POST("/api/updateLocation")
     Call<ResponseBody> updateLocation(@Field("user_id") String user_id,
                                       @Field("user_google_lat") double user_google_lat,
                                       @Field("user_google_long") double user_google_long
     );
 
     @FormUrlEncoded
-    @POST("/Api/updateToken")
+    @POST("/api/updateToken")
     Call<ResponseBody> updateToken(@Field("user_id") String user_id,
-                                   @Field("user_token_id") String user_token_id
+                                   @Field("user_token_id") String user_token_id,
+                                   @Field("soft_type") int soft_type
 
     );
 
-    @GET("/Api/slider")
+    @GET("/api/slider")
     Call<SliderModel> getAds();
 
-    @GET("/Api/driverList")
+    @GET("/api/driverList")
     Call<NearDelegateDataModel> getDelegate(@Query("mylat") double lat, @Query("mylong") double lng, @Query("page") int page_index);
 
     @FormUrlEncoded
-    @POST("/Api/logout")
-    Call<ResponseBody> logOut(@Field("user_id") String user_id);
+    @POST("/api/logout")
+    Call<ResponseBody> logOut(@Field("user_id") String user_id,
+                              @Field("user_token_id") String user_token_id
+
+    );
 
     @FormUrlEncoded
-    @POST("/Api/addOrder")
+    @POST("/api/addOrder")
     Call<OrderIdDataModel> sendOrder(@Field("client_id") String client_id,
                                      @Field("client_address") String client_address,
                                      @Field("client_lat") double client_lat,
@@ -160,29 +164,49 @@ public interface Service {
                                      @Field("order_type") String order_type,
                                      @Field("place_lat") double place_lat,
                                      @Field("place_long") double place_long,
-                                     @Field("order_time_arrival") long order_time_arrival
+                                     @Field("order_time_arrival") long order_time_arrival,
+                                     @Field("coupon_id") String coupon_id,
+                                     @Field("place_name") String place_name
+
+    );
+
+    @Multipart
+    @POST("/api/addOrder")
+    Call<OrderIdDataModel> sendOrderWithImage(@Part("client_id") RequestBody client_id,
+                                              @Part("client_address") RequestBody client_address,
+                                              @Part("client_lat") RequestBody client_lat,
+                                              @Part("client_long") RequestBody client_long,
+                                              @Part("order_details") RequestBody order_details,
+                                              @Part("place_google_id") RequestBody place_google_id,
+                                              @Part("place_name") RequestBody place_google_name,
+                                              @Part("place_address") RequestBody place_address,
+                                              @Part("order_type") RequestBody order_type,
+                                              @Part("place_lat") RequestBody place_lat,
+                                              @Part("place_long") RequestBody place_long,
+                                              @Part("order_time_arrival") RequestBody order_time_arrival,
+                                              @Part("coupon_id") RequestBody RequestBody,
+                                              @Part MultipartBody.Part image
     );
 
     @FormUrlEncoded
-    @POST("/Api/visit")
+    @POST("/api/visit")
     Call<ResponseBody> updateVisit(@Field("type") String type, @Field("day_date") String day_date);
 
     @Multipart
-    @POST("/Api/beDriver")
+    @POST("/api/beDriver")
     Call<UserModel> registerDelegate(@Part("user_id") RequestBody user_id,
                                      @Part("user_card_id") RequestBody user_card_id,
                                      @Part("user_address") RequestBody user_address,
-                                     @Part("car_plate_number") RequestBody car_plate_number,
+                                     @Part("account_num") RequestBody account_num,
                                      @Part MultipartBody.Part user_card_id_image,
                                      @Part MultipartBody.Part user_driving_license,
                                      @Part MultipartBody.Part image_car_front,
-                                     @Part MultipartBody.Part image_car_back,
-                                     @Part MultipartBody.Part image_plate
+                                     @Part MultipartBody.Part image_car_back
 
     );
 
     @Multipart
-    @POST("/Api/profile")
+    @POST("/api/profile")
     Call<UserModel> updateImage(@Part("user_id") RequestBody user_id,
                                 @Part("user_email") RequestBody user_email,
                                 @Part("user_full_name") RequestBody user_full_name,
@@ -197,7 +221,7 @@ public interface Service {
     );
 
     @Multipart
-    @POST("/Api/profile")
+    @POST("/api/profile")
     Call<UserModel> updateProfile(@Part("user_id") RequestBody user_id,
                                   @Part("user_email") RequestBody user_email,
                                   @Part("user_full_name") RequestBody user_full_name,
@@ -209,33 +233,34 @@ public interface Service {
                                   @Part("user_phone") RequestBody user_phone
     );
 
-    @GET("/Api/placeOrders")
+    @GET("/api/placeOrders")
     Call<WatingOrderData> getWaitingOrders(@Query("place_id") String place_id, @Query("page") int page);
 
-    @GET("/Api/clientOrders")
+    @GET("/api/clientOrders")
     Call<OrderDataModel> getClientOrders(@Query("user_id") String user_id, @Query("order_type") String order_type, @Query("page") int page);
 
+    @GET("/api/clientOrders")
+    Call<OrderModel> getClientOrders(@Query("order_id") String order_id);
 
-    @GET("/Api/driverOrders")
-    Call<OrderDataModel> getDelegateOrders(@Query("user_id") String user_id,
-                                           @Query("order_type") String order_type,
-                                           @Query("page") int page);
+
+    @GET("/api/driverOrders")
+    Call<OrderDataModel> getDelegateOrders(@Query("user_id") String user_id, @Query("order_type") String order_type, @Query("page") int page);
 
     @FormUrlEncoded
-    @POST("/Api/alerts")
+    @POST("/api/alerts")
     Call<NotificationCountModel> getNotificationCount(@Field("user_id") String user_id, @Field("type") String type);
 
     @FormUrlEncoded
-    @POST("/Api/alerts")
+    @POST("/api/alerts")
     Call<ResponseBody> readNotification(@Field("user_id") String user_id, @Field("type") String type);
 
 
-    @GET("/Api/notification")
+    @GET("/api/notification")
     Call<NotificationDataModel> getNotification(@Query("user_id") String user_id, @Query("user_type") String user_type, @Query("page") int page);
 
 
     @FormUrlEncoded
-    @POST("/Api/driverAction")
+    @POST("/api/driverAction")
     Call<ResponseBody> delegateAccept(@Field("driver_id") String driver_id,
                                       @Field("client_id") String client_id,
                                       @Field("order_id") String order_id,
@@ -244,7 +269,7 @@ public interface Service {
     );
 
     @FormUrlEncoded
-    @POST("/Api/driverAction")
+    @POST("/api/driverAction")
     Call<ResponseBody> delegateRefuse_Finish(@Field("driver_id") String driver_id,
                                              @Field("client_id") String client_id,
                                              @Field("order_id") String order_id,
@@ -252,7 +277,7 @@ public interface Service {
     );
 
     @FormUrlEncoded
-    @POST("/Api/clientAction")
+    @POST("/api/clientAction")
     Call<ResponseBody> clientAccept_Refuse(@Field("client_id") String client_id,
                                            @Field("driver_id") String driver_id,
                                            @Field("order_id") String order_id,
@@ -261,7 +286,7 @@ public interface Service {
     );
 
     @FormUrlEncoded
-    @POST("/Api/clientAction")
+    @POST("/api/clientAction")
     Call<ResponseBody> addRate(@Field("client_id") String client_id,
                                @Field("driver_id") String driver_id,
                                @Field("order_id") String order_id,
@@ -271,42 +296,40 @@ public interface Service {
     );
 
     @FormUrlEncoded
-    @POST("/App/ratingFamily")
-    Call<ResponseBody> addFamilyRate(@Field("client_id") String client_id,
-                                     @Field("family_id") String family_id,
-                                     @Field("order_id") String order_id,
-                                     @Field("client_rate") double client_rate,
-                                     @Field("client_comment") String client_comment
+    @POST("/app/categories/add-rate")
+    Call<ResponseBody> addRate(@Field("user_id") String user_id,
+                               @Field("category_id") String category_id,
+                               @Field("rate") float rate,
+                               @Field("comment") String comment
     );
 
-
-    @GET("/Api/comment")
+    @GET("/api/comment")
     Call<CommentDataModel> getDelegateComment(@Query("user_id") String user_id, @Query("user_type") String user_type, @Query("page") int page);
 
     @FormUrlEncoded
-    @POST("/Api/cancelOrder")
+    @POST("/api/cancelOrder")
     Call<ResponseBody> clientCancelOrder(@Field("order_id") String order_id
     );
 
     @FormUrlEncoded
-    @POST("/Api/changeDriver")
+    @POST("/api/changeDriver")
     Call<ResponseBody> resendOrderToDifferentDelegate(@Field("client_id") String client_id,
                                                       @Field("driver_id") String driver_id,
                                                       @Field("order_id") String order_id
     );
 
     @FormUrlEncoded
-    @POST("/Api/moveOrder")
+    @POST("/api/moveOrder")
     Call<ResponseBody> movementDelegate(@Field("order_id") String order_id,
                                         @Field("order_movement") String order_movement
     );
 
-    @GET("/Api/chat")
+    @GET("/api/chat")
     Call<MessageDataModel> getChatMessages(@Query("room_id") String room_id, @Query("page") int page);
 
 
     @FormUrlEncoded
-    @POST("/Api/chating")
+    @POST("/api/chating")
     Call<MessageModel> sendMessage(@Field("room_id_fk") String room_id_fk,
                                    @Field("from_user") String from_user_id,
                                    @Field("to_user") String to_user_id,
@@ -317,7 +340,7 @@ public interface Service {
 
 
     @Multipart
-    @POST("/Api/chating")
+    @POST("/api/chating")
     Call<MessageModel> sendMessageWithImage(@Part("room_id_fk") RequestBody room_id_fk,
                                             @Part("from_user") RequestBody from_user_id,
                                             @Part("to_user") RequestBody to_user_id,
@@ -328,8 +351,23 @@ public interface Service {
 
     );
 
+    @Multipart
+    @POST("/api/attachBill")
+    Call<MessageModel> sendbillWithImage(@Part("room_id_fk") RequestBody room_id_fk,
+                                         @Part("from_user") RequestBody from_user_id,
+                                         @Part("to_user") RequestBody to_user_id,
+                                         @Part("message") RequestBody message,
+                                         @Part("message_type") RequestBody message_type,
+                                         @Part("bill_amount") RequestBody bill_amount,
+                                         @Part("order_id") RequestBody order_id,
+                                         @Part("network_value") RequestBody network_value,
+                                         @Part MultipartBody.Part messagefile_type
+
+
+    );
+
     @FormUrlEncoded
-    @POST("/Api/Typing")
+    @POST("/api/Typing")
     Call<MessageModel> typing(@Field("room_id_fk") String room_id_fk,
                               @Field("from_user") String from_user_id,
                               @Field("to_user") String to_user_id,
@@ -338,20 +376,20 @@ public interface Service {
     );
 
     @FormUrlEncoded
-    @POST("/Api/confirmCode")
+    @POST("/api/confirmCode")
     Call<ResponseBody> validateCode(@Field("user_phone_code") String user_phone_code,
                                     @Field("user_phone") String user_phone,
                                     @Field("confirm_code") String confirm_code
     );
 
     @FormUrlEncoded
-    @POST("/Api/resendSms")
+    @POST("/api/resendSms")
     Call<ResponseBody> getSmsCode(@Field("user_phone_code") String user_phone_code,
                                   @Field("user_phone") String user_phone
     );
 
     @FormUrlEncoded
-    @POST("/Api/coupon")
+    @POST("/api/coupon")
     Call<UserModel> getCouponValue(@Field("user_id") String user_id,
                                    @Field("type") String type,
                                    @Field("coupon_code") String coupon_code
@@ -359,187 +397,77 @@ public interface Service {
     );
 
     @FormUrlEncoded
-    @POST("/Api/deleteNote")
+    @POST("/api/deleteNote")
     Call<ResponseBody> clientRefuseDelegateOffer(@Field("id_notification") String id_notification);
 
-    @GET("/Api/socialMedia")
+    @GET("/api/socialMedia")
     Call<SocialMediaModel> getSocialMedia();
 
-    @GET("/Api/profile")
+    @GET("/api/profile")
     Call<UserModel> getUserDataById(@Query("user_id") String user_id);
 
-    @GET("/App/familyStore")
-    Call<FamiliesStoreDataModel> getFamiliesStores(@Query("mylat") double lat, @Query("mylong") double lng, @Query("page") int page);
+    @FormUrlEncoded
+    @POST("/api/availableStatus")
+    Call<UserModel> updateDelegateAvailable(@Field("user_id") String user_id,
+                                            @Field("available") String available
+    );
 
-    @GET("/App/products")
-    Call<ProductsDataModel> getProductsByDeptId(@Query("id_department") String id_department, @Query("page") int page);
+    @GET("directions/json")
+    Call<PlaceDirectionModel> getDirection(@Query("origin") String origin,
+                                           @Query("destination") String destination,
+                                           @Query("transit_mode") String transit_mode,
+                                           @Query("key") String key
+    );
 
-    @GET("/App/departments")
-    Call<DepartmentDataModel> getAllFamilyDepts(@Query("user_id_fk") String user_id_fk);
 
     @FormUrlEncoded
-    @POST("/App/department")
-    Call<Department_Model> addDept(@Field("ar_title_dep") String ar_title_dep,
-                                   @Field("en_title_dep") String en_title_dep,
-                                   @Field("user_id_fk") String user_id_fk
+    @POST("/api/followingDriver")
+    Call<FollowModel> getFollowData(@Field("order_id") String order_id,
+                                    @Field("driver_id") String driver_id,
+                                    @Field("client_id") String client_id
     );
 
-    @Multipart
-    @POST("/App/carParts")
-    Call<OrderSpareDataModel.OrderSpare> addSparePart(@Part("client_id") RequestBody client_id,
-                                                      @Part("client_address") RequestBody client_address,
-                                                      @Part("client_lat") RequestBody client_lat,
-                                                      @Part("client_long") RequestBody client_long,
-                                                      @Part("car_model") RequestBody car_model,
-                                                      @Part("car_type") RequestBody car_type,
-                                                      @Part("facture_year") RequestBody facture_year,
-                                                      @Part("part_num") RequestBody part_num,
-                                                      @Part("part_amount") RequestBody part_amount,
-                                                      @Part("delivery_method") RequestBody delivery_method,
-                                                      @Part MultipartBody.Part image
-    );
-
-    @GET("/App/driverCarParts")
-    Call<OrderSpareDataModel> getDelegateSpareOrder(@Query("user_id") String user_id,
-                                                    @Query("order_type") String order_type,
-                                                    @Query("page") int page
-    );
-
-    @GET("/App/clientCarParts")
-    Call<OrderSpareDataModel> getClientSpareOrder(@Query("user_id") String user_id,
-                                                  @Query("order_type") String order_type,
-                                                  @Query("page") int page);
-
-
-    @Multipart
-    @POST("/App/product")
-    Call<ResponseBody> addFamilyProductWithImage(@Part("user_id_fk") RequestBody user_id_fk,
-                                                 @Part("dep_id_fk") RequestBody dep_id_fk,
-                                                 @Part("ar_title_pro") RequestBody ar_title_pro,
-                                                 @Part("en_title_pro") RequestBody en_title_pro,
-                                                 @Part("price") RequestBody price,
-                                                 @Part("ar_details_pro") RequestBody ar_details_pro,
-                                                 @Part("en_details_pro") RequestBody en_details_pro,
-                                                 @Part("notes") RequestBody notes,
-                                                 @Part MultipartBody.Part image
-    );
-
-    @Multipart
-    @POST("/App/product")
-    Call<ResponseBody> addFamilyProductWithoutImage(@Part("user_id_fk") RequestBody user_id_fk,
-                                                    @Part("dep_id_fk") RequestBody dep_id_fk,
-                                                    @Part("ar_title_pro") RequestBody ar_title_pro,
-                                                    @Part("en_title_pro") RequestBody en_title_pro,
-                                                    @Part("price") RequestBody price,
-                                                    @Part("ar_details_pro") RequestBody ar_details_pro,
-                                                    @Part("en_details_pro") RequestBody en_details_pro,
-                                                    @Part("notes") RequestBody notes
-
-    );
-
-
-    @Multipart
-    @POST("/App/updateProduct")
-    Call<ProductsDataModel.ProductModel> updateFamilyProductWithImage(@Part("id_product") RequestBody id_product,
-                                                                      @Part("user_id") RequestBody user_id_fk,
-                                                                      @Part("dep_id_fk") RequestBody dep_id_fk,
-                                                                      @Part("ar_title_pro") RequestBody ar_title_pro,
-                                                                      @Part("en_title_pro") RequestBody en_title_pro,
-                                                                      @Part("price") RequestBody price,
-                                                                      @Part("ar_details_pro") RequestBody ar_details_pro,
-                                                                      @Part("en_details_pro") RequestBody en_details_pro,
-                                                                      @Part("notes") RequestBody notes,
-                                                                      @Part MultipartBody.Part image
-    );
-
-    @Multipart
-    @POST("/App/updateProduct")
-    Call<ProductsDataModel.ProductModel> updateFamilyProductWithoutImage(@Part("id_product") RequestBody id_product,
-                                                                         @Part("user_id") RequestBody user_id_fk,
-                                                                         @Part("dep_id_fk") RequestBody dep_id_fk,
-                                                                         @Part("ar_title_pro") RequestBody ar_title_pro,
-                                                                         @Part("en_title_pro") RequestBody en_title_pro,
-                                                                         @Part("price") RequestBody price,
-                                                                         @Part("ar_details_pro") RequestBody ar_details_pro,
-                                                                         @Part("en_details_pro") RequestBody en_details_pro,
-                                                                         @Part("notes") RequestBody notes
-
-    );
-
-    @FormUrlEncoded
-    @POST("/App/deleteProduct")
-    Call<ResponseBody> deleteProduct(@Field("id_product") String id_product,
-                                     @Field("user_id") String user_id
-    );
-
-
-    @POST("/App/familyStoreOrder")
-    Call<ResponseBody> sendFamilyOrder(@Body OrderModelToUpload orderModelToUpload);
-
-
-    @GET("/App/userFamilyStore")
-    Call<OrderClientFamilyDataModel> getDelegateFamiliesOrders(@Query("user_id") String user_id,
-                                                               @Query("order_type") String order_type,
-                                                               @Query("user_type") String user_type,
-                                                               @Query("page") int page
-    );
-
-    @FormUrlEncoded
-    @POST("/App/familyAction")
-    Call<ResponseBody> familyAction(@Field("client_id") String client_id,
-                                    @Field("family_id") String driver_id,
-                                    @Field("order_id") String order_id,
-                                    @Field("status") String status
-    );
-
-    @FormUrlEncoded
-    @POST("/App/sendToDrivers")
-    Call<ResponseBody> sendFamilyOrderToDrivers(@Field("client_id") String client_id,
-                                                @Field("order_id") String order_id
-    );
-
-    @FormUrlEncoded
-    @POST("App/beFamily")
-    Call<ResponseBody> beFamily(@Field("user_id") String user_id,
-                                @Field("user_address") String user_address,
-                                @Field("user_google_lat") double user_google_lat,
-                                @Field("user_google_long") double user_google_long,
-                                @Field("user_nationality") String user_nationality
-
-    );
-
-    @FormUrlEncoded
-    @POST("App/beFamily")
-    Call<OrderIdDataModel> resend_order(@Field("client_id") String client_id,
-                                        @Field("order_id") String order_id
-    );
-
-    @FormUrlEncoded
-    @POST("Api/contactUs")
-    Call<ResponseBody> send_complain(@Field("name") String name,
-                                     @Field("phone") String phone,
-                                     @Field("email") String email,
-                                     @Field("message") String message
-
-    );
-
-    @Multipart
-    @POST("Api/payment")
-    Call<ResponseBody> payment(@Part("user_id") RequestBody user_id,
-                               @Part("name") RequestBody name,
-                               @Part("account_num") RequestBody account_num,
-                               @Part("bank_name") RequestBody bank_name,
-                               @Part("payment_value") RequestBody payment_value,
-                               @Part MultipartBody.Part image
-
-
-    );
-
-    @GET("/Api/banks")
+    @GET("/api/banks")
     Call<BankDataModel> getBankAccount();
 
+    @GET("/app/place/categories")
+    Call<CategoryModel> getcatogries(@Header("lang") String lang);
 
+    @GET("/app/categories/all-rate")
+    Call<ReviewsCategoryModel> getreview(@Query("category_id") String category_id)
+            ;
+
+    @GET("/app/place/show")
+    Call<SingleCategoryModel> getsinglecat(
+            @Header("lang") String lang,
+            @Query("category_id") String category_id,
+            @Query("page") int page,
+            @Query("limit_per_page") int limit_per_page
+
+    );
+
+    @FormUrlEncoded
+    @POST("http://sub.jacmart.net/api/online-payment")
+    Call<PayPalLinkModel> getPayPalLink(
+            @Field("user_id") String user_id,
+            @Field("user_type") String user_type,
+            @Field("amount") double amount
+    );
+
+    @FormUrlEncoded
+    @POST("/api/deleteOrder")
+    Call<ResponseBody> DelteOrder(
+            @Field("user_id") String user_id,
+            @Field("order_id") String order_id
+    );
+
+    @FormUrlEncoded
+    @POST("http://sub.jacmart.net/api/online-payment-bill")
+    Call<PayPalLinkModel> getbillpay(
+            @Field("user_id") String user_id,
+            @Field("order_id") String order_id,
+            @Field("bill_amount") String bill_amount
+    );
 }
-
 
 

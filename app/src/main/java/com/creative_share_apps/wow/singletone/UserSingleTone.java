@@ -5,6 +5,7 @@ import android.content.Context;
 import com.creative_share_apps.wow.models.UserModel;
 import com.creative_share_apps.wow.preferences.Preferences;
 
+
 public class UserSingleTone {
 
     private static UserSingleTone instance = null;

@@ -17,12 +17,12 @@
         android:layout_height="wrap_content"
         app:cardElevation="3dp"
         app:cardBackgroundColor="@color/white"
-        android:visibility="invisible"
 
         >
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:background="@color/colorPrimary"
             >
             <ImageView
                 android:id="@+id/image_logo"
@@ -106,175 +106,67 @@
                 app:titleEnabled="false"
                 app:layout_scrollFlags="scroll|exitUntilCollapsed"
                 >
-                <LinearLayout
+                <FrameLayout
+                    android:id="@+id/fl_slider"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
                     >
-                    <FrameLayout
-                        android:id="@+id/fl_slider"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        >
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="vertical"
-                            >
-                            <androidx.viewpager.widget.ViewPager
-                                android:id="@+id/pager"
-                                android:layout_width="match_parent"
-                                android:layout_height="160dp"
-                                android:layout_marginBottom="8dp"
-                                >
-
-                            </androidx.viewpager.widget.ViewPager>
-                            <com.google.android.material.tabs.TabLayout
-                                android:id="@+id/tab"
-                                android:layout_width="wrap_content"
-                                android:layout_height="6dp"
-                                android:layout_gravity="bottom|center_horizontal"
-                                android:layout_marginBottom="10dp"
-                                app:tabIndicatorHeight="0dp"
-                                app:tabMode="scrollable"
-                                app:tabMinWidth="6dp"
-                                app:tabMaxWidth="6dp"
-                                app:tabBackground="@drawable/tab_circle_indicator"
-
-                                >
-
-                            </com.google.android.material.tabs.TabLayout>
-                        </LinearLayout>
-                        <ProgressBar
-                            android:id="@+id/progBarSlider"
-                            android:layout_width="35dp"
-                            android:layout_height="35dp"
-                            android:layout_gravity="center"
-                            android:visibility="visible"
-                            />
-                    </FrameLayout>
-
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:padding="8dp"
-                        android:orientation="horizontal"
-                        android:weightSum="3"
+                        android:orientation="vertical"
                         >
-                        <LinearLayout
-                            android:id="@+id/ll_shipment"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:orientation="vertical"
-                            android:background="@drawable/ll_bg_store"
+                        <androidx.viewpager.widget.ViewPager
+                            android:id="@+id/pager"
+                            android:layout_width="match_parent"
+                            android:layout_height="160dp"
+                            android:layout_marginBottom="8dp"
+                            android:visibility="gone"
                             >
-                            <ImageView
-                                android:layout_width="40dp"
-                                android:layout_height="40dp"
-                                android:layout_gravity="center_horizontal"
-                                android:src="@drawable/ic_box"
-                                android:tint="@color/white"
-                                android:longClickable="false"
-                                android:clickable="false"
-                                android:padding="8dp"
 
-                                />
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="center_horizontal"
-                                android:layout_marginBottom="5dp"
-                                android:textColor="@color/white"
-                                android:textSize="13sp"
-                                android:longClickable="false"
-                                android:clickable="false"
-                                android:text="@string/shipment"
-
-
-                                />
-                        </LinearLayout>
-                        <LinearLayout
-                            android:id="@+id/ll_spare"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:orientation="vertical"
-                            android:background="@drawable/ll_bg_store"
-                            android:layout_marginLeft="5dp"
-                            android:layout_marginRight="5dp"
+                        </androidx.viewpager.widget.ViewPager>
+                        <com.google.android.material.tabs.TabLayout
+                            android:id="@+id/tab"
+                            android:layout_width="wrap_content"
+                            android:layout_height="6dp"
+                            android:layout_gravity="bottom|center_horizontal"
+                            android:layout_marginBottom="10dp"
+                            app:tabIndicatorHeight="0dp"
+                            app:tabMode="scrollable"
+                            app:tabMinWidth="6dp"
+                            app:tabMaxWidth="6dp"
+                            app:tabBackground="@drawable/tab_circle_indicator"
+android:visibility="gone"
                             >
-                            <ImageView
-                                android:layout_width="40dp"
-                                android:layout_height="40dp"
-                                android:layout_gravity="center_horizontal"
-                                android:src="@drawable/ic_tools"
-                                android:tint="@color/white"
-                                android:longClickable="false"
-                                android:clickable="false"
-                                android:padding="8dp"
 
-                                />
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="center_horizontal"
-                                android:layout_marginBottom="5dp"
-                                android:textColor="@color/white"
-                                android:textSize="13sp"
-                                android:longClickable="false"
-                                android:clickable="false"
-                                android:text="@string/spare_parts"
-
-
-                                />
-                        </LinearLayout>
-                        <LinearLayout
-                            android:id="@+id/ll_productive_families"
-                            android:layout_width="0dp"
+                        </com.google.android.material.tabs.TabLayout>
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/reccat"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:orientation="vertical"
-                            android:background="@drawable/ll_bg_store"
                             >
-                            <ImageView
-                                android:layout_width="40dp"
-                                android:layout_height="40dp"
-                                android:layout_gravity="center_horizontal"
-                                android:src="@drawable/ic_family"
-                                android:tint="@color/white"
-                                android:longClickable="false"
-                                android:clickable="false"
-                                android:padding="8dp"
 
-                                />
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="center_horizontal"
-                                android:layout_marginBottom="5dp"
-                                android:textColor="@color/white"
-                                android:textSize="13sp"
-                                android:longClickable="false"
-                                android:clickable="false"
-                                android:text="@string/productive_families"
-
-
-                                />
-                        </LinearLayout>
-
+                        </androidx.recyclerview.widget.RecyclerView>
                     </LinearLayout>
-                </LinearLayout>
+                    <ProgressBar
+                        android:id="@+id/progBarSlider"
+                        android:layout_width="35dp"
+                        android:layout_height="35dp"
+                        android:layout_gravity="center"
+                        android:visibility="gone"
+
+                        />
+                </FrameLayout>
 
 
             </com.google.android.material.appbar.CollapsingToolbarLayout>
+
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recViewQueries"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
                 android:layout_marginBottom="5dp"
-                android:visibility="gone"
                 >
 
             </androidx.recyclerview.widget.RecyclerView>

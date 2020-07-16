@@ -7,6 +7,7 @@ public class SliderModel implements Serializable {
 
     private List<SliderImage> data;
     private int search_des;
+
     public List<SliderImage> getData() {
         return data;
     }
@@ -19,7 +20,6 @@ public class SliderModel implements Serializable {
             return image;
         }
     }
-
     public int getSearch_des() {
         return search_des;
     }

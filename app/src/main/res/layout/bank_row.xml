@@ -24,7 +24,7 @@
             android:layout_height="wrap_content"
             android:textColor="@color/black"
             android:textSize="16sp"
-            android:text="@string/bank_name2"
+            android:text="@string/bank_name"
             android:textStyle="bold"
             />
         <TextView

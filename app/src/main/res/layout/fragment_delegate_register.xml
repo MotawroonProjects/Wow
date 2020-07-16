@@ -116,11 +116,11 @@
 
                 />
             <EditText
-                android:id="@+id/edt_plate_number"
+                android:id="@+id/edt_banknumber"
                 android:layout_width="match_parent"
                 android:layout_height="35dp"
                 android:background="@drawable/edt_bg"
-                android:hint="@string/plate_number"
+                android:hint="@string/bank_account_number"
                 android:paddingLeft="8dp"
                 android:paddingRight="8dp"
                 android:singleLine="true"
@@ -128,49 +128,9 @@
                 android:layout_marginTop="8dp"
                 android:textSize="14sp"
                 android:textColorHint="@color/gray4"
-                android:inputType="number"
 
 
                 />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:textColor="@color/gray4"
-                android:text="@string/car_license"
-                android:textSize="15sp"
-                />
-            <FrameLayout
-                android:id="@+id/fl_car_plate_image"
-                android:layout_width="match_parent"
-                android:layout_height="160dp"
-                android:layout_marginTop="10dp"
-                android:background="@color/white"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                >
-                <ImageView
-                    android:id="@+id/image_car_plate_license"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:clickable="false"
-                    android:longClickable="false"
-
-                    />
-                <ImageView
-                    android:id="@+id/image_car_plate_icon"
-                    android:layout_width="60dp"
-                    android:layout_height="60dp"
-                    android:layout_gravity="center"
-                    android:src="@drawable/ic_upload_file"
-                    android:padding="8dp"
-                    android:tint="@color/gray4"
-                    android:clickable="false"
-                    android:longClickable="false"
-                    />
-            </FrameLayout>
-
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -198,10 +158,10 @@
                     />
                 <ImageView
                     android:id="@+id/image_id_icon"
-                    android:layout_width="60dp"
-                    android:layout_height="60dp"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
                     android:layout_gravity="center"
-                    android:src="@drawable/ic_upload_file"
+                    android:src="@drawable/ic_picture"
                     android:padding="8dp"
                     android:tint="@color/gray4"
                     android:clickable="false"
@@ -236,10 +196,10 @@
                     />
                 <ImageView
                     android:id="@+id/image_license_icon"
-                    android:layout_width="60dp"
-                    android:layout_height="60dp"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
                     android:layout_gravity="center"
-                    android:src="@drawable/ic_upload_file"
+                    android:src="@drawable/ic_picture"
                     android:padding="8dp"
                     android:tint="@color/gray4"
                     android:clickable="false"
@@ -274,10 +234,10 @@
                     />
                 <ImageView
                     android:id="@+id/car_front_icon"
-                    android:layout_width="60dp"
-                    android:layout_height="60dp"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
                     android:layout_gravity="center"
-                    android:src="@drawable/ic_upload_file"
+                    android:src="@drawable/ic_picture"
                     android:padding="8dp"
                     android:tint="@color/gray4"
                     android:clickable="false"
@@ -314,62 +274,16 @@
                     />
                 <ImageView
                     android:id="@+id/car_back_icon"
-                    android:layout_width="60dp"
-                    android:layout_height="60dp"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
                     android:layout_gravity="center"
-                    android:src="@drawable/ic_upload_file"
+                    android:src="@drawable/ic_picture"
                     android:padding="8dp"
                     android:tint="@color/gray4"
                     android:clickable="false"
                     android:longClickable="false"
                     />
             </FrameLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:orientation="horizontal"
-                android:layout_marginBottom="10dp"
-                >
-                <CheckBox
-                    android:id="@+id/checkbox"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:button="@drawable/rb_bg"
-                    android:checked="false"
-                    android:text="@string/accept"
-                    android:paddingLeft="5dp"
-                    android:paddingRight="5dp"
-
-                    />
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:layout_gravity="center_vertical"
-                    >
-                    <TextView
-                        android:id="@+id/tv_terms"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:layout_marginLeft="5dp"
-                        android:layout_marginRight="5dp"
-                        android:textColor="@color/colorPrimary"
-                        android:text="@string/terms_and_conditions"
-                        android:textStyle="italic"
-                        />
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="1px"
-                        android:background="@color/colorPrimary"
-                        android:layout_marginLeft="5dp"
-                        android:layout_marginRight="5dp"                                />
-                </LinearLayout>
-
-            </LinearLayout>
-
 
         </LinearLayout>
     </ScrollView>

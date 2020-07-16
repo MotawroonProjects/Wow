@@ -8,7 +8,7 @@
     android:focusable="true"
     >
 
-    <androidx.coordinatorlayout.widget.CoordinatorLayout
+    <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:background="@color/gray0"
@@ -27,9 +27,10 @@
 
             <com.google.android.material.appbar.CollapsingToolbarLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:layout_scrollFlags="scroll|exitUntilCollapsed">
-
+                android:layout_height="match_parent"
+                app:titleEnabled="false"
+                app:layout_scrollFlags="scroll|exitUntilCollapsed"
+                >
                 <androidx.appcompat.widget.Toolbar
                     android:layout_width="match_parent"
                     android:layout_height="56dp"
@@ -105,6 +106,7 @@
                             android:layout_width="65dp"
                             android:layout_height="65dp"
                             app:civ_border_color="@color/white"
+                            app:civ_fill_color="@color/white"
                             app:civ_border_width="1dp"
                             />
 
@@ -161,7 +163,6 @@
 
                 </FrameLayout>
             </com.google.android.material.appbar.CollapsingToolbarLayout>
-
         </com.google.android.material.appbar.AppBarLayout>
 
         <androidx.core.widget.NestedScrollView
@@ -245,6 +246,13 @@
                     android:textColor="@color/gray4"
                     android:textSize="15sp" />
 
+                <ImageView
+                    android:id="@+id/order_image"
+                    android:layout_width="160dp"
+                    android:layout_height="160dp"
+                    android:layout_gravity="center_horizontal"
+                    android:visibility="gone"
+                    />
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

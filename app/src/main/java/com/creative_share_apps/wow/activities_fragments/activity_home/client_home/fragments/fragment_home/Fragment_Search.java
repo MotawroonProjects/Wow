@@ -35,21 +35,19 @@ import com.creative_share_apps.wow.adapters.NearbySearchAdapter;
 import com.creative_share_apps.wow.adapters.SearchRecentAdapter;
 import com.creative_share_apps.wow.models.NearbyModel;
 import com.creative_share_apps.wow.models.NearbyStoreDataModel;
+import com.creative_share_apps.wow.models.PhotosModel;
 import com.creative_share_apps.wow.models.PlaceModel;
 import com.creative_share_apps.wow.models.QueryModel;
 import com.creative_share_apps.wow.models.SearchModel;
 import com.creative_share_apps.wow.preferences.Preferences;
 import com.creative_share_apps.wow.remote.Api;
 import com.creative_share_apps.wow.share.Common;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.maps.android.SphericalUtil;
 
 import net.cachapa.expandablelayout.ExpandableLayout;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 
@@ -58,11 +56,12 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class Fragment_Search extends Fragment {
+public class Fragment_Search extends Fragment
+{
     private static final String TAG2 = "LAT";
     private static final String TAG3 = "LNG";
     private ClientHomeActivity activity;
-    private ImageView arrow, image_icon_delete;
+    private ImageView arrow,image_icon_delete;
     private ConstraintLayout cons_search;
     private LinearLayout ll_no_store;
     private EditText edt_search;
@@ -75,12 +74,11 @@ public class Fragment_Search extends Fragment {
     private String query = "";
     private List<QueryModel> queryModelList;
     private Preferences preferences;
+    private NearbySearchAdapter adapter;
     private SearchRecentAdapter searchRecentAdapter;
-    private List<PlaceModel> placeModelList;
+    private List<NearbyModel> nearbyModelList;
     private double lat = 0.0, lng = 0.0;
     private String user_address="";
-    private NearbySearchAdapter adapter;
-    private List<NearbyModel> nearbyModelList;
 
 
     @Nullable
@@ -113,9 +111,7 @@ public class Fragment_Search extends Fragment {
         }
 
         queryModelList = new ArrayList<>();
-        placeModelList = new ArrayList<>();
         nearbyModelList = new ArrayList<>();
-
 
 
 
@@ -150,7 +146,7 @@ public class Fragment_Search extends Fragment {
 
 
         progBar = view.findViewById(R.id.progBar);
-        progBar.getIndeterminateDrawable().setColorFilter(ContextCompat.getColor(activity, R.color.colorPrimary), PorterDuff.Mode.SRC_IN);
+        progBar.getIndeterminateDrawable().setColorFilter(ContextCompat.getColor(activity, R.color.colorAccent), PorterDuff.Mode.SRC_IN);
         cons_search.setVisibility(View.VISIBLE);
         animation = AnimationUtils.loadAnimation(activity, R.anim.search_anim);
         cons_search.clearAnimation();
@@ -218,6 +214,7 @@ public class Fragment_Search extends Fragment {
             }
         });
 
+
         image_icon_delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -226,7 +223,11 @@ public class Fragment_Search extends Fragment {
                 query = "";
             }
         });
+
+
     }
+
+
 
 
     private void Search() {
@@ -238,7 +239,7 @@ public class Fragment_Search extends Fragment {
 
         Common.CloseKeyBoard(activity,edt_search);
         ll_no_store.setVisibility(View.GONE);
-        placeModelList.clear();
+        nearbyModelList.clear();
         if (adapter != null) {
             adapter.notifyDataSetChanged();
         }
@@ -289,12 +290,57 @@ public class Fragment_Search extends Fragment {
                     }
                 });
 
+       /* String loc = "circle:15000@"+lat+","+lng;
+        String fields ="id,place_id,name,geometry,rating,formatted_address,icon,opening_hours";
+
+        Api.getService("https://maps.googleapis.com/maps/api/")
+                .getNearbyStoresWithKeyword(loc,"textquery",(query+user_address),fields,current_language,getString(R.string.map_api_key))
+                .enqueue(new Callback<SearchDataModel>() {
+                    @Override
+                    public void onResponse(Call<SearchDataModel> call, Response<SearchDataModel> response) {
+                        if (response.isSuccessful() && response.body() != null) {
+                            progBar.setVisibility(View.GONE);
+                            if (response.body().getCandidates().size() > 0) {
+                                preferences.saveQuery(activity, new QueryModel(query.trim()));
+                                updateAdapter(response.body().getCandidates());
+
+                            } else {
+                                ll_no_store.setVisibility(View.VISIBLE);
+
+                            }
+                        } else {
+
+                            progBar.setVisibility(View.GONE);
+
+                            try {
+                                Log.e("error_code", response.errorBody().string());
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        }
+
+
+                    }
+
+                    @Override
+                    public void onFailure(Call<SearchDataModel> call, Throwable t) {
+                        try {
+
+
+                            progBar.setVisibility(View.GONE);
+                            Toast.makeText(activity, getString(R.string.something), Toast.LENGTH_LONG).show();
+                        } catch (Exception e) {
+
+                        }
+                    }
+                });*/
     }
 
     private void updateAdapter(List<NearbyModel> results) {
 
+        nearbyModelList.addAll(results);
+        Collections.sort(nearbyModelList,NearbyModel.distanceComparator);
 
-        nearbyModelList.addAll(sortData(results));
         adapter.notifyDataSetChanged();
         queryModelList.clear();
         queryModelList.addAll(preferences.getAllQueries(activity));
@@ -307,8 +353,16 @@ public class Fragment_Search extends Fragment {
 
         for (SearchModel searchModel : searchModelList)
         {
-            PlaceModel placeModel = new PlaceModel(searchModel.getId(),searchModel.getPlace_id(),searchModel.getName(),searchModel.getIcon(),searchModel.getRating(),searchModel.getGeometry().getLocation().getLat(),searchModel.getGeometry().getLocation().getLng(),searchModel.getFormatted_address());
+            PlaceModel placeModel ;
+            if (searchModel.getPhotos()!=null)
+            {
+                placeModel = new PlaceModel(searchModel.getId(),searchModel.getPlace_id(),searchModel.getName(),searchModel.getIcon(),searchModel.getPhotos(),searchModel.getRating(),searchModel.getGeometry().getLocation().getLat(),searchModel.getGeometry().getLocation().getLng(),searchModel.getFormatted_address());
 
+            }else
+            {
+                placeModel = new PlaceModel(searchModel.getId(),searchModel.getPlace_id(),searchModel.getName(),searchModel.getIcon(),new ArrayList<PhotosModel>(),searchModel.getRating(),searchModel.getGeometry().getLocation().getLat(),searchModel.getGeometry().getLocation().getLng(),searchModel.getFormatted_address());
+
+            }
             if (searchModel.getOpening_hours()!=null)
             {
                 placeModel.setOpenNow(searchModel.getOpening_hours().isOpen_now());
@@ -347,7 +401,16 @@ public class Fragment_Search extends Fragment {
 
     public void setItemData(NearbyModel nearbyModel) {
 
-        PlaceModel placeModel = new PlaceModel(nearbyModel.getId(),nearbyModel.getPlace_id(),nearbyModel.getName(),nearbyModel.getIcon(),nearbyModel.getRating(),nearbyModel.getGeometry().getLocation().getLat(),nearbyModel.getGeometry().getLocation().getLng(),nearbyModel.getVicinity());
+        PlaceModel placeModel ;
+        if (nearbyModel.getPhotos()!=null)
+        {
+            placeModel = new PlaceModel(nearbyModel.getId(),nearbyModel.getPlace_id(),nearbyModel.getName(),nearbyModel.getIcon(),nearbyModel.getPhotos(),nearbyModel.getRating(),nearbyModel.getGeometry().getLocation().getLat(),nearbyModel.getGeometry().getLocation().getLng(),nearbyModel.getVicinity());
+
+        }else
+        {
+            placeModel = new PlaceModel(nearbyModel.getId(),nearbyModel.getPlace_id(),nearbyModel.getName(),nearbyModel.getIcon(),new ArrayList<PhotosModel>(),nearbyModel.getRating(),nearbyModel.getGeometry().getLocation().getLat(),nearbyModel.getGeometry().getLocation().getLng(),nearbyModel.getVicinity());
+
+        }
         if (nearbyModel.getOpening_hours()!=null)
         {
             placeModel.setOpenNow(nearbyModel.getOpening_hours().isOpen_now());
@@ -356,7 +419,7 @@ public class Fragment_Search extends Fragment {
         activity.DisplayFragmentStoreDetails(placeModel);
     }
 
-    private String getUserAddress(double lat,double lng)
+    private String getUserAddress(double lat, double lng)
     {
         String user_address = "";
 
@@ -390,32 +453,6 @@ public class Fragment_Search extends Fragment {
         return user_address;
     }
 
-    private List<NearbyModel> sortData(List<NearbyModel> nearbylList) {
 
-        List<NearbyModel> nearbyModelList = new ArrayList<>();
-        for (NearbyModel nearbyModel :nearbylList)
-        {
-            double distance = SphericalUtil.computeDistanceBetween(new LatLng(lat,lng),new LatLng(nearbyModel.getGeometry().getLocation().getLat(),nearbyModel.getGeometry().getLocation().getLng()));
-            nearbyModel.setDistance(distance);
-            nearbyModelList.add(nearbyModel);
-        }
-
-        Collections.sort(nearbyModelList, new Comparator<NearbyModel>() {
-            @Override
-            public int compare(NearbyModel o1, NearbyModel o2) {
-                if (o1.getDistance()>o2.getDistance())
-                {
-                    return 1;
-                }else if (o1.getDistance()<o2.getDistance())
-                {
-                    return -1;
-                }else
-                {
-                    return 0;
-                }
-            }
-        });
-        return nearbyModelList;
-    }
 
 }

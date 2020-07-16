@@ -47,7 +47,7 @@
         <ImageView
             android:layout_width="20dp"
             android:layout_height="20dp"
-            android:src="@drawable/ic_checked_circle"
+            android:src="@drawable/ic_checked"
             app:layout_constraintTop_toTopOf="@id/numberPicker"
             app:layout_constraintBottom_toBottomOf="@id/numberPicker"
             app:layout_constraintEnd_toStartOf="@id/numberPicker"
