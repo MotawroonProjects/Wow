@@ -67,35 +67,35 @@ mGoogleSignInClient.signOut();
 
         btn_skip = view.findViewById(R.id.btn_skip);
         btn_terms = view.findViewById(R.id.btn_terms);
-        FacebookSdk.sdkInitialize(getApplicationContext());
+//        FacebookSdk.sdkInitialize(getApplicationContext());
 
         callbackManager = CallbackManager.Factory.create();
-        loginButton = view.findViewById(R.id.login_button);
+      //  loginButton = view.findViewById(R.id.login_button);
         ll_phone_sign_up.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 activity.DisplayFragmentPhone();
             }
         });
-        loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
-            @Override
-            public void onSuccess(LoginResult loginResult) {
-                Log.e("datyaa",loginResult.getAccessToken().getUserId());
-            }
-
-            @Override
-            public void onCancel() {
-                Log.e("hhhhh","gggg");
-            }
-
-            @Override
-            public void onError(FacebookException e) {
-                Log.e("hhhhh","gggg");
-
-                Log.e("datysssaa",e.toString());
-
-            }
-        });
+//        loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
+//            @Override
+//            public void onSuccess(LoginResult loginResult) {
+//                Log.e("datyaa",loginResult.getAccessToken().getUserId());
+//            }
+//
+//            @Override
+//            public void onCancel() {
+//                Log.e("hhhhh","gggg");
+//            }
+//
+//            @Override
+//            public void onError(FacebookException e) {
+//                Log.e("hhhhh","gggg");
+//
+//                Log.e("datysssaa",e.toString());
+//
+//            }
+//        });
 //        ll_face.setOnClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View v) {

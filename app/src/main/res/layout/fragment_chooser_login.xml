@@ -9,6 +9,7 @@
     android:scrollbars="none"
     android:clickable="true"
     android:focusable="true"
+
     >
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -30,7 +31,7 @@
             <ImageView
                 android:layout_width="190dp"
                 android:layout_height="170dp"
-                android:src="@drawable/logo_only" />
+                android:src="@drawable/logo" />
 
             <LinearLayout
                 android:id="@+id/ll_phone_sign_up"
@@ -87,13 +88,13 @@
                 android:layout_marginTop="20dp"
                 android:background="@color/com_facebook_blue"
                 android:orientation="horizontal">
-                <com.facebook.login.widget.LoginButton
-android:id="@+id/login_button"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
+<!--                <com.facebook.login.widget.LoginButton-->
+<!--android:id="@+id/login_button"-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_gravity="center"-->
 
-                    />
+<!--                    />-->
             </LinearLayout>
             <LinearLayout
                 android:id="@+id/ll_google_sign_up"
