@@ -6,7 +6,7 @@ public class Tags {
 
     public static final String base_url = "http://twseelwow.com";
     public static final String googleDirectionBase_url = "https://maps.googleapis.com/maps/api/";
-    public static final String IMAGE_URL = base_url + "/uploads/images/";
+    public static final String IMAGE_URL = base_url+"/uploads/images/";
     public static final String session_login = "login";
     public static final String session_logout = "logout";
     public static final String local_folder_path = Environment.getExternalStorageDirectory().getAbsoluteFile() + "/Aamr_Audio";

@@ -697,9 +697,9 @@ pay();
 //            ll_bill.setVisibility(View.VISIBLE);
 //
 //        }}
-        if(messageModel.getTotal_cost()!=null){
-            chatUserModel.setTotla_cost(messageModel.getTotal_cost());
-        }
+//        if(messageModel.getTotal_cost()!=null){
+//            chatUserModel.setTotla_cost(messageModel.getTotal_cost());
+//        }
         if (adapter == null) {
             messageModelList.add(messageModel);
             adapter = new ChatAdapter(messageModelList, userModel.getData().getUser_id(), chatUserModel.getImage(), ChatActivity.this);
