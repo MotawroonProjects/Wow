@@ -3,14 +3,21 @@ package com.creative_share_apps.wow.activities_fragments.activity_home.activity_
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.FrameLayout;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.creative_share_apps.wow.R;
+import com.creative_share_apps.wow.activities_fragments.activity_home.activity_sign_in.activity.SignInActivity;
+import com.creative_share_apps.wow.activities_fragments.activity_home.client_home.activity.ClientHomeActivity;
 import com.creative_share_apps.wow.activities_fragments.activity_home.intro_slider.MainScreen;
 import com.creative_share_apps.wow.language.Language_Helper;
+import com.creative_share_apps.wow.models.UserModel;
 import com.creative_share_apps.wow.preferences.Preferences;
+import com.creative_share_apps.wow.singletone.UserSingleTone;
+import com.creative_share_apps.wow.tags.Tags;
 
 
 public class SplashActivity extends AppCompatActivity {
@@ -29,28 +36,28 @@ public class SplashActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
 
-        Thread myThread = new Thread()
-        {
-            @Override
-            public void run() {
-                try {
-                    sleep(1200);
-                    Intent intent = new Intent(getApplicationContext(), MainScreen.class);
+//        Thread myThread = new Thread()
+//        {
+//            @Override
+//            public void run() {
+//                try {
+//                    sleep(1200);
+//                    Intent intent = new Intent(getApplicationContext(), MainScreen.class);
+//
+//                    startActivity(intent);
+//                    finish();
+//                } catch (InterruptedException e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//        };
+//        myThread.start();
 
-                    startActivity(intent);
-                    finish();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-        };
-        myThread.start();
 
 
-
-       /* preferences = Preferences.getInstance();
+        preferences = Preferences.getInstance();
         fl = findViewById(R.id.fl);
-        Animation animation = AnimationUtils.loadAnimation(this,R.anim.fade);
+        Animation animation = AnimationUtils.loadAnimation(this,R.anim.dialog_enter);
         fl.startAnimation(animation);
         animation.setAnimationListener(new Animation.AnimationListener() {
             @Override
@@ -84,6 +91,6 @@ public class SplashActivity extends AppCompatActivity {
             public void onAnimationRepeat(Animation animation) {
 
             }
-        });*/
+        });
     }
 }
