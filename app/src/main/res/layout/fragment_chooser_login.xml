@@ -86,7 +86,6 @@
                 android:layout_marginRight="25dp"
                 android:visibility="gone"
                 android:layout_marginTop="20dp"
-                android:background="@color/com_facebook_blue"
                 android:orientation="horizontal">
 <!--                <com.facebook.login.widget.LoginButton-->
 <!--android:id="@+id/login_button"-->
