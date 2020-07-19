@@ -761,6 +761,10 @@ pay();
             ll_bill.setVisibility(View.VISIBLE);
 
         }
+        else {
+            ll_bill.setVisibility(View.GONE);
+
+        }
 
 //        else if (userModel.getData().getUser_type().equals(Tags.TYPE_CLIENT)&&chatUserModel.getBill_step().equals("not_attach")) {
 //            ll_bill.setVisibility(View.GONE);
