@@ -438,7 +438,7 @@ UserModel userModel=new UserModel();
                 Intent intent = new Intent(this, ClientHomeActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 String order_status = map.get("order_status");
-                Log.e("order_status",order_status+"_");
+                //Log.e("order_status",order_status+"_");
                 final NotStateModel notStateModel = new NotStateModel(order_status);
 
                 if (order_status.equals(String.valueOf(Tags.STATE_ORDER_NEW))) {
