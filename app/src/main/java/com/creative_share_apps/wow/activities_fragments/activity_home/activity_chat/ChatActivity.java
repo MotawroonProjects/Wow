@@ -672,31 +672,31 @@ pay();
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void ListenToNewMessage(MessageModel messageModel) {
-        if(messageModel.getBill_step()!=null){
-            if(messageModel.getBill_step().equals("bill_paid")){
-                ll_bill.setVisibility(View.GONE);
-
-            }
-        else if (userModel.getData().getUser_type().equals(Tags.TYPE_CLIENT)&&messageModel.getBill_step().equals("not_attach")) {
-            ll_bill.setVisibility(View.GONE);
-        }
-        else if(userModel.getData().getUser_type().equals(Tags.TYPE_DELEGATE)&&messageModel.getBill_step().equals("not_attach"))
-        {
-            ll_bill.setVisibility(View.VISIBLE);
-
-        }
-        else if(userModel.getData().getUser_type().equals(Tags.TYPE_DELEGATE)&&!messageModel.getBill_step().equals("not_attach"))
-        {
-            ll_bill.setVisibility(View.GONE);
-
-        }
-        else if(userModel.getData().getUser_type().equals(Tags.TYPE_CLIENT)&&!messageModel.getBill_step().equals("not_attach"))
-        {
-            tv_title.setText(getResources().getString(R.string.pay));
-
-            ll_bill.setVisibility(View.VISIBLE);
-
-        }}
+//        if(messageModel.getBill_step()!=null){
+//            if(messageModel.getBill_step().equals("bill_paid")){
+//                ll_bill.setVisibility(View.GONE);
+//
+//            }
+//        else if (userModel.getData().getUser_type().equals(Tags.TYPE_CLIENT)&&messageModel.getBill_step().equals("not_attach")) {
+//            ll_bill.setVisibility(View.GONE);
+//        }
+//        else if(userModel.getData().getUser_type().equals(Tags.TYPE_DELEGATE)&&messageModel.getBill_step().equals("not_attach"))
+//        {
+//            ll_bill.setVisibility(View.VISIBLE);
+//
+//        }
+//        else if(userModel.getData().getUser_type().equals(Tags.TYPE_DELEGATE)&&!messageModel.getBill_step().equals("not_attach"))
+//        {
+//            ll_bill.setVisibility(View.GONE);
+//
+//        }
+//        else if(userModel.getData().getUser_type().equals(Tags.TYPE_CLIENT)&&!messageModel.getBill_step().equals("not_attach"))
+//        {
+//            tv_title.setText(getResources().getString(R.string.pay));
+//
+//            ll_bill.setVisibility(View.VISIBLE);
+//
+//        }}
         if(messageModel.getTotal_cost()!=null){
             chatUserModel.setTotla_cost(messageModel.getTotal_cost());
         }
@@ -757,30 +757,30 @@ pay();
     }
 
     private void UpdateUI(ChatUserModel chatUserModel) {
-        if(chatUserModel.getBill_step().equals("bill_paid")){
-            ll_bill.setVisibility(View.GONE);
-
-        }
-
-        else if (userModel.getData().getUser_type().equals(Tags.TYPE_CLIENT)&&chatUserModel.getBill_step().equals("not_attach")) {
-            ll_bill.setVisibility(View.GONE);
-        }
-        else if(userModel.getData().getUser_type().equals(Tags.TYPE_DELEGATE)&&chatUserModel.getBill_step().equals("not_attach"))
-        {
+        if(userModel.getData().getUser_type().equals(Tags.TYPE_DELEGATE)){
             ll_bill.setVisibility(View.VISIBLE);
 
         }
-        else if(userModel.getData().getUser_type().equals(Tags.TYPE_DELEGATE)&&!chatUserModel.getBill_step().equals("not_attach"))
-        {
-            ll_bill.setVisibility(View.GONE);
 
-        }
-        else if(userModel.getData().getUser_type().equals(Tags.TYPE_CLIENT)&&!chatUserModel.getBill_step().equals("not_attach"))
-        {
-            ll_bill.setVisibility(View.VISIBLE);
-            tv_title.setText(getResources().getString(R.string.pay));
-
-        }
+//        else if (userModel.getData().getUser_type().equals(Tags.TYPE_CLIENT)&&chatUserModel.getBill_step().equals("not_attach")) {
+//            ll_bill.setVisibility(View.GONE);
+//        }
+//        else if(userModel.getData().getUser_type().equals(Tags.TYPE_DELEGATE)&&chatUserModel.getBill_step().equals("not_attach"))
+//        {
+//            ll_bill.setVisibility(View.VISIBLE);
+//
+//        }
+//        else if(userModel.getData().getUser_type().equals(Tags.TYPE_DELEGATE)&&!chatUserModel.getBill_step().equals("not_attach"))
+//        {
+//            ll_bill.setVisibility(View.GONE);
+//
+//        }
+//        else if(userModel.getData().getUser_type().equals(Tags.TYPE_CLIENT)&&!chatUserModel.getBill_step().equals("not_attach"))
+//        {
+//            ll_bill.setVisibility(View.VISIBLE);
+//            tv_title.setText(getResources().getString(R.string.pay));
+//
+//        }
         preferences.saveChatUserData(this, chatUserModel);
         tv_name.setText(chatUserModel.getName());
         tv_order_num.setText(getString(R.string.order_number) + "#" + chatUserModel.getOrder_id());
