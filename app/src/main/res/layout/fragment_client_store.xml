@@ -121,7 +121,6 @@
                             android:layout_width="match_parent"
                             android:layout_height="160dp"
                             android:layout_marginBottom="8dp"
-                            android:visibility="gone"
                             >
 
                         </androidx.viewpager.widget.ViewPager>
@@ -136,7 +135,6 @@
                             app:tabMinWidth="6dp"
                             app:tabMaxWidth="6dp"
                             app:tabBackground="@drawable/tab_circle_indicator"
-android:visibility="gone"
                             >
 
                         </com.google.android.material.tabs.TabLayout>
@@ -144,6 +142,7 @@ android:visibility="gone"
                             android:id="@+id/reccat"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                           android:visibility="gone"
                             >
 
                         </androidx.recyclerview.widget.RecyclerView>
