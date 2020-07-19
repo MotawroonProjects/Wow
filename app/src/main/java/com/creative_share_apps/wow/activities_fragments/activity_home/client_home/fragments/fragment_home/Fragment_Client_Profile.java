@@ -46,10 +46,10 @@ import retrofit2.Response;
 
 public class Fragment_Client_Profile extends Fragment {
 
-    private ImageView image_logout, image, arrow, arrow2,arrow3,arrow13, image_instagram, image_facebook, image_twitter, img_certified;
+    private ImageView image_logout, image, arrow, arrow2, arrow3, arrow13, image_instagram, image_facebook, image_twitter, img_certified;
     private TextView tv_name, tv_balance, tv_order_count, tv_feedback, tv_certified, tv_coupons;
     private SimpleRatingBar rateBar;
-    private ConstraintLayout cons_setting,cons_balance, cons_register_delegate, cons_comment, cons_add_coupon,cons_banks,cons_pay;
+    private ConstraintLayout cons_setting, cons_balance, cons_register_delegate, cons_comment, cons_add_coupon, cons_banks, cons_pay;
     private LinearLayout ll_telegram, ll_certification;
     private String current_language;
     private ClientHomeActivity activity;
@@ -142,18 +142,16 @@ public class Fragment_Client_Profile extends Fragment {
                 activity.DisplayFragmentSettings();
             }
         });
-cons_pay.setOnClickListener(new View.OnClickListener() {
-    @Override
-    public void onClick(View v) {
-        if(userModel.getData().getAccount_balance()!=0){
-        Common.CreatePAyDialog(activity,activity.getResources().getString(R.string.you_pay)+Math.abs(userModel.getData().getAccount_balance()));
-    }
-
-    else {
-        Common.CreateSuccessDialog(activity,activity.getResources().getString(R.string.you_cant));
-    }
-    }
-});
+        cons_pay.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (userModel.getData().getAccount_balance() != 0) {
+                    Common.CreatePAyDialog(activity, activity.getResources().getString(R.string.you_pay) + Math.abs(userModel.getData().getAccount_balance()));
+                } else {
+                    Common.CreateSuccessDialog(activity, activity.getResources().getString(R.string.you_cant));
+                }
+            }
+        });
         cons_register_delegate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -248,7 +246,7 @@ cons_pay.setOnClickListener(new View.OnClickListener() {
                 try {
 
                     Intent telegramIntent = new Intent(Intent.ACTION_VIEW);
-                    telegramIntent.setData(Uri.parse("http://telegram.me/"+telegram));
+                    telegramIntent.setData(Uri.parse("http://telegram.me/" + telegram));
                     startActivity(telegramIntent);
 
                 } catch (Exception e) {
@@ -355,7 +353,7 @@ cons_pay.setOnClickListener(new View.OnClickListener() {
     }
 
     public void updateUserData(UserModel userModel) {
-        Preferences.getInstance().create_update_userData(activity,userModel);
+        Preferences.getInstance().create_update_userData(activity, userModel);
         this.userModel = userModel;
         userSingleTone.setUserModel(userModel);
 
@@ -387,91 +385,92 @@ cons_pay.setOnClickListener(new View.OnClickListener() {
         dialog.setView(view);
         dialog.show();
     }
+
     public void pay() {
-if(userModel.getData().getAccount_balance()!=0.0) {
-    ProgressDialog dialog = Common.createProgressDialog(activity, getString(R.string.wait));
-    dialog.setCancelable(false);
-    dialog.show();
-    try {
+        if (userModel.getData().getAccount_balance() != 0.0) {
+            ProgressDialog dialog = Common.createProgressDialog(activity, getString(R.string.wait));
+            dialog.setCancelable(false);
+            dialog.show();
+            try {
 
-        Api.getService(Tags.base_url)
-                .getPayPalLink(userModel.getData().getUser_id(), userModel.getData().getUser_type(), Math.abs(userModel.getData().getAccount_balance()))
-                .enqueue(new Callback<PayPalLinkModel>() {
-                    @Override
-                    public void onResponse(Call<PayPalLinkModel> call, Response<PayPalLinkModel> response) {
-                        dialog.dismiss();
-                        if (response.isSuccessful() && response.body() != null) {
-                            if (response.body() != null) {
-                                // Log.e("body",response.body().getData()+"______");
-                                Intent intent = new Intent(activity, TelrActivity.class);
-                                intent.putExtra("data", response.body());
-                                startActivityForResult(intent, 100);
-
-
-                            } else {
-                                Toast.makeText(activity, R.string.failed, Toast.LENGTH_SHORT).show();
-                            }
+                Api.getService(Tags.base_url)
+                        .getPayPalLink(userModel.getData().getUser_id(), userModel.getData().getUser_type(), Math.abs(userModel.getData().getAccount_balance()))
+                        .enqueue(new Callback<PayPalLinkModel>() {
+                            @Override
+                            public void onResponse(Call<PayPalLinkModel> call, Response<PayPalLinkModel> response) {
+                                dialog.dismiss();
+                                if (response.isSuccessful() && response.body() != null) {
+                                    if (response.body() != null) {
+                                        // Log.e("body",response.body().getData()+"______");
+                                        Intent intent = new Intent(activity, TelrActivity.class);
+                                        intent.putExtra("data", response.body());
+                                        startActivityForResult(intent, 100);
 
 
-                        } else {
-                            try {
+                                    } else {
+                                        Toast.makeText(activity, R.string.failed, Toast.LENGTH_SHORT).show();
+                                    }
 
-                                Log.e("error", response.code() + "_" + response.errorBody().string());
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
-                            if (response.code() == 500) {
-                                Toast.makeText(activity, "Server Error", Toast.LENGTH_SHORT).show();
 
-                            } else {
-                                Toast.makeText(activity, getString(R.string.failed), Toast.LENGTH_SHORT).show();
-
-                                try {
-
-                                    Log.e("error", response.code() + "_" + response.errorBody().string());
-                                } catch (IOException e) {
-                                    e.printStackTrace();
-                                }
-                            }
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(Call<PayPalLinkModel> call, Throwable t) {
-                        try {
-                            dialog.dismiss();
-                            if (t.getMessage() != null) {
-                                Log.e("error", t.getMessage());
-                                if (t.getMessage().toLowerCase().contains("failed to connect") || t.getMessage().toLowerCase().contains("unable to resolve host")) {
-                                    Toast.makeText(activity, R.string.something, Toast.LENGTH_SHORT).show();
                                 } else {
-                                    Toast.makeText(activity, t.getMessage(), Toast.LENGTH_SHORT).show();
+                                    try {
+
+                                        Log.e("error", response.code() + "_" + response.errorBody().string());
+                                    } catch (IOException e) {
+                                        e.printStackTrace();
+                                    }
+                                    if (response.code() == 500) {
+                                        Toast.makeText(activity, "Server Error", Toast.LENGTH_SHORT).show();
+
+                                    } else {
+                                        Toast.makeText(activity, getString(R.string.failed), Toast.LENGTH_SHORT).show();
+
+                                        try {
+
+                                            Log.e("error", response.code() + "_" + response.errorBody().string());
+                                        } catch (IOException e) {
+                                            e.printStackTrace();
+                                        }
+                                    }
                                 }
                             }
 
-                        } catch (Exception e) {
-                        }
-                    }
-                });
-    } catch (Exception e) {
-        dialog.dismiss();
+                            @Override
+                            public void onFailure(Call<PayPalLinkModel> call, Throwable t) {
+                                try {
+                                    dialog.dismiss();
+                                    if (t.getMessage() != null) {
+                                        Log.e("error", t.getMessage());
+                                        if (t.getMessage().toLowerCase().contains("failed to connect") || t.getMessage().toLowerCase().contains("unable to resolve host")) {
+                                            Toast.makeText(activity, R.string.something, Toast.LENGTH_SHORT).show();
+                                        } else {
+                                            Toast.makeText(activity, t.getMessage(), Toast.LENGTH_SHORT).show();
+                                        }
+                                    }
 
-    }
-}
-else {
-    Common.CreateSuccessDialog(activity,activity.getResources().getString(R.string.you_cant));
-}
+                                } catch (Exception e) {
+                                }
+                            }
+                        });
+            } catch (Exception e) {
+                dialog.dismiss();
+
+            }
+        } else {
+            Common.CreateSuccessDialog(activity, activity.getResources().getString(R.string.you_cant));
+        }
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-       getUserDataById(userModel.getData().getUser_id());
-       Log.e("lokkkk","llll");
+        getUserDataById(userModel.getData().getUser_id());
+        Log.e("lokkkk", "llll");
 
     }
+
     private void getUserDataById(String user_id) {
-        ProgressDialog dialog = Common.createProgressDialog(activity,getString(R.string.wait));
+        ProgressDialog dialog = Common.createProgressDialog(activity, getString(R.string.wait));
         dialog.setCancelable(false);
         dialog.show();
         Api.getService(Tags.base_url)

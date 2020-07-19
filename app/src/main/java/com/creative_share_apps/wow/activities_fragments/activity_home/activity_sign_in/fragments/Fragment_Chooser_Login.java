@@ -29,27 +29,26 @@ import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
 
 import static androidx.constraintlayout.widget.Constraints.TAG;
-import static com.facebook.FacebookSdk.getApplicationContext;
 
 public class Fragment_Chooser_Login extends Fragment {
 
     private LinearLayout ll_phone_sign_up,ll_face,signup,ll_google_signup;
     private Button btn_skip,btn_terms;
     private com.creative_share_apps.wow.activities_fragments.activity_home.activity_sign_in.activity.SignInActivity activity;
-    private GoogleSignInClient mGoogleSignInClient;
-    private LoginButton loginButton;
-    private CallbackManager callbackManager;
+//    private GoogleSignInClient mGoogleSignInClient;
+//    private LoginButton loginButton;
+//    private CallbackManager callbackManager;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_chooser_login,container,false);
 
         initView(view);
-        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestEmail()
-                .build();
-        mGoogleSignInClient = GoogleSignIn.getClient(activity, gso);
-mGoogleSignInClient.signOut();
+//        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+//                .requestEmail()
+//                .build();
+//        mGoogleSignInClient = GoogleSignIn.getClient(activity, gso);
+//mGoogleSignInClient.signOut();
 
         return view;
     }
@@ -69,7 +68,7 @@ mGoogleSignInClient.signOut();
         btn_terms = view.findViewById(R.id.btn_terms);
 //        FacebookSdk.sdkInitialize(getApplicationContext());
 
-        callbackManager = CallbackManager.Factory.create();
+       // callbackManager = CallbackManager.Factory.create();
       //  loginButton = view.findViewById(R.id.login_button);
         ll_phone_sign_up.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -102,11 +101,11 @@ mGoogleSignInClient.signOut();
 //                activity.DisplayFragmentPhone();
 //            }
 //        });
-        ll_google_signup.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-signIn();            }
-        });
+//        ll_google_signup.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//signIn();            }
+//        });
         btn_terms.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -121,60 +120,60 @@ signIn();            }
         });
 
     }
-    private void signIn() {
-        Intent signInIntent = mGoogleSignInClient.getSignInIntent();
-        startActivityForResult(signInIntent, 2);
-    }
-    private void handleSignInResult(Task<GoogleSignInAccount> completedTask) {
-        try {
-            GoogleSignInAccount account = completedTask.getResult(ApiException.class);
+//    private void signIn() {
+//        Intent signInIntent = mGoogleSignInClient.getSignInIntent();
+//        startActivityForResult(signInIntent, 2);
+//    }
+//    private void handleSignInResult(Task<GoogleSignInAccount> completedTask) {
+//        try {
+//            GoogleSignInAccount account = completedTask.getResult(ApiException.class);
+//
+//            // Signed in successfully, show authenticated UI.
+//            updateUI(account);
+//           // mGoogleSignInClient.signOut();
+//        } catch (ApiException e) {
+//            // The ApiException status code indicates the detailed failure reason.
+//            // Please refer to the GoogleSignInStatusCodes class reference for more information.
+//            Log.e(TAG, "signInResult:failed code=" + e.getStatusCode());
+//            updateUI(null);
+//        }
+//    }
 
-            // Signed in successfully, show authenticated UI.
-            updateUI(account);
-           // mGoogleSignInClient.signOut();
-        } catch (ApiException e) {
-            // The ApiException status code indicates the detailed failure reason.
-            // Please refer to the GoogleSignInStatusCodes class reference for more information.
-            Log.e(TAG, "signInResult:failed code=" + e.getStatusCode());
-            updateUI(null);
-        }
-    }
-
-    private void updateUI(GoogleSignInAccount acct) {
-      //  mGoogleSignInClient.signOut();
-
-        if (acct != null) {
-            String personName = acct.getDisplayName();
-            String personGivenName = acct.getGivenName();
-            String personFamilyName = acct.getFamilyName();
-            String personEmail = acct.getEmail();
-            String personId = acct.getId();
-            Uri personPhoto = acct.getPhotoUrl();
-
-          //  Log.e("ldkkkfk",acct.getAccount().type);
-        }
-
-    }
+//    private void updateUI(GoogleSignInAccount acct) {
+//      //  mGoogleSignInClient.signOut();
+//
+//        if (acct != null) {
+//            String personName = acct.getDisplayName();
+//            String personGivenName = acct.getGivenName();
+//            String personFamilyName = acct.getFamilyName();
+//            String personEmail = acct.getEmail();
+//            String personId = acct.getId();
+//            Uri personPhoto = acct.getPhotoUrl();
+//
+//          //  Log.e("ldkkkfk",acct.getAccount().type);
+//        }
+//
+//    }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
         // Result returned from launching the Intent from GoogleSignInClient.getSignInIntent(...);
-        if (requestCode == 2) {
-            // The Task returned from this call is always completed, no need to attach
-            // a listener.
-            Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
-            handleSignInResult(task);
-        }
-        else {
-            callbackManager.onActivityResult(requestCode, resultCode, data);
-        }
+//        if (requestCode == 2) {
+//            // The Task returned from this call is always completed, no need to attach
+//            // a listener.
+//            Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
+//            handleSignInResult(task);
+//        }
+//        else {
+//            callbackManager.onActivityResult(requestCode, resultCode, data);
+//        }
     }
     @Override
     public void onStart() {
         super.onStart();
-        GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(activity);
-        updateUI(account);
+//        GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(activity);
+//        updateUI(account);
     }
 }

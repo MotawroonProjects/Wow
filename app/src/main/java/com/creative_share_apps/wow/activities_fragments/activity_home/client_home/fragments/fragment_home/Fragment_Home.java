@@ -73,34 +73,35 @@ public class Fragment_Home extends Fragment {
                 bottomNavigationView.getMenu().getItem(3).setIconTintList(null);
                 bottomNavigationView.getMenu().getItem(3).setIconTintMode(null);
             }
-            Log.e("lflgllg", userModel.getData().getUser_image());
-            Glide.with(getApplicationContext()).asBitmap().load(Tags.IMAGE_URL + userModel.getData().getUser_image())
-                    .apply(RequestOptions.circleCropTransform()).into(new SimpleTarget<Bitmap>() {
+            //  Log.e("lflgllg", userModel.getData().getUser_image());
+                Glide.with(activity).asBitmap().load(Tags.IMAGE_URL + userModel.getData().getUser_image())
+                        .apply(RequestOptions.circleCropTransform()).into(new SimpleTarget<Bitmap>() {
 
-                @Override
-                public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
-                    // Log.e("lflgllg,";fllflf");
+                    @Override
+                    public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
+                        // Log.e("lflgllg,";fllflf");
 
-                    Drawable profileImage = new BitmapDrawable(getResources(), resource);
-                    bottomNavigationView.getMenu().findItem(R.id.profile).setIcon(profileImage);
-                }
+                        Drawable profileImage = new BitmapDrawable(getResources(), resource);
+                        bottomNavigationView.getMenu().findItem(R.id.profile).setIcon(profileImage);
+                    }
 
-                @Override
-                public void onLoadCleared(@Nullable Drawable placeholder) {
-
-
-                    bottomNavigationView.getMenu().findItem(R.id.profile).setIcon(R.drawable.ic_nav_user);
+                    @Override
+                    public void onLoadCleared(@Nullable Drawable placeholder) {
 
 
-                }
+                        bottomNavigationView.getMenu().findItem(R.id.profile).setIcon(R.drawable.ic_nav_user);
 
-                @Override
-                public void onLoadFailed(@Nullable Drawable errorDrawable) {
-                    super.onLoadFailed(errorDrawable);
-                    bottomNavigationView.getMenu().findItem(R.id.profile).setIcon(R.drawable.ic_nav_user);
 
-                }
-            });
+                    }
+
+                    @Override
+                    public void onLoadFailed(@Nullable Drawable errorDrawable) {
+                        super.onLoadFailed(errorDrawable);
+                        bottomNavigationView.getMenu().findItem(R.id.profile).setIcon(R.drawable.ic_nav_user);
+
+                    }
+                });
+
         }
         BottomNavigationMenuView menuView = (BottomNavigationMenuView) bottomNavigationView.getChildAt(0);
 
@@ -269,7 +270,7 @@ public class Fragment_Home extends Fragment {
         AHBottomNavigationItem item1 = new AHBottomNavigationItem(getString(R.string.stores), R.drawable.ic_nav_store);
         AHBottomNavigationItem item2 = new AHBottomNavigationItem(getString(R.string.shipment), R.drawable.ic_box);
         AHBottomNavigationItem item3 = new AHBottomNavigationItem(getString(R.string.my_orders), R.drawable.ic_nav_order);
-       // AHBottomNavigationItem item4 = new AHBottomNavigationItem(getString(R.string.notifications), R.drawable.ic_nav_notification);
+        // AHBottomNavigationItem item4 = new AHBottomNavigationItem(getString(R.string.notifications), R.drawable.ic_nav_notification);
         AHBottomNavigationItem item4 = new AHBottomNavigationItem(getString(R.string.profile), R.drawable.ic_nav_user);
 
         ah_bottom_nav.setTitleState(AHBottomNavigation.TitleState.ALWAYS_SHOW);
@@ -282,7 +283,7 @@ public class Fragment_Home extends Fragment {
         ah_bottom_nav.addItem(item2);
         ah_bottom_nav.addItem(item3);
         ah_bottom_nav.addItem(item4);
-      //  ah_bottom_nav.addItem(item5);
+        //  ah_bottom_nav.addItem(item5);
 
     }
 
