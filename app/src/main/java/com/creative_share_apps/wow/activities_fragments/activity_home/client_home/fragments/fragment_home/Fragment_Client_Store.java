@@ -325,9 +325,9 @@ public class Fragment_Client_Store extends Fragment {
 
         }else
 
-            pager.setVisibility(View.GONE);
         {
             pager.setVisibility(View.GONE);
+            tab.setVisibility(View.GONE);
 
         }
 
