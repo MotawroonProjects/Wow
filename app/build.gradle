@@ -3,12 +3,12 @@ apply plugin: 'com.android.application'
 android {
     compileSdkVersion 29
     defaultConfig {
-        applicationId "com.creative_share_apps.wow"
+        applicationId "com.arab_developer.wow"
         minSdkVersion 17
         targetSdkVersion 28
         multiDexEnabled true
-        versionCode 10
-        versionName "1.9"
+        versionCode 1
+        versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
     }
